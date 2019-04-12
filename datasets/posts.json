@@ -1,0 +1,68 @@
+[
+    {
+        "id": 1,
+        "liked_by": ["ferran", "iscle"],
+        "published_when": 1555063027,
+        "published_by": "cristian",
+        "location": [
+          48.870961,
+          2.332176
+        ],
+        "hashtags": ["gym", "2019", "likes4likes"]
+    },
+    {
+        "id": 2,
+        "liked_by": ["iscle"],
+        "published_when": 1555063012,
+        "published_by": "cristian",
+        "location": [
+          55.760140,
+          37.617844
+        ],
+        "hashtags": ["engineering", "omg", "badluck"]
+    },
+    {
+        "id": 3,
+        "liked_by": ["cristian", "ferran"],
+        "published_when": 1555062564,
+        "published_by": "iscle",
+        "location": [
+          51.509782,
+          -0.126913
+        ],
+        "hashtags": ["brandnew", "new", "winwin"]
+    },
+    {
+        "id": 4,
+        "liked_by": ["iscle"],
+        "published_when": 1555061027,
+        "published_by": "ferran",
+        "location": [
+          45.447464,
+          11.001697
+        ],
+        "hashtags": ["happy", "routine", "playing"]
+    },
+    {
+        "id": 5,
+        "liked_by": ["cristian", "iscle"],
+        "published_when": 1555063026,
+        "published_by": "ferran",
+        "location": [
+          40.813678,
+          -73.959614
+        ],
+        "hashtags": ["night", "party", "wow"]
+    },
+    {
+        "id": 6,
+        "liked_by": ["cristian"],
+        "published_when": 1555063250,
+        "published_by": "iscle",
+        "location": [
+          48.870961,
+          2.332176
+        ],
+        "hashtags": ["best", "shot", "foody"]
+    }
+]

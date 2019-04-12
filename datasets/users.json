@@ -1,0 +1,17 @@
+[
+    {
+        "username": "cristian",
+        "creation": 1555053027,
+        "liked_by": ["ferran", "iscle"]
+    },
+    {
+        "username": "iscle",
+        "creation": 1555053012,
+        "liked_by": ["ferran"]
+    },
+    {
+        "username": "ferran",
+        "creation": 1555052564,
+        "hashtags": ["iscle", "cristian"]
+    }
+]

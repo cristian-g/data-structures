@@ -1,5 +1,9 @@
+import controller.InstaSalle;
+
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("Goodbye World!");
+
+    public static void main(String[] args) throws Exception {
+        InstaSalle instasalle = new InstaSalle();
+        instasalle.init();
     }
 }
