@@ -1,6 +1,7 @@
 package controller;
 
 import com.google.gson.JsonIOException;
+import models.Hashtag;
 import models.Post;
 import models.User;
 import utils.JsonReader;
@@ -14,8 +15,49 @@ public class InstaSalle {
     private Post[] posts;
 
     public InstaSalle() throws JsonIOException, FileNotFoundException {
-        users = JsonReader.parseUsers();
-        posts = JsonReader.parsePosts();
+        this.parseData();
+    }
+
+    private void parseData() throws JsonIOException, FileNotFoundException {
+        this.users = JsonReader.parseUsers();
+        this.posts = JsonReader.parsePosts();
+
+        HashMap<String, User> usersByUsername = new HashMap<>();
+        for (User user: this.users) {
+            usersByUsername.put(user.getUsername(), user);
+        }
+        for (User user: this.users) {
+            for (String usernameToFollow: user.getToFollowUsernames()) {
+                User toFollow = usersByUsername.get(usernameToFollow);
+                user.getFollowing().add(toFollow);
+                toFollow.getFollowers().add(user);
+            }
+        }
+
+        HashMap<String, Hashtag> hashtagsByName = new HashMap<>();
+        for (Post post: this.posts) {
+            // Post liked by...
+            for (String usernameWhoLiked: post.getLikedByUsernames()) {
+                User likedBy = usersByUsername.get(usernameWhoLiked);
+                post.getLikedBy().add(likedBy);
+                likedBy.getLikedPosts().add(post);
+            }
+            // Post published by...
+            User author = usersByUsername.get(post.getPublishedByUsername());
+            author.getPosts().add(post);
+            post.setPublishedBy(author);
+
+            // Post with hashtags...
+            for (String hashtagId: post.getHashtagIds()) {
+                Hashtag hashtag = hashtagsByName.get(hashtagId);
+                if (hashtag == null) {
+                    hashtag = new Hashtag(hashtagId);
+                    hashtagsByName.put(hashtagId, hashtag);
+                }
+                hashtag.getPosts().add(post);
+                post.getHashtags().add(hashtag);
+            }
+        }
     }
 
     public void showFunctionalitiesMenu() {

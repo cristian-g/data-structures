@@ -2,16 +2,16 @@
     {
         "username": "cristian",
         "creation": 1555053027,
-        "liked_by": ["ferran", "iscle"]
+        "to_follow": ["ferran", "iscle"]
     },
     {
         "username": "iscle",
         "creation": 1555053012,
-        "liked_by": ["ferran"]
+        "to_follow": ["ferran"]
     },
     {
         "username": "ferran",
         "creation": 1555052564,
-        "hashtags": ["iscle", "cristian"]
+        "to_follow": ["iscle", "cristian"]
     }
 ]

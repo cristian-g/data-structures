@@ -54,4 +54,8 @@ public class StringUtilities {
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
+
+    public static void printTabbedLine(String string) {
+        System.out.println(string.replace("\n", "\n\t"));
+    }
 }
