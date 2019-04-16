@@ -3,6 +3,7 @@ package test;
 import datastructures.AVLTree.AVLTree;
 import datastructures.ElementWithIntegerKey;
 import utils.IntegerUtilities;
+import utils.print.TreePrinter;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -13,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class Test {
     @org.junit.jupiter.api.Test
     void AVLTreeinOrder() {
-        int[] sizes = new int[2];
+        int[] sizes = new int[1];
         int length = sizes.length;
-        for (int i = 0; i < length; i++) sizes[i] = (int) Math.pow(10, i+1);
+        for (int i = 0; i < length; i++) sizes[i] = (int) Math.pow(100, i+1);
 
         System.out.println("--------------------");
         System.out.println("Starting the test. We will try collections of the following sizes:");
@@ -38,6 +39,8 @@ class Test {
             // Insert elements into the data structure
             for (SimpleElementWithIntegerKey element: elements) {
                 tree.setRoot(tree.insert(tree.getRoot(), element));
+                TreePrinter treePrinter = new TreePrinter();
+                treePrinter.printGraph(tree.getRoot());
             }
 
             // Retrieve elements in order from data structure

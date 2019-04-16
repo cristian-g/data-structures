@@ -19,5 +19,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="guru.nidi:graphviz-java:0.8.3" level="project" />
   </component>
 </module>
