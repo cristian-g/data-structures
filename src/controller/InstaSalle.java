@@ -1,6 +1,7 @@
 package controller;
 
 import com.google.gson.JsonIOException;
+import datastructures.AVLTree.AVLTree;
 import models.Hashtag;
 import models.Post;
 import models.User;
@@ -65,6 +66,7 @@ public class InstaSalle {
         System.out.println("0. Print read data of JSON");
         System.out.println("1. Import files");
         System.out.println("2. Export files");
+        System.out.println("3. AVL Tree");
         System.out.println("Select an option from the menu:");
     }
 
@@ -93,6 +95,42 @@ public class InstaSalle {
                 break;
 
             case 2:
+                break;
+
+            case 3:
+                AVLTree tree = new AVLTree();
+
+        /* Constructing tree given in the above figure
+                tree.setRoot(tree.insert(tree.getRoot(), 10));
+                tree.setRoot(tree.insert(tree.getRoot(), 20));
+                tree.setRoot(tree.insert(tree.getRoot(), 30));
+                tree.setRoot(tree.insert(tree.getRoot(), 40));
+                tree.setRoot(tree.insert(tree.getRoot(), 50));
+                tree.setRoot(tree.insert(tree.getRoot(), 25));*/
+
+        /* The constructed AVL Tree would be
+             30
+            /  \
+          20   40
+         /  \     \
+        10  25    50
+        */
+
+
+                for (Post post: this.posts) {
+                    System.out.println("adding post: " + post);
+                    System.out.println(post);
+                    tree.setRoot(tree.insert(tree.getRoot(), post));
+                }
+
+                System.out.println("Preorder traversal" +
+                        " of constructed tree is : ");
+                tree.preOrder(tree.getRoot());
+
+                System.out.println("");
+                System.out.println("Inorder");
+                System.out.println(tree.inOrder(tree.getRoot()));
+
                 break;
 
             default:

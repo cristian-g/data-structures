@@ -1,6 +1,7 @@
 package models;
 
 import com.google.gson.annotations.SerializedName;
+import datastructures.ElementWithIntegerKey;
 
 import java.util.LinkedList;
 
@@ -13,7 +14,7 @@ import java.util.LinkedList;
  * @author Cristian, Ferran, Iscle
  *
  */
-public class Post {
+public class Post implements ElementWithIntegerKey {
     private int id;
 
     @SerializedName("liked_by")
@@ -43,6 +44,11 @@ public class Post {
     }
 
     public int getId() {
+        return id;
+    }
+
+    @Override
+    public int getKey() {
         return id;
     }
 
