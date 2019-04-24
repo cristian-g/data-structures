@@ -12,22 +12,23 @@ import java.util.*;
 
 public class InstaSalle {
     private Scanner kb;
-    private User[] users;
-    private Post[] posts;
 
-    public InstaSalle() throws JsonIOException, FileNotFoundException {
-        this.parseData();
+    // Graph
+
+
+    // AVL Tree
+    private AVLTree avlTree = new AVLTree();
+
+    public InstaSalle() {
     }
 
-    private void parseData() throws JsonIOException, FileNotFoundException {
-        this.users = JsonReader.parseUsers();
-        this.posts = JsonReader.parsePosts();
+    private void computeGraph(User[] users, Post[] posts) {
 
         HashMap<String, User> usersByUsername = new HashMap<>();
-        for (User user: this.users) {
+        for (User user: users) {
             usersByUsername.put(user.getUsername(), user);
         }
-        for (User user: this.users) {
+        for (User user: users) {
             for (String usernameToFollow: user.getToFollowUsernames()) {
                 User toFollow = usersByUsername.get(usernameToFollow);
                 user.getFollowing().add(toFollow);
@@ -36,7 +37,7 @@ public class InstaSalle {
         }
 
         HashMap<String, Hashtag> hashtagsByName = new HashMap<>();
-        for (Post post: this.posts) {
+        for (Post post: posts) {
             // Post liked by...
             for (String usernameWhoLiked: post.getLikedByUsernames()) {
                 User likedBy = usersByUsername.get(usernameWhoLiked);
@@ -63,10 +64,12 @@ public class InstaSalle {
 
     public void showFunctionalitiesMenu() {
         System.out.println("---------- InstaSalle ------------");
-        System.out.println("0. Print read data of JSON");
         System.out.println("1. Import files");
         System.out.println("2. Export files");
-        System.out.println("3. AVL Tree");
+        System.out.println("3. Visualization of the structure's state");
+        System.out.println("4. Insertion of information");
+        System.out.println("5. Erase information");
+        System.out.println("6. Search information");
         System.out.println("Select an option from the menu:");
     }
 
@@ -79,61 +82,86 @@ public class InstaSalle {
 
         switch (functionalityOption) {
 
-            case 0:
+            case 1:// Import files
 
-                for (User user: this.users) {
+                // Import data to arrays (they will be discarded by java garbage collector
+                // after adding all the elements into the data structures)
+
+                User[] users = null;
+                try {
+                    users = JsonReader.parseUsers();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                Post[] posts = null;
+                try {
+                    posts = JsonReader.parsePosts();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                // Graph
+                this.computeGraph(users, posts);
+
+
+                // AVL Tree
+                for (Post post: posts) {
+                    System.out.println("adding post: " + post);
+                    System.out.println(post);
+                    avlTree.setRoot(this.avlTree.insert(this.avlTree.getRoot(), post));
+                }
+
+                break;
+
+            case 2:// Export files
+
+                break;
+
+            case 3:// Visualization of the structure's state
+
+
+
+                // AVL Tree
+                System.out.println("Preorder:");
+                avlTree.preOrder(avlTree.getRoot());
+
+                System.out.println("Inorder:");
+                avlTree.inOrder(avlTree.getRoot());
+
+
+                // Graph
+                // TODO pending of email answer
+                /*for (User user: this.users) {
                     System.out.println(user);
                 }
 
                 for (Post post: this.posts) {
                     System.out.println(post);
-                }
+                }*/
+
+
 
                 break;
 
-            case 1:
+            case 4:// Insertion of information
+
                 break;
 
-            case 2:
+            case 5:// Erase information
+
                 break;
 
-            case 3:
-                AVLTree tree = new AVLTree();
+            case 6:// Search information
 
-        /* Constructing tree given in the above figure
-                tree.setRoot(tree.insert(tree.getRoot(), 10));
-                tree.setRoot(tree.insert(tree.getRoot(), 20));
-                tree.setRoot(tree.insert(tree.getRoot(), 30));
-                tree.setRoot(tree.insert(tree.getRoot(), 40));
-                tree.setRoot(tree.insert(tree.getRoot(), 50));
-                tree.setRoot(tree.insert(tree.getRoot(), 25));*/
+                int idToFind = Integer.parseInt(kb.nextLine());
 
-        /* The constructed AVL Tree would be
-             30
-            /  \
-          20   40
-         /  \     \
-        10  25    50
-        */
-
-
-                for (Post post: this.posts) {
-                    System.out.println("adding post: " + post);
-                    System.out.println(post);
-                    tree.setRoot(tree.insert(tree.getRoot(), post));
-                }
-
-                System.out.println("Preorder traversal" +
-                        " of constructed tree is : ");
-                tree.preOrder(tree.getRoot());
-
-                System.out.println("");
-                System.out.println("Inorder");
-                System.out.println(tree.inOrder(tree.getRoot()));
+                System.out.println(avlTree.findNodeWithKey(idToFind));
 
                 break;
 
             default:
+
                 break;
         }
     }

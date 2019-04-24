@@ -161,6 +161,26 @@ public class AVLTree {
         return current;
     }
 
+    public ElementWithIntegerKey findNodeWithKey(int key)
+    {
+        AVLNode current = this.root;
+
+        // Loop down
+        while (current != null && current.getKey() != key) {
+            if (key < current.getKey()) {
+                current = current.getLeft();
+            } else {
+                current = current.getRight();
+            }
+        }
+
+        if (current != null) {
+            return current.getElement();
+        }
+
+        return null;
+    }
+
     public AVLNode deleteNode(AVLNode root, int key)
     {
         // Step 1: perform standard BST delete
