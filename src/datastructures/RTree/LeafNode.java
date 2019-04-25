@@ -1,5 +1,6 @@
 package datastructures.RTree;
 
+import models.Point;
 import models.Post;
 
 import static datastructures.RTree.RTree.ARRAY_SIZE;
@@ -13,12 +14,12 @@ public class LeafNode extends Node {
     }
 
     // TODO: implement this function if we need it
-    public void addPost(Node node, int position) {
-
+    public void addPost(Post post) {
+        // TODO: find here the best position to insert the post
     }
 
     // TODO: implement this function if we need it
-    public Node getPost(int position) {
+    public Post getPost(Point point) {
         return null;
     }
 
