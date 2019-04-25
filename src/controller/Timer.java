@@ -21,6 +21,6 @@ public class Timer {
     }
 
     public String computeFormattedDuration() {
-        return "TIME: " + this.computeDuration() + " milliseconds";
+        return this.computeDuration() + "ms";
     }
 }

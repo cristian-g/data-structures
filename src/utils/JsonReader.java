@@ -13,14 +13,14 @@ public class JsonReader {
 
     public static final Gson gson = new GsonBuilder().create();
 
-    public static User[] parseUsers() throws FileNotFoundException {
-        final String FILE_NAME = "datasets/users.json";
+    public static User[] parseUsers(String fileName) throws FileNotFoundException {
+        final String FILE_NAME = "datasets" + fileName;
         JsonArray jsAll = gson.fromJson(new BufferedReader(new FileReader(FILE_NAME)), JsonArray.class);
         return gson.fromJson(jsAll, new TypeToken<User[]>(){}.getType());
     }
 
-    public static Post[] parsePosts() throws FileNotFoundException {
-        final String FILE_NAME = "datasets/posts.json";
+    public static Post[] parsePosts(String fileName) throws FileNotFoundException {
+        final String FILE_NAME = "datasets" + fileName;
         JsonArray jsAll = gson.fromJson(new BufferedReader(new FileReader(FILE_NAME)), JsonArray.class);
         return gson.fromJson(jsAll, new TypeToken<Post[]>(){}.getType());
     }
