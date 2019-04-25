@@ -7,10 +7,10 @@ public class RTree {
     // TODO: Change "ARRAY_SIZE" to a more meaningful name
     public static final int ARRAY_SIZE = 3;
 
-    private InternalNode root;
+    private Node root;
 
     public RTree() {
-        root = new InternalNode();
+        root = new LeafNode();
     }
 
     public void addPost(Post post) {
