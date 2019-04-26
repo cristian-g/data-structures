@@ -2,7 +2,6 @@ package datastructures.AVLTree;
 
 import datastructures.BinaryNode;
 import datastructures.ElementWithIntegerKey;
-import utils.print.PrintableNode;
 
 public class AVLNode extends BinaryNode {
     private int height;

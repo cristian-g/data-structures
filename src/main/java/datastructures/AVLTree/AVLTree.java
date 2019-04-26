@@ -2,7 +2,6 @@ package datastructures.AVLTree;
 
 import datastructures.ElementWithIntegerKey;
 import utils.IntegerUtilities;
-
 import java.util.LinkedList;
 
 // Java program for insertion in AVL Tree
@@ -256,7 +255,6 @@ public class AVLTree {
             root.setLeft(leftRotate(root.getLeft()));
             return rightRotate(root);
         }
-
 
         // Right Right Case
         // Right Right Case
