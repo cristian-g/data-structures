@@ -442,10 +442,13 @@ public class InstaSalle {
 
         while (true) {
             showFunctionalitiesMenu();
-            functionalityOption = kb.nextInt(); // Get the option number
-            kb.nextLine(); // Cleanup the input
-            if (functionalityOption == 8) break;
-            handleOption(functionalityOption);
+            try {
+                functionalityOption = Integer.parseInt(kb.nextLine());
+                if (functionalityOption == 8) break;
+                handleOption(functionalityOption);
+            } catch (NumberFormatException e) {
+                System.out.println("Wrong option, please input a number...");
+            }
         }
     }
 }
