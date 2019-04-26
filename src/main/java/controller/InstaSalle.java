@@ -13,10 +13,11 @@ public class InstaSalle {
     private Scanner kb;
 
     // AVL Tree
-    private AVLTree avlTree = new AVLTree();
+    private AVLTree avlTree;
 
     public InstaSalle() {
         kb = new Scanner(System.in);
+        avlTree = new AVLTree();
     }
 
     private void computeGraph(User[] users, Post[] posts) {
