@@ -2,11 +2,8 @@ import controller.InstaSalle;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
-        boolean close;
+    public static void main(String[] args) {
         InstaSalle instasalle = new InstaSalle();
-        do {
-            close = instasalle.init();
-        } while(!close);
+        instasalle.init();
     }
 }

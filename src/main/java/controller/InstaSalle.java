@@ -16,6 +16,7 @@ public class InstaSalle {
     private AVLTree avlTree = new AVLTree();
 
     public InstaSalle() {
+        kb = new Scanner(System.in);
     }
 
     private void computeGraph(User[] users, Post[] posts) {
@@ -435,25 +436,15 @@ public class InstaSalle {
     /**
      * This method allows toId enter options toId execute.
      */
-    public boolean init() {
-
-        this.kb = new Scanner(System.in);
-
+    public void init() {
         int functionalityOption;
         showFunctionalitiesMenu();
-        boolean close = false;
 
-        try {
-            functionalityOption = kb.nextInt();
-            kb.nextLine();
-            this.handleOption(functionalityOption);
-            close = functionalityOption == 8;
+        while (true) {
+            functionalityOption = kb.nextInt(); // Get the option number
+            kb.nextLine(); // Cleanup the input
+            if (functionalityOption == 8) break;
+            handleOption(functionalityOption);
         }
-        catch (NumberFormatException e) {
-            System.out.println("Wrong option.\n");
-        }
-
-        kb.close();
-        return close;
     }
 }
