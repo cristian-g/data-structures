@@ -444,7 +444,8 @@ public class InstaSalle {
         boolean close = false;
 
         try {
-            functionalityOption = Integer.parseInt(kb.nextLine());
+            functionalityOption = kb.nextInt();
+            kb.nextLine();
             this.handleOption(functionalityOption);
             close = functionalityOption == 8;
         }
