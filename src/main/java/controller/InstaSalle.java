@@ -438,9 +438,9 @@ public class InstaSalle {
      */
     public void init() {
         int functionalityOption;
-        showFunctionalitiesMenu();
 
         while (true) {
+            showFunctionalitiesMenu();
             functionalityOption = kb.nextInt(); // Get the option number
             kb.nextLine(); // Cleanup the input
             if (functionalityOption == 8) break;
