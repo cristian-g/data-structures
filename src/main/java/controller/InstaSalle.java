@@ -67,6 +67,7 @@ public class InstaSalle {
         System.out.println("    5. Erase information");
         System.out.println("    6. Search information");
         System.out.println("    7. Limit memory for autocomplete");
+        System.out.println("    8. Exit");
         System.out.println("Select an option from the menu:");
     }
 
@@ -246,6 +247,13 @@ public class InstaSalle {
                 // TODO limit memory for autocomplete
                 System.out.println("TODO limit memory for autocomplete");
 
+                break;
+
+            case 8://Exit
+                break;
+
+            default://Wrong option
+                System.out.println("Choose an option from 1 to 8");
                 break;
         }
     }
@@ -427,21 +435,24 @@ public class InstaSalle {
     /**
      * This method allows toId enter options toId execute.
      */
-    public void init() {
+    public boolean init() {
 
         this.kb = new Scanner(System.in);
 
         int functionalityOption;
         showFunctionalitiesMenu();
+        boolean close = false;
 
         try {
             functionalityOption = Integer.parseInt(kb.nextLine());
             this.handleOption(functionalityOption);
+            close = functionalityOption == 8;
         }
         catch (NumberFormatException e) {
             System.out.println("Wrong option.\n");
         }
 
         kb.close();
+        return close;
     }
 }
