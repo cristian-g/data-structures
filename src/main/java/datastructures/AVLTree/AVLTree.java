@@ -4,7 +4,6 @@ import datastructures.ElementWithIntegerKey;
 import utils.IntegerUtilities;
 import java.util.LinkedList;
 
-// Java program for insertion in AVL Tree
 public class AVLTree {
 
     private AVLNode root;
@@ -17,151 +16,90 @@ public class AVLTree {
         this.root = root;
     }
 
-    // A utility function to get the height of the tree
-    int height(AVLNode N) {
-        if (N == null)
-            return 0;
-
-        return N.getHeight();
+    public void insert(ElementWithIntegerKey element) {
+        this.root = this.insertImmersion(this.root, element);
     }
 
-    // A utility function to right rotate subtree rooted with y
-    // See the diagram given above.
-    AVLNode rightRotate(AVLNode y) {
-        AVLNode x = y.getLeft();
-        AVLNode T2 = x.getRight();
-
-        // Perform rotation
-        x.setRight(y);
-        y.setLeft(T2);
-
-        // Update heights
-        y.setHeight(IntegerUtilities.max(height(y.getLeft()), height(y.getRight())) + 1);
-        x.setHeight(IntegerUtilities.max(height(x.getLeft()), height(x.getRight())) + 1);
-
-        // Return new root
-        return x;
-    }
-
-    // A utility function to left rotate subtree rooted with x
-    // See the diagram given above.
-    AVLNode leftRotate(AVLNode x) {
-        AVLNode y = x.getRight();
-        AVLNode T2 = y.getLeft();
-
-        // Perform rotation
-        y.setLeft(x);
-        x.setRight(T2);
-
-        //  Update heights
-        x.setHeight(IntegerUtilities.max(height(x.getLeft()), height(x.getRight())) + 1);
-        y.setHeight(IntegerUtilities.max(height(y.getLeft()), height(y.getRight())) + 1);
-
-        // Return new root
-        return y;
-    }
-
-    // Get Balance factor of node N
-    int getBalance(AVLNode N) {
-        if (N == null)
-            return 0;
-
-        return height(N.getLeft()) - height(N.getRight());
-    }
-
-    public AVLNode insert(AVLNode node, ElementWithIntegerKey element) {
+    public AVLNode insertImmersion(AVLNode node, ElementWithIntegerKey element) {
 
         int key = element.getKey();
 
-        // 1.  Perform the normal BST insertion
-        if (node == null)
-            return (new AVLNode(element));
+        // Check if sub tree is empty
+        if (node == null) {
+            // Create the node
+            AVLNode avlNode = new AVLNode(element);
+            return avlNode;
+        }
 
-        if (key < node.getKey())
-            node.setLeft(insert(node.getLeft(), element));
-        else if (key > node.getKey())
-            node.setRight(insert(node.getRight(), element));
-        else // Duplicate keys not allowed
+        // Sub tree is NOT empty so we have to perform the recursive descent
+        if (key < node.getKey()) {
+            node.setLeft(this.insertImmersion(node.getLeft(), element));
+        } else if (key > node.getKey()) {
+            node.setRight(this.insertImmersion(node.getRight(), element));
+        } else {
+            // Key already exists, so we cannot add a new element with the same key
             return node;
-
-        // 2. Update height of this ancestor node
-        node.setHeight(1 + IntegerUtilities.max(height(node.getLeft()),
-                height(node.getRight())));
-
-        // 3. Get the balance factor of this ancestor node to check whether this node became unbalanced
-        int balance = getBalance(node);
-
-        // If this node becomes unbalanced, then there are 4 cases
-        // Left Left Case
-        if (balance > 1 && key < node.getLeft().getKey())
-            return rightRotate(node);
-
-        // Left Right Case
-        if (balance > 1 && key > node.getLeft().getKey()) {
-            node.setLeft(leftRotate(node.getLeft()));
-            return rightRotate(node);
         }
 
-        // Right Left Case
-        if (balance < -1 && key < node.getRight().getKey()) {
-            node.setRight(rightRotate(node.getRight()));
-            return leftRotate(node);
+        // After inserting the element, we must increase the height of the current node
+        // so we can later compute the height of the whole tree.
+        // Let's compute height below using child heights
+        int heightBelow = IntegerUtilities.max(
+                height(node.getLeft()),
+                height(node.getRight())
+        );
+        // Increase the height of the current node
+        node.setHeight(heightBelow + 1);
+
+        // Compute the balance factor of this node
+        int balance = this.getBalance(node);
+
+        // Check if this node is unbalanced
+        if (balance > 1 || balance < -1) {
+
+            // This node is unbalanced
+            // Let's check the case
+
+            if (balance > 1) {
+                // Case Left Left / case Left Right
+                if (key < node.getLeft().getKey()) {
+                    // Case Left Left
+                    return this.rightRotate(node);
+                } else if (key > node.getLeft().getKey()) {
+                    // Case Left Right
+                    node.setLeft(leftRotate(node.getLeft()));
+                    return this.rightRotate(node);
+                }
+            } else {// balance < -1
+                // Case Right Right / case Right Left
+                if (key > node.getRight().getKey()) {
+                    // Case Right Right
+                    return this.leftRotate(node);
+                } else if (key < node.getRight().getKey()) {
+                    // Case Right Left
+                    node.setRight(rightRotate(node.getRight()));
+                    return this.leftRotate(node);
+                }
+            }
         }
 
-        // Right Right Case
-        if (balance < -1 && key > node.getRight().getKey())
-            return leftRotate(node);
-
-        /* return the (unchanged) node pointer */
+        // No rotation is needed
         return node;
     }
 
-    // A utility function to print preorder traversal
-    // of the tree.
-    // The function also prints height of every node
-    public void preOrder(AVLNode node) {
-        if (node != null) {
-            System.out.print(node.getKey() + " ");
-            preOrder(node.getLeft());
-            preOrder(node.getRight());
-        }
-    }
-
-    public ElementWithIntegerKey[] inOrder(AVLNode node) {
-        LinkedList<ElementWithIntegerKey> list = new LinkedList<>();
-        return inOrderImmersion(node, list).toArray(new ElementWithIntegerKey[list.size()]);
-    }
-
-    public LinkedList<ElementWithIntegerKey> inOrderImmersion(AVLNode node, LinkedList<ElementWithIntegerKey> list) {
-        if (node != null) {
-            inOrderImmersion(node.getLeft(), list);
-            list.add(node.getElement());
-            inOrderImmersion(node.getRight(), list);
-        }
-        return list;
-    }
-
-    /**
-     * Given a non-empty binary search tree, return the
-     node with minimum key value found in that tree.
-     Note that the entire tree does not need to be
-     searched.
-     * @param node
-     * @return
-     */
-    public AVLNode minValueNode(AVLNode node)
-    {
+    // Returns the node with the minimum key
+    public AVLNode minValueNode(AVLNode node) {
         AVLNode current = node;
 
-        /* loop down to find the leftmost leaf */
-        while (current.getLeft() != null)
+        // Loop to find the leaf at the left
+        while (current.getLeft() != null) {
             current = current.getLeft();
+        }
 
         return current;
     }
 
-    public ElementWithIntegerKey findNodeWithKey(int key)
-    {
+    public ElementWithIntegerKey findNodeWithKey(int key) {
         AVLNode current = this.root;
 
         // Loop down
@@ -180,95 +118,221 @@ public class AVLTree {
         return null;
     }
 
-    public AVLNode deleteNode(AVLNode root, int key)
-    {
-        // Step 1: perform standard BST delete
-        if (root == null)
-            return root;
+    public void deleteNode(int key) {
+        this.root = this.deleteNodeImmersion(this.root, key);
+    }
 
-        // If the key to be deleted is smaller than
-        // the root's key, then it lies in left subtree
-        if (key < root.getKey())
-            root.setLeft( deleteNode(root.getLeft(), key));
+    public AVLNode deleteNodeImmersion(AVLNode treeRoot, int key) {
 
-            // If the key to be deleted is greater than the
-            // root's key, then it lies in right subtree
-        else if (key > root.getKey())
-            root.setRight(deleteNode(root.getRight(), key));
+        // Check if sub tree is empty
+        if (treeRoot == null) {
+            // Sub tree is empty
+            // End operation
+            return treeRoot;
+        }
 
-            // if key is same as root's key, then this is the node to be deleted
-        else
-        {
+        // Sub tree is NOT empty so we have to perform the recursive descent
+        if (key < treeRoot.getKey()) {
+            // The key of the current node is less than the key we are looking for
+            // Recursive descent through the left
+            treeRoot.setLeft(deleteNodeImmersion(treeRoot.getLeft(), key));
+        }
+        else if (key > treeRoot.getKey()) {
+            // The key of the current node is greater than the key we are looking for
+            // Recursive descent through the right
+            treeRoot.setRight(deleteNodeImmersion(treeRoot.getRight(), key));
+        }
+        else {
+            // Key already exists, so we cannot add a new element with the same key
+            treeRoot = this.handleDeletion(treeRoot);
+        }
 
-            // node with only one child or no child
-            if ((root.getLeft() == null) || (root.getRight() == null))
-            {
-                AVLNode temp = null;
-                if (temp == root.getLeft())
-                    temp = root.getRight();
-                else
-                    temp = root.getLeft();
+        // After applying the removal, let's see if rotations need to be applied
 
-                // No child case
-                if (temp == null)
-                {
-                    temp = root;
-                    root = null;
+        // Case of tree with just one node: it is not necessary to apply rotations
+        if (treeRoot == null) {
+            return treeRoot;
+        }
+
+        // After inserting the element, we must increase the height of the current node
+        // so we can later compute the height of the whole tree.
+        // Let's compute height below using child heights
+        int heightBelow = IntegerUtilities.max(height(treeRoot.getLeft()), height(treeRoot.getRight()));
+        // Increase the height of the current node
+        treeRoot.setHeight(heightBelow + 1);
+
+        // Compute the balance factor of this node
+        int balance = getBalance(treeRoot);
+
+        // Check if this node is unbalanced
+        if (balance > 1 || balance < -1) {
+
+            // This node is unbalanced
+            // Let's check the case
+
+            if (balance > 1) {
+                // Case Left Left / case Left Right
+                if (getBalance(treeRoot.getLeft()) >= 0) {
+                    // Case Left Left: Right Rotation
+                    return rightRotate(treeRoot);// Right Rotation
                 }
-                else // One child case
-                    root = temp; // Copy the contents of
-                // the non-empty child
+                else if (getBalance(treeRoot.getLeft()) < 0) {
+                    // Case Left Right: Left Rotation and Right Rotation
+                    treeRoot.setLeft(leftRotate(treeRoot.getLeft()));// Left Rotation
+                    return rightRotate(treeRoot);// Right Rotation
+                }
+            } else {// balance < -1
+                // Case Right Right / case Right Left
+                if (getBalance(treeRoot.getRight()) <= 0) {
+                    // Case Right Right: Left Rotation
+                    return leftRotate(treeRoot);// Left Rotation
+                }
+                else if (getBalance(treeRoot.getRight()) > 0) {
+                    // Case Right Left: Right Rotation and Left Rotation
+                    treeRoot.setRight(rightRotate(treeRoot.getRight()));// Right Rotation
+                    return leftRotate(treeRoot);// Left Rotation
+                }
             }
-            else
-            {
+        }
 
-                // node with two children: Get the inorder
-                // successor (smallest in the right subtree)
-                AVLNode temp = minValueNode(root.getRight());
+        return treeRoot;
+    }
 
-                // Copy the inorder successor's data to this node
-                root.setElement(temp.getElement());
+    private AVLNode handleDeletion(AVLNode treeRoot) {
 
-                // Delete the inorder successor
-                root.setRight(deleteNode(root.getRight(), temp.getKey()));
+        // Two possible cases:
+        // - Node with only one child or with no childs at all
+        // - Node with two children
+
+        // Let's check the case
+        if ((treeRoot.getLeft() == null) || (treeRoot.getRight() == null)) {
+
+            // Node with only one child or with no childs at all
+
+            // Store the node which can be non-null
+            AVLNode node = null;
+            if (node == treeRoot.getLeft())
+                node = treeRoot.getRight();
+            else {
+                node = treeRoot.getLeft();
+            }
+
+            // Two possible cases:
+            // - No child case
+            // - One child case
+
+            // No child case
+            if (node == null) {
+                treeRoot = null;
+            }
+            else { // One child case
+                treeRoot = node; // Copy the contents of the non-empty child
             }
         }
+        else {
 
-        // If the tree had only one node then return
-        if (root == null)
-            return root;
+            // Case of node with two children
 
-        // Step 2: update height of the current node
-        root.setHeight(IntegerUtilities.max(height(root.getLeft()), height(root.getRight())) + 1);
+            // Store the inorder successor (smallest node in the right subtree)
+            AVLNode temp = minValueNode(treeRoot.getRight());
 
-        // Step 3: GET THE BALANCE FACTOR OF THIS NODE (to check whether this node became unbalanced)
-        int balance = getBalance(root);
+            // Copy the inorder successor's data to this node
+            treeRoot.setElement(temp.getElement());
 
-        // If this node becomes unbalanced, then there are 4 cases
-        // Left Left Case
-        if (balance > 1 && getBalance(root.getLeft()) >= 0)
-            return rightRotate(root);
-
-        // Left Right Case
-        if (balance > 1 && getBalance(root.getLeft()) < 0)
-        {
-            root.setLeft(leftRotate(root.getLeft()));
-            return rightRotate(root);
+            // Delete the inorder successor
+            treeRoot.setRight(deleteNodeImmersion(treeRoot.getRight(), temp.getKey()));
         }
 
-        // Right Right Case
-        // Right Right Case
-        // Right Right Case
-        if (balance < -1 && getBalance(root.getRight()) <= 0)
-            return leftRotate(root);
+        return treeRoot;
+    }
 
-        // Right Left Case
-        if (balance < -1 && getBalance(root.getRight()) > 0)
-        {
-            root.setRight(rightRotate(root.getRight()));
-            return leftRotate(root);
+    // Right rotation
+    AVLNode rightRotate(AVLNode node) {
+
+        // Store childs
+        AVLNode originalLeft = node.getLeft();
+        AVLNode originalLeftRight = originalLeft.getRight();
+
+        // Old root will be stored as right child of new root
+        originalLeft.setRight(node);
+
+        // Original right child of left child will be stored as left child of old root
+        node.setLeft(originalLeftRight);
+
+        // Update heights
+        int currentHeightChilds = IntegerUtilities.max(height(node.getLeft()), height(node.getRight()));
+        node.setHeight(currentHeightChilds + 1);
+        int currentHeightChildsLeft = IntegerUtilities.max(height(originalLeft.getLeft()), height(originalLeft.getRight()));
+        originalLeft.setHeight(currentHeightChildsLeft + 1);
+
+        // New root is the original left
+        return originalLeft;
+    }
+
+    // Left rotation
+    AVLNode leftRotate(AVLNode node) {
+
+        // Store childs
+        AVLNode originalRight = node.getRight();
+        AVLNode originalRightLeft = originalRight.getLeft();
+
+        // Old root will be stored as left child of new root
+        originalRight.setLeft(node);
+
+        // Original left child of right child will be stored as right child of old root
+        node.setRight(originalRightLeft);
+
+        //  Update heights
+        int currentHeightChilds = IntegerUtilities.max(height(node.getLeft()), height(node.getRight()));
+        node.setHeight(currentHeightChilds + 1);
+        int currentHeightChildsRight = IntegerUtilities.max(height(originalRight.getLeft()), height(originalRight.getRight()));
+        originalRight.setHeight(currentHeightChildsRight + 1);
+
+        // New root is the original left
+        return originalRight;
+    }
+
+    public ElementWithIntegerKey[] preOrder(AVLNode node) {
+        LinkedList<ElementWithIntegerKey> list = new LinkedList<>();
+        return preOrderImmersion(node, list).toArray(new ElementWithIntegerKey[list.size()]);
+    }
+
+    public LinkedList<ElementWithIntegerKey> preOrderImmersion(AVLNode node, LinkedList<ElementWithIntegerKey> list) {
+        if (node != null) {
+            list.add(node.getElement());
+            preOrderImmersion(node.getLeft(), list);
+            preOrderImmersion(node.getRight(), list);
         }
+        return list;
+    }
 
-        return root;
+    public ElementWithIntegerKey[] inOrder(AVLNode node) {
+        LinkedList<ElementWithIntegerKey> list = new LinkedList<>();
+        return inOrderImmersion(node, list).toArray(new ElementWithIntegerKey[list.size()]);
+    }
+
+    public LinkedList<ElementWithIntegerKey> inOrderImmersion(AVLNode node, LinkedList<ElementWithIntegerKey> list) {
+        if (node != null) {
+            inOrderImmersion(node.getLeft(), list);
+            list.add(node.getElement());
+            inOrderImmersion(node.getRight(), list);
+        }
+        return list;
+    }
+
+    // Get the height of the tree
+    int height(AVLNode N) {
+        if (N == null)
+            return 0;
+
+        return N.getHeight();
+    }
+
+    // Get the balance factor of a node
+    int getBalance(AVLNode node) {
+        if (node == null)
+            return 0;
+
+        return this.height(node.getLeft()) - this.height(node.getRight());
     }
 }

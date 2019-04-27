@@ -37,7 +37,7 @@ class Test {
 
             // Insert elements into the data structure
             for (SimpleElementWithIntegerKey element: elements) {
-                tree.setRoot(tree.insert(tree.getRoot(), element));
+                tree.insert(element);
                 //TreePrinter treePrinter = new TreePrinter();
                 //treePrinter.printGraph(tree.getRoot());
             }
@@ -61,7 +61,7 @@ class Test {
             assertArrayEquals(sortedByJava, inOrder);
 
             // Delete node
-            tree.setRoot(tree.deleteNode(tree.getRoot(), elements[2].getKey()));
+            tree.deleteNode(elements[2].getKey());
 
             // Retrieve elements in order from data structure
             ElementWithIntegerKey[] inOrder2 = tree.inOrder(tree.getRoot());
