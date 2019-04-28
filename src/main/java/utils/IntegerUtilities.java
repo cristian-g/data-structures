@@ -23,7 +23,7 @@ public class IntegerUtilities {
     public static int[] generateRandomArray(int n){
         int[] array = new int[n];
         Random random = new Random();
-        for (int i = 0; i < n; i++) array[i] = random.nextInt(1000);
+        for (int i = 0; i < n; i++) array[i] = random.nextInt(100000);
         return array;
     }
 }

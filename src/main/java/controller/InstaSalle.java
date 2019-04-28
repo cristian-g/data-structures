@@ -160,7 +160,7 @@ public class InstaSalle {
 
                 // Add data to AVL Tree
                 for (Post post: posts) {
-                    avlTree.setRoot(this.avlTree.insert(this.avlTree.getRoot(), post));
+                    this.avlTree.insert(post);
                 }
 
                 timer.triggerEnd();
