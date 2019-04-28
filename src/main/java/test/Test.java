@@ -19,10 +19,10 @@ class Test {
         int length = sizes.length;
         for (int i = 0; i < length; i++) sizes[i] = (int) Math.pow(10, i+1);
 
-        System.out.println("--------------------");
+        System.out.println("\n" + "--------------------");
         System.out.println("Starting the test. We will try collections of the following sizes:");
-        System.out.println("--------------------");
         System.out.println(Arrays.toString(sizes));
+        System.out.println("--------------------" + "\n");
 
         for (int size: sizes) {
 
@@ -88,8 +88,8 @@ class Test {
 
         System.out.println("--------------------");
         System.out.println("Starting the test. We will try collections of the following sizes:");
-        System.out.println("--------------------");
         System.out.println(Arrays.toString(sizes));
+        System.out.println("--------------------" + "\n");
 
         for (int size: sizes) {
 
