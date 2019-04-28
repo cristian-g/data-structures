@@ -32,4 +32,12 @@ public class InternalNode extends Node {
     public Node[] getChild() {
         return child;
     }
+
+    public double[] getStart() {
+        return start;
+    }
+
+    public double[] getEnd() {
+        return end;
+    }
 }

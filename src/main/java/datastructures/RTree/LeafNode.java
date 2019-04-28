@@ -2,6 +2,8 @@ package datastructures.RTree;
 
 import models.Post;
 
+import java.util.Arrays;
+
 import static datastructures.RTree.RTree.ARRAY_SIZE;
 
 public class LeafNode extends Node {
@@ -12,6 +14,7 @@ public class LeafNode extends Node {
         this.posts = new Post[ARRAY_SIZE];
     }
 
+    //TODO: call setVisible when you insert a Post
     public void addPost(Post post) {
         assert (!isFull()); // We can only insert if we have space left in the array
 
@@ -34,13 +37,21 @@ public class LeafNode extends Node {
     }
 
     // TODO: implement this function if we need it
-    public Post getPost(double[] location) {
+    public Post getPost(Post post) {
+        for(Post p: posts) {
+            if(p.equals(post)) {
+                //If the post exists, return it.
+                return p;
+            }
+        }
+        //If the post doesn't exist, return null.
         return null;
     }
 
     // TODO: implement this function if we need it
-    public void removePost(double[] location) {
-
+    public void removePost(Post post) {
+        Post p = getPost(post);
+        p.setInvisible();
     }
 
     public Post[] getPosts() {
