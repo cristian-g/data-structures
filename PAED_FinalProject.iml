@@ -34,5 +34,6 @@
     <orderEntry type="library" name="Maven: org.junit.jupiter:junit-jupiter-api:5.4.2" level="project" />
     <orderEntry type="library" name="Maven: org.apiguardian:apiguardian-api:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-commons:1.4.2" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.26" level="project" />
   </component>
 </module>

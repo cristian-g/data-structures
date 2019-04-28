@@ -1,20 +1,21 @@
 package datastructures.RTree;
 
-import models.Point;
-
 import static datastructures.RTree.RTree.ARRAY_SIZE;
 
 public class InternalNode extends Node {
-    private Point[] corners; // Upper left and lower right corners go here
+    private double[] start; // Upper left corner
+    private double[] end; // Lower right corner
     private Node[] child; // The maximum number of child is defined by the "ARRAY_SIZE" constant
 
-    public InternalNode() {
-        this.corners = new Point[2];
+    public InternalNode(Node parent) {
+        super(parent);
+        this.start = new double[2];
+        this.end = new double[2];
         this.child = new Node[ARRAY_SIZE];
     }
 
     // TODO: implement this function if we need it
-    public void addNode(Node node, int position) {
+    public void addNode(Node node) {
 
     }
 
@@ -26,5 +27,9 @@ public class InternalNode extends Node {
     // TODO: implement this function if we need it
     public void removeNode(int position) {
 
+    }
+
+    public Node[] getChild() {
+        return child;
     }
 }
