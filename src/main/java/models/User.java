@@ -2,6 +2,7 @@ package models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import datastructures.ElementWithIntegerKey;
 
 import java.util.LinkedList;
 
@@ -14,7 +15,7 @@ import java.util.LinkedList;
  * @author Cristian, Ferran, Iscle
  *
  */
-public class User {
+public class User implements ElementWithIntegerKey {
     private String username;
     private int creation;
 
@@ -146,5 +147,10 @@ public class User {
                 "username='" + username + ", " + '\n' +
                 "creation=" + creation + ", " + '\n' +
                 '}';
+    }
+
+    @Override
+    public int getKey() {
+        return this.username.hashCode();
     }
 }
