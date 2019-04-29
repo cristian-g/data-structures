@@ -109,6 +109,29 @@ public class LinkedList {
         return false;
     }
 
+    public ElementWithIntegerKey getByKey(int key) {
+
+        // Check if head node contains the key we are searching
+        Node currentNode = this.head;
+        if (currentNode != null && currentNode.data.getKey() == key) {
+            return currentNode.data;
+        }
+
+        // Search the key in the next nodes
+        while (currentNode != null && currentNode.data.getKey() != key) {
+            currentNode = currentNode.next;
+        }
+
+        // Check if the key has been found
+        if (currentNode != null) {
+            return currentNode.data;
+
+        }
+
+        // Key has not been found
+        return null;
+    }
+
     public ElementWithIntegerKey[] toArray() {
         ElementWithIntegerKey[] array = new ElementWithIntegerKey[this.size];
         Node currentNode = this.head;

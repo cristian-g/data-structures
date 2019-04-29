@@ -1,63 +1,93 @@
 package controller;
 
 import datastructures.AVLTree.AVLTree;
+import datastructures.LinkedList.LinkedList;
 import models.Hashtag;
 import models.Post;
 import models.User;
 import utils.JsonReader;
+import utils.print.TreePrinter;
 
 import java.io.FileNotFoundException;
 import java.util.*;
 
 public class InstaSalle {
-    private Scanner kb;
+    public static Scanner scanner;
+
+    // Graph
+    private LinkedList usersByUsername;
+    private LinkedList postsById;
+    private LinkedList hashtagsByName;
 
     // AVL Tree
     private AVLTree avlTree;
 
     public InstaSalle() {
-        kb = new Scanner(System.in);
+        scanner = new Scanner(System.in);
         avlTree = new AVLTree();
     }
 
-    private void computeGraph(User[] users, Post[] posts) {
+    private void computeInitialGraph(User[] users, Post[] posts) {
 
-        HashMap<String, User> usersByUsername = new HashMap<>();
+        // Store users
+        this.usersByUsername = new LinkedList();
         for (User user: users) {
-            usersByUsername.put(user.getUsername(), user);
-        }
-        for (User user: users) {
-            for (String usernameToFollow: user.getToFollowUsernames()) {
-                User toFollow = usersByUsername.get(usernameToFollow);
-                user.getFollowing().add(toFollow);
-                toFollow.getFollowers().add(user);
-            }
+            usersByUsername.insert(user);
         }
 
-        HashMap<String, Hashtag> hashtagsByName = new HashMap<>();
+        // Store users
+        this.postsById = new LinkedList();
         for (Post post: posts) {
-            // Post liked by...
-            for (String usernameWhoLiked: post.getLikedByUsernames()) {
-                User likedBy = usersByUsername.get(usernameWhoLiked);
-                post.getLikedBy().add(likedBy);
-                likedBy.getLikedPosts().add(post);
-            }
-            // Post published by...
-            User author = usersByUsername.get(post.getPublishedByUsername());
-            author.getPosts().add(post);
-            post.setPublishedBy(author);
-
-            // Post with hashtags...
-            for (String hashtagId: post.getHashtagIds()) {
-                Hashtag hashtag = hashtagsByName.get(hashtagId);
-                if (hashtag == null) {
-                    hashtag = new Hashtag(hashtagId);
-                    hashtagsByName.put(hashtagId, hashtag);
-                }
-                hashtag.getPosts().add(post);
-                post.getHashtags().add(hashtag);
-            }
+            usersByUsername.insert(post);
         }
+
+        // Compute graph for each user
+        for (User user: users) {
+            this.computeGraph(user);
+        }
+
+        this.hashtagsByName = new LinkedList();
+
+        // Compute graph for each post
+        for (Post post: posts) {
+            this.computeGraph(post);
+        }
+    }
+
+    private void computeGraph(User user) {
+        // Connect following users
+        for (String usernameToFollow: user.getToFollowUsernames()) {
+            User toFollow = (User) usersByUsername.getByKey(usernameToFollow.hashCode());
+            user.getFollowing().add(toFollow);
+            toFollow.getFollowers().add(user);
+        }
+    }
+
+    private void computeGraph(Post post) {
+
+        // Post liked by...
+        for (String usernameWhoLiked: post.getLikedByUsernames()) {
+            User likedBy = (User) usersByUsername.getByKey(usernameWhoLiked.hashCode());
+            post.getLikedBy().add(likedBy);
+            likedBy.getLikedPosts().add(post);
+        }
+
+        // Post published by...
+        User author = (User) usersByUsername.getByKey(post.getPublishedByUsername().hashCode());
+        author.getPosts().add(post);
+        post.setPublishedBy(author);
+
+        // Post with hashtags...
+        for (String hashtagId: post.getHashtagIds()) {
+            Hashtag hashtag = (Hashtag) hashtagsByName.getByKey(hashtagId.hashCode());
+            if (hashtag == null) {
+                hashtag = new Hashtag(hashtagId);
+                hashtagsByName.insert(hashtag);
+            }
+            hashtag.getPosts().add(post);
+            post.getHashtags().add(hashtag);
+        }
+
     }
 
     public void showFunctionalitiesMenu() {
@@ -121,13 +151,13 @@ public class InstaSalle {
             case 1:// Import files
 
                 System.out.println("Specify path of the file to import corresponding to users (default is /users.json):");
-                String fileNameUsers = kb.nextLine();
+                String fileNameUsers = scanner.nextLine();
                 if (fileNameUsers.equals("")) {
                     fileNameUsers = "/users.json";
                 }
 
                 System.out.println("Specify path of the file to be imported corresponding to posts (default is /posts.json)");
-                String fileNamePosts = kb.nextLine();
+                String fileNamePosts = scanner.nextLine();
                 if (fileNamePosts.equals("")) {
                     fileNamePosts = "/posts.json";
                 }
@@ -156,7 +186,7 @@ public class InstaSalle {
                 }
 
                 // Compute graph
-                this.computeGraph(users, posts);
+                this.computeInitialGraph(users, posts);
 
                 // Add data to AVL Tree
                 for (Post post: posts) {
@@ -175,7 +205,7 @@ public class InstaSalle {
                 showExportMenu();
 
                 try {
-                    exportOption = Integer.parseInt(kb.nextLine());
+                    exportOption = Integer.parseInt(scanner.nextLine());
                     this.handleExportOption(exportOption);
                 }
                 catch (NumberFormatException e) {
@@ -190,7 +220,7 @@ public class InstaSalle {
                 showVisualizationMenu();
 
                 try {
-                    visualizationOption = Integer.parseInt(kb.nextLine());
+                    visualizationOption = Integer.parseInt(scanner.nextLine());
                     this.handleVisualizationOption(visualizationOption);
                 }
                 catch (NumberFormatException e) {
@@ -205,7 +235,7 @@ public class InstaSalle {
                 showInsertionMenu();
 
                 try {
-                    insertionOption = Integer.parseInt(kb.nextLine());
+                    insertionOption = Integer.parseInt(scanner.nextLine());
                     this.handleInsertionOption(insertionOption);
                 }
                 catch (NumberFormatException e) {
@@ -220,7 +250,7 @@ public class InstaSalle {
                 showEliminationMenu();
 
                 try {
-                    eliminationOption = Integer.parseInt(kb.nextLine());
+                    eliminationOption = Integer.parseInt(scanner.nextLine());
                     this.handleEliminationOption(eliminationOption);
                 }
                 catch (NumberFormatException e) {
@@ -235,7 +265,7 @@ public class InstaSalle {
                 showSearchMenu();
 
                 try {
-                    searchOption = Integer.parseInt(kb.nextLine());
+                    searchOption = Integer.parseInt(scanner.nextLine());
                     this.handleSearchOption(searchOption);
                 }
                 catch (NumberFormatException e) {
@@ -348,15 +378,28 @@ public class InstaSalle {
 
             case 1:// New user
 
-                // TODO insertion of new user
-                System.out.println("TODO insertion of new user");
+                User user = new User();
+                user.fillFromUserInput();
+
+                // Graph
+                this.computeGraph(user);
+                this.usersByUsername.insert(user);
+
+                // TODO Insert to Trie
 
                 break;
 
             case 2:// New post
 
-                // TODO insertion of new post
-                System.out.println("TODO insertion of new post");
+                Post post = new Post();
+                post.fillFromUserInput();
+
+                // Graph
+                this.computeGraph(post);
+                this.postsById.insert(post);
+
+                // AVL Tree
+                this.avlTree.insert(post);
 
                 break;
         }
@@ -406,7 +449,7 @@ public class InstaSalle {
             case 2:// Search post
 
                 System.out.println("Enter post id:");
-                int idToFind = Integer.parseInt(kb.nextLine());
+                int idToFind = Integer.parseInt(scanner.nextLine());
                 System.out.println(avlTree.findNodeWithKey(idToFind));
 
                 break;
@@ -443,7 +486,7 @@ public class InstaSalle {
         while (true) {
             showFunctionalitiesMenu();
             try {
-                functionalityOption = Integer.parseInt(kb.nextLine());
+                functionalityOption = Integer.parseInt(scanner.nextLine());
                 if (functionalityOption == 8) break;
                 handleOption(functionalityOption);
             } catch (NumberFormatException e) {

@@ -2,6 +2,7 @@ package models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import controller.InstaSalle;
 import datastructures.ElementWithIntegerKey;
 
 import java.util.LinkedList;
@@ -152,5 +153,23 @@ public class User implements ElementWithIntegerKey {
     @Override
     public int getKey() {
         return this.username.hashCode();
+    }
+
+    public void fillFromUserInput() {
+
+        System.out.println("Username:");
+        this.username = InstaSalle.scanner.nextLine();
+
+        System.out.println("Creation timestamp:");
+        this.creation = Integer.parseInt(InstaSalle.scanner.nextLine());
+
+        System.out.println("N of users to follow:");
+        int length = Integer.parseInt(InstaSalle.scanner.nextLine());
+        this.toFollowUsernames = new String[length];
+
+        for (int i = 0; i < length; i++) {
+            System.out.println("Username of user to follow:");
+            this.toFollowUsernames[i] = InstaSalle.scanner.nextLine();
+        }
     }
 }

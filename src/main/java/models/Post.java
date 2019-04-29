@@ -1,6 +1,7 @@
 package models;
 
 import com.google.gson.annotations.SerializedName;
+import controller.InstaSalle;
 import datastructures.ElementWithIntegerKey;
 
 import java.util.LinkedList;
@@ -162,5 +163,41 @@ public class Post implements ElementWithIntegerKey {
                 "id='" + id + ", " + '\n' +
                 "published_by=" + publishedByUsername + '\n' +
                 '}';
+    }
+
+    public void fillFromUserInput() {
+
+        System.out.println("ID:");
+        this.id = Integer.parseInt(InstaSalle.scanner.nextLine());
+
+        System.out.println("N of users that liked this post:");
+        int length = Integer.parseInt(InstaSalle.scanner.nextLine());
+        this.likedByUsernames = new String[length];
+
+        for (int i = 0; i < length; i++) {
+            System.out.println("Username of user " + (i + 1) + " that liked this post:");
+            this.likedByUsernames[i] = InstaSalle.scanner.nextLine();
+        }
+
+        System.out.println("Published timestamp:");
+        this.publishedWhen = Integer.parseInt(InstaSalle.scanner.nextLine());
+
+        System.out.println("Username of user that published this post:");
+        this.publishedByUsername = InstaSalle.scanner.nextLine();
+
+        System.out.println("Latitude:");
+        this.location[0] = Double.parseDouble(InstaSalle.scanner.nextLine());
+
+        System.out.println("Longitude:");
+        this.location[1] = Double.parseDouble(InstaSalle.scanner.nextLine());
+
+        System.out.println("N of hashtags:");
+        int lengthHashtags = Integer.parseInt(InstaSalle.scanner.nextLine());
+        this.hashtagIds = new String[length];
+
+        for (int i = 0; i < length; i++) {
+            System.out.println("Hashtag " + (i + 1));
+            this.hashtagIds[i] = InstaSalle.scanner.nextLine();
+        }
     }
 }
