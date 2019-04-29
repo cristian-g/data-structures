@@ -1,5 +1,6 @@
 package datastructures.RTree;
 
+import datastructures.ElementWithCoordinates;
 import models.Post;
 
 public class RTree {
@@ -44,5 +45,33 @@ public class RTree {
     // Returns the posts inside that region
     public Post[] getPosts(double[] corners) {
         return null; // TODO: implement this function
+    }
+
+    public void removePost(ElementWithCoordinates post) {
+        Node nextNode = root;
+        while (nextNode instanceof InternalNode) {
+            Node[] child = ((InternalNode) nextNode).getChild();
+            for (Node n : child) {
+                if (n instanceof LeafNode) {
+                    ((LeafNode) n).removePost((Post)post);
+                } else if (n instanceof InternalNode){
+                    //Mira si els punts estan dins la regio:
+                    if(postInTheRegion(((InternalNode) n).getStart(), ((InternalNode) n).getEnd(), post.getLocation())) {
+                        nextNode = n;
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean postInTheRegion(double[] start, double[] end, double[] location) {
+        //Si està dins del marge de les x:
+        if((location[0] > start[0] && location[0] < end[0]) || (location[0] > end[0] && location[0] < start[0])) {
+            //Si està dins el marge de les y:
+            if((location[1] > start[1] && location[1] < end[1]) ||(location[1] > end[1] && location[1] < start[1])) {
+                return  true;
+            }
+        }
+        return false;
     }
 }

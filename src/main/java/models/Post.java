@@ -2,6 +2,7 @@ package models;
 
 import com.google.gson.annotations.SerializedName;
 import controller.InstaSalle;
+import datastructures.ElementWithCoordinates;
 import datastructures.ElementWithIntegerKey;
 
 import java.util.LinkedList;
@@ -15,8 +16,10 @@ import java.util.LinkedList;
  * @author Cristian, Ferran, Iscle
  *
  */
-public class Post implements ElementWithIntegerKey {
+public class Post implements ElementWithIntegerKey, ElementWithCoordinates {
     private int id;
+
+    private boolean isVisible;
 
     @SerializedName("liked_by")
     private String[] likedByUsernames;
@@ -199,5 +202,13 @@ public class Post implements ElementWithIntegerKey {
             System.out.println("Hashtag " + (i + 1));
             this.hashtagIds[i] = InstaSalle.scanner.nextLine();
         }
+    }
+
+    public void setInvisible() {
+        this.isVisible = false;
+    }
+
+    public void setVisible() {
+        this.isVisible = true;
     }
 }
