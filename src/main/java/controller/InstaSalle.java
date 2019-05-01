@@ -1,6 +1,9 @@
 package controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import datastructures.AVLTree.AVLTree;
+import datastructures.ElementWithIntegerKey;
 import datastructures.LinkedList.LinkedList;
 import models.Hashtag;
 import models.Post;
@@ -8,16 +11,21 @@ import models.User;
 import utils.JsonReader;
 import utils.print.TreePrinter;
 
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class InstaSalle {
     public static Scanner scanner;
 
     // Graph
-    private LinkedList usersByUsername;
-    private LinkedList postsById;
-    private LinkedList hashtagsByName;
+    private LinkedList<User> usersByUsername;
+    private LinkedList<Post> postsById;
+    private LinkedList<Hashtag> hashtagsByName;
 
     // AVL Tree
     private AVLTree avlTree;
@@ -30,15 +38,15 @@ public class InstaSalle {
     private void computeInitialGraph(User[] users, Post[] posts) {
 
         // Store users
-        this.usersByUsername = new LinkedList();
+        this.usersByUsername = new LinkedList<>();
         for (User user: users) {
             usersByUsername.insert(user);
         }
 
         // Store users
-        this.postsById = new LinkedList();
+        this.postsById = new LinkedList<>();
         for (Post post: posts) {
-            usersByUsername.insert(post);
+            postsById.insert(post);
         }
 
         // Compute graph for each user
@@ -46,7 +54,7 @@ public class InstaSalle {
             this.computeGraph(user);
         }
 
-        this.hashtagsByName = new LinkedList();
+        this.hashtagsByName = new LinkedList<>();
 
         // Compute graph for each post
         for (Post post: posts) {
@@ -353,8 +361,16 @@ public class InstaSalle {
 
             case 1:// Export of files in JSON format of users and posts
 
-                // TODO export of files in JSON format of users and posts
-                System.out.println("TODO export of files in JSON format of users and posts");
+                try (Writer writer = new FileWriter("Output.json")) {
+                    Gson gson = new GsonBuilder().create();
+                    //gson.toJson(this.postsById.toArray(), writer);
+                    User user = new User();
+                    User[] elementWithIntegerKeys = (User[]) this.usersByUsername.toArray();
+                    gson.toJson(elementWithIntegerKeys, writer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
                 break;
 

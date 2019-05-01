@@ -17,17 +17,19 @@ import java.util.LinkedList;
  *
  */
 public class User implements ElementWithIntegerKey {
+
+    @Expose
     private String username;
     private int creation;
 
     @SerializedName("to_follow")
     private String[] toFollowUsernames;
 
-    private LinkedList<User> following;
-    private LinkedList<User> followers;
+    private transient LinkedList<User> following;
+    private transient LinkedList<User> followers;
 
-    private LinkedList<Post> posts;
-    private LinkedList<Post> likedPosts;
+    private transient LinkedList<Post> posts;
+    private transient LinkedList<Post> likedPosts;
 
     public User() {
         this.following = new LinkedList<>();

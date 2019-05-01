@@ -94,7 +94,7 @@ class Test {
         for (int size: sizes) {
 
             // Init data structure
-            LinkedList dataStructure = new LinkedList();
+            LinkedList<SimpleElementWithIntegerKey> dataStructure = new LinkedList<>();
 
             // Compute random keys
             int[] keys = IntegerUtilities.generateRandomArray(size);
@@ -114,9 +114,15 @@ class Test {
             for(int i = 0; i < keysLength; i++) javaLinkedList.add(elements[i]);
 
             // Assert
+            System.out.println("head before assertEqualsCustom: " + dataStructure.getFirst());
             assertEqualsCustom(dataStructure, javaLinkedList);
+            System.out.println("head after assertEqualsCustom: " + dataStructure.getFirst());
+
+            System.out.println("delete node");
 
             // Delete node
+            System.out.println("size before deleting: " + dataStructure.getSize());
+            System.out.println("head before deleting: " + dataStructure.getFirst());
             dataStructure.deleteByKey(elements[2].getKey());
             javaLinkedList.remove(new SimpleElementWithIntegerKey(elements[2].getKey()));
 
@@ -129,7 +135,7 @@ class Test {
     private void assertEqualsCustom(LinkedList dataStructure, java.util.LinkedList<SimpleElementWithIntegerKey> javaLinkedList) {
 
         // Retrieve elements in an array from data structure
-        ElementWithIntegerKey[] array = dataStructure.toArray();
+        SimpleElementWithIntegerKey[] array = (SimpleElementWithIntegerKey[]) dataStructure.toArray((new SimpleElementWithIntegerKey[javaLinkedList.size()]));
         int keysLength = array.length;
         SimpleElementWithIntegerKey[] arrayByJava = javaLinkedList.toArray(new SimpleElementWithIntegerKey[javaLinkedList.size()]);
 
@@ -147,6 +153,7 @@ class Test {
             dataStructure.deleteByKey(element.getKey());
         }
 
+        System.out.println("head Regenerate data structure: " + dataStructure.getFirst());
         // Regenerate data structure
         for(int i = 0; i < keysLength; i++) dataStructure.insert(array[i]);
     }
