@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import controller.InstaSalle;
 import datastructures.ElementWithCoordinates;
 import datastructures.ElementWithIntegerKey;
+import utils.DoubleUtilities;
 
 import java.util.LinkedList;
 
@@ -202,5 +203,13 @@ public class Post implements ElementWithIntegerKey, ElementWithCoordinates {
 
     public void setVisible() {
         this.isVisible = true;
+    }
+
+    public void fillWithRandomGeographicCoordinates() {
+        this.location = DoubleUtilities.computeRandomGeographicCoordinates();
+    }
+
+    public String computeLabel() {
+        return "Post " + this.id + ": latitude " + DoubleUtilities.computeFormattedGeographicCoordinate(this.location[0]) + " longitude " + DoubleUtilities.computeFormattedGeographicCoordinate(this.location[1]);
     }
 }

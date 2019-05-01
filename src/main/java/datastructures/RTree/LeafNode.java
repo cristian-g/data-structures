@@ -61,4 +61,20 @@ public class LeafNode extends Node {
     public Post[] getPosts() {
         return posts;
     }
+
+    public void fillWithPostsWithRandomGeographicCoordinates(int emptyBoxes) {
+
+        int desiredLength = RTree.ARRAY_SIZE;
+
+        Post[] posts = new Post[desiredLength];
+
+        int boxesToFill = desiredLength - emptyBoxes;
+        for (int i = 0; i < boxesToFill; i++) {
+            Post post = new Post();
+            post.fillWithRandomGeographicCoordinates();
+            posts[i] = post;
+        }
+
+        this.setPosts(posts);
+    }
 }
