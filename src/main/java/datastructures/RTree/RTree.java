@@ -13,6 +13,14 @@ public class RTree {
         root = new LeafNode(null);
     }
 
+    public Node getRoot() {
+        return root;
+    }
+
+    public void setRoot(Node root) {
+        this.root = root;
+    }
+
     public void addPost(Post post) {
         Node nextNode = root;
 

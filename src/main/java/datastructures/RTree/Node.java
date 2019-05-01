@@ -11,6 +11,14 @@ public abstract class Node {
         this.length = 0;
     }
 
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
     public int getLength() {
         return length;
     }

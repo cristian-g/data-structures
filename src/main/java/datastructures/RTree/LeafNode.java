@@ -14,6 +14,10 @@ public class LeafNode extends Node {
         this.posts = new Post[ARRAY_SIZE];
     }
 
+    public void setPosts(Post[] posts) {
+        this.posts = posts;
+    }
+
     //TODO: call setVisible when you insert a Post
     public void addPost(Post post) {
         assert (!isFull()); // We can only insert if we have space left in the array

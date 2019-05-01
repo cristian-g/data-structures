@@ -14,6 +14,18 @@ public class InternalNode extends Node {
         this.child = new Node[ARRAY_SIZE];
     }
 
+    public void setStart(double[] start) {
+        this.start = start;
+    }
+
+    public void setEnd(double[] end) {
+        this.end = end;
+    }
+
+    public void setChild(Node[] child) {
+        this.child = child;
+    }
+
     // TODO: implement this function if we need it
     public void addNode(Node node) {
 
