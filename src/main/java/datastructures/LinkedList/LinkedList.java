@@ -37,16 +37,12 @@ public class LinkedList<E> {
     }
 
     public void insert(E e) {
-
-        System.out.println("size when inserting: " + this.size);
-
         final Node<E> l = this.last;
         final Node<E> newNode = new Node<>(l, e, null);
         last = newNode;
 
         // If the Linked List is empty, then the new node will be the first
         if (l == null) {
-            System.out.println("the Linked List is empty, then the new node will be the first");
             first = newNode;
         }
         else {
@@ -67,62 +63,39 @@ public class LinkedList<E> {
         }
     }
 
-    public E deleteByKey(int key) {
-
-        System.out.println("0");
-        System.out.println("size: " + this.size);
-
-        // Check if first node contains the key we want to delete
-        Node currentNode = this.first;
-        if (currentNode != null) {
-            System.out.println("1");
-            ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) currentNode.item;
+    public boolean removeByKey(int key) {
+        for (Node<E> x = first; x != null; x = x.next) {
+            ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) x.item;
             if (elementWithIntegerKey.getKey() == key) {
-                System.out.println("2");
-                // Delete currentNode
-                this.first = currentNode.next;
-                this.size--;
-                if (this.last == currentNode) {
-                    this.last = this.last.prev;
-                }
-                return (E) currentNode.item;
+                unlink(x);
+                return true;
             }
         }
+        return false;
+    }
 
-        // Search the key in the next nodes
-        Node previousNode = null;
-        while (true) {
-            if (currentNode != null) {
-                System.out.println("3");
-                ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) currentNode.item;
-                if (elementWithIntegerKey.getKey() != key) {
-                    System.out.println("4");
-                    previousNode = currentNode;
-                    currentNode = currentNode.next;
-                }
-                else {
-                    break;
-                }
-            }
-            else {
-                break;
-            }
+    E unlink(Node<E> x) {
+        final E element = x.item;
+        final Node<E> next = x.next;
+        final Node<E> prev = x.prev;
+
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            x.prev = null;
         }
 
-        // Check if the key has been found
-        if (currentNode != null) {
-            // Delete currentNode
-            previousNode.next = currentNode.next;
-            this.size--;
-            if (this.last == currentNode) {
-                this.last = this.last.prev;
-            }
-            return (E) currentNode.item;
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            x.next = null;
         }
 
-        // Key has not been found
-        // Return null
-        return null;
+        x.item = null;
+        size--;
+        return element;
     }
 
     public boolean contains(int key) {

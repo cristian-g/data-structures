@@ -4,7 +4,6 @@ import datastructures.AVLTree.AVLTree;
 import datastructures.ElementWithIntegerKey;
 import datastructures.LinkedList.LinkedList;
 import utils.IntegerUtilities;
-import utils.print.TreePrinter;
 
 import java.util.Arrays;
 import java.util.TreeSet;
@@ -114,17 +113,15 @@ class Test {
             for(int i = 0; i < keysLength; i++) javaLinkedList.add(elements[i]);
 
             // Assert
-            System.out.println("head before assertEqualsCustom: " + dataStructure.getFirst());
             assertEqualsCustom(dataStructure, javaLinkedList);
-            System.out.println("head after assertEqualsCustom: " + dataStructure.getFirst());
 
-            System.out.println("delete node");
-
-            // Delete node
-            System.out.println("size before deleting: " + dataStructure.getSize());
-            System.out.println("head before deleting: " + dataStructure.getFirst());
-            dataStructure.deleteByKey(elements[2].getKey());
+            // Delete node with key 2
+            dataStructure.removeByKey(elements[2].getKey());
             javaLinkedList.remove(new SimpleElementWithIntegerKey(elements[2].getKey()));
+
+            // Delete node with key 4
+            dataStructure.removeByKey(elements[4].getKey());
+            javaLinkedList.remove(new SimpleElementWithIntegerKey(elements[4].getKey()));
 
             // Assert
             assertEqualsCustom(dataStructure, javaLinkedList);
@@ -150,10 +147,9 @@ class Test {
         for (ElementWithIntegerKey element: arrayByJava) {
             boolean contains = dataStructure.contains(element.getKey());
             assertTrue(contains);
-            dataStructure.deleteByKey(element.getKey());
+            dataStructure.removeByKey(element.getKey());
         }
 
-        System.out.println("head Regenerate data structure: " + dataStructure.getFirst());
         // Regenerate data structure
         for(int i = 0; i < keysLength; i++) dataStructure.insert(array[i]);
     }
