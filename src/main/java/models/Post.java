@@ -17,30 +17,22 @@ import java.util.LinkedList;
  *
  */
 public class Post implements ElementWithIntegerKey, ElementWithCoordinates {
+
+    // Read data
     private int id;
-
-    private boolean isVisible;
-
-    @SerializedName("liked_by")
-    private String[] likedByUsernames;
-
-    private LinkedList<User> likedBy;
-
-    @SerializedName("published_when")
-    private int publishedWhen;
-
-    @SerializedName("published_by")
-    private String publishedByUsername;
-
-    private User publishedBy;
-
+    @SerializedName("liked_by") private String[] likedByUsernames;
+    @SerializedName("published_when") private int publishedWhen;
+    @SerializedName("published_by") private String publishedByUsername;
     private double[] location;
+    @SerializedName("hashtags") private String[] hashtagIds;
 
-    @SerializedName("hashtags")
-    private String[] hashtagIds;
+    // Graph
+    private transient LinkedList<User> likedBy;
+    private transient User publishedBy;
+    @SerializedName("hashtag_objects") private transient LinkedList<Hashtag> hashtags;
 
-    @SerializedName("hashtag_objects")
-    private LinkedList<Hashtag> hashtags;
+    // Additional attributes
+    private boolean isVisible;
 
     public Post() {
         this.likedBy = new LinkedList<>();

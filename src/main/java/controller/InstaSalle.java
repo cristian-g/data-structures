@@ -361,16 +361,23 @@ public class InstaSalle {
 
             case 1:// Export of files in JSON format of users and posts
 
-                try (Writer writer = new FileWriter("Output.json")) {
+                // Export users
+                try (Writer writer = new FileWriter("out/datasets/users.json")) {
                     Gson gson = new GsonBuilder().create();
-                    //gson.toJson(this.postsById.toArray(), writer);
-                    User user = new User();
-                    User[] elementWithIntegerKeys = (User[]) this.usersByUsername.toArray();
-                    gson.toJson(elementWithIntegerKeys, writer);
+                    User[] usersArray = this.usersByUsername.toArray(new User[this.usersByUsername.getSize()]);
+                    gson.toJson(usersArray, writer);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
+                // Export posts
+                try (Writer writer = new FileWriter("out/datasets/posts.json")) {
+                    Gson gson = new GsonBuilder().create();
+                    Post[] postsArray = this.postsById.toArray(new Post[this.postsById.getSize()]);
+                    gson.toJson(postsArray, writer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 break;
 
