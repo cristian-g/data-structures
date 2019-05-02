@@ -5,7 +5,7 @@ import models.Post;
 
 public class RTree {
     // TODO: Change "ARRAY_SIZE" to a more meaningful name
-    public static final int ARRAY_SIZE = 3;
+    public static final int ARRAY_SIZE = 4;
 
     private Node root;
 

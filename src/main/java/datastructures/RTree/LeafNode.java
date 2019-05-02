@@ -2,8 +2,6 @@ package datastructures.RTree;
 
 import models.Post;
 
-import java.util.Arrays;
-
 import static datastructures.RTree.RTree.ARRAY_SIZE;
 
 public class LeafNode extends Node {
@@ -71,7 +69,7 @@ public class LeafNode extends Node {
         int boxesToFill = desiredLength - emptyBoxes;
         for (int i = 0; i < boxesToFill; i++) {
             Post post = new Post();
-            post.fillWithRandomGeographicCoordinates();
+            post.fillWithRandomInfo();
             posts[i] = post;
         }
 
