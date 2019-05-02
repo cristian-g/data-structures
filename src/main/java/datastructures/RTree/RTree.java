@@ -25,7 +25,6 @@ public class RTree {
         Node nextNode = root;
 
         while (nextNode instanceof InternalNode) {
-
             Node[] child = ((InternalNode) nextNode).getChild();
 
             for (Node n : child) {
@@ -64,7 +63,7 @@ public class RTree {
                     ((LeafNode) n).removePost((Post)post);
                 } else if (n instanceof InternalNode){
                     //Mira si els punts estan dins la regio:
-                    if(postInTheRegion(((InternalNode) n).getStart(), ((InternalNode) n).getEnd(), post.getLocation())) {
+                    if(postInTheRegion(n.getStart(), n.getEnd(), post.getLocation())) {
                         nextNode = n;
                     }
                 }
