@@ -1,30 +1,32 @@
 package datastructures.Trie;
 
+import datastructures.LinkedList.LinkedList;
+
 public class Node {
-    private boolean isWord;
     private String key;
-    private Node[] childs;
+    private LinkedList<Node> childs;
 
     public Node() {
 
     }
 
+    public Node(WordNode node) {
+        this.key = node.getKey();
+        this.childs = node.getChilds();
+    }
+
     /*
         DUBTE:
-            Si és una paraula, serà un WordNode.
-            Aleshores no fa falta tenir el boolean de isWord pq podem utilitzar el instanceOf.
+            Per eliminar una paraula que té fills, passar de WordNode a Node.
             Però quan volem eliminar una paraula, haurem de canviar el node de tipus WordNode a tipus Node.
      */
 
-    public boolean isWord() {
-        return isWord;
-    }
 
     public String getKey() {
         return key;
     }
 
-    public Node[] getChilds() {
+    public LinkedList<Node> getChilds() {
         return childs;
     }
 }
