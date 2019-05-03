@@ -1,13 +1,14 @@
 package datastructures.Trie;
 
 import datastructures.LinkedList.LinkedList;
+import utils.print.PrintableNode;
 
-public class Node {
+public class Node implements PrintableNode {
     private String key;
     private LinkedList<Node> childs;
 
     public Node() {
-
+        this.childs = new LinkedList<>();
     }
 
     public Node(WordNode node) {
@@ -28,5 +29,30 @@ public class Node {
 
     public LinkedList<Node> getChilds() {
         return childs;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public void setChilds(LinkedList<Node> childs) {
+        this.childs = childs;
+    }
+
+    @Override
+    public PrintableNode[] getConnections() {
+        PrintableNode[] printableNodes = this.childs.toArray(new PrintableNode[this.childs.getSize()]);
+        return printableNodes;
+    }
+
+    @Override
+    public String getPrintName() {
+        String string = this.key;
+        if (string.length() > 0) {
+            return string.substring(string.length() - 1);
+        }
+        else {
+            return "Trie";
+        }
     }
 }

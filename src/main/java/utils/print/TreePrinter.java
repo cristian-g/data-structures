@@ -4,6 +4,7 @@ import datastructures.LinkedList.LinkedList;
 import datastructures.RTree.InternalNode;
 import datastructures.RTree.LeafNode;
 import datastructures.RTree.RTree;
+import datastructures.Trie.Trie;
 import guru.nidi.graphviz.attribute.*;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
@@ -11,6 +12,8 @@ import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.LinkTarget;
 import guru.nidi.graphviz.model.Node;
 import models.Post;
+import utils.IntegerUtilities;
+import utils.StringUtilities;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,25 +105,10 @@ public class TreePrinter {
 
     public void printRTree(RTree rTree) {
 
-        LinkedList<Node> nodes = new LinkedList<>();
         LinkedList<Node> links = new LinkedList<>();
 
+        this.printRTreeImmersion(rTree.getRoot(), null, "", links);
 
-        this.printRTreeImmersion(rTree.getRoot(), null, "", nodes, links);
-
-
-
-
-        /*Node[] nodeArray = new Node[]{
-                node0.link(
-                        between(port("f0"), node1.port("v", SOUTH)),
-                        between(port("f1"), node2.port(WEST)),
-                        between(port("f2"), node3.port(WEST)),
-                        between(port("f3"), node4.port(WEST)),
-                        between(port("f4"), node5.port("v", NORTH))),
-                node2.link(between(port("p"), node6.port(NORTH_WEST))),
-                node4.link(between(node4.port(SOUTH).port(), node7.port(NORTH)))
-        };*/
         Node[] nodeArray = links.toArray(new Node[links.getSize()]);
 
         Graph g = graph("example3").directed()
@@ -129,26 +117,15 @@ public class TreePrinter {
                         nodeArray
                 );
 
-
-
         try {
-            Graphviz.fromGraph(g).width(9000).render(Format.PNG).toFile(new File("out/r_tree_example.png"));
+            Graphviz.fromGraph(g).width(9000).render(Format.PNG).toFile(new File("out/r_tree.png"));
         }
         catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void printRTreeImmersion(datastructures.RTree.Node node, Node parent, String tag, LinkedList<Node> nodes, LinkedList<Node> links) {
-
-
-        if (this.count == 29) {
-            System.out.println(node instanceof InternalNode);
-            System.out.println(node instanceof LeafNode);
-            System.out.println();
-            System.out.println();
-        }
-
+    public void printRTreeImmersion(datastructures.RTree.Node node, Node parent, String tag, LinkedList<Node> links) {
 
         LinkedList<java.lang.String> records = new LinkedList<>();
         java.lang.String[] tags = null;
@@ -204,27 +181,7 @@ public class TreePrinter {
 
             Node node3 = node2.link(between(node2.port(NORTH).port(), parent.port(tag, SOUTH)));
             links.insert(node3);
-
-            Node node4 = node2.link(between(node2.port(NORTH).port(), node3.port(SOUTH)));
-            //links.insert(node4);
-
-
-
-
-
-
-            /*java.lang.String[] recordsAux = new java.lang.String[]{
-                    rec("rec" + (this.count++), "aux"),
-            };
-
-            Node nodeAux = node(Integer.toString(this.count++)).with(Records.of(recordsAux));
-
-            Node nodeAuxLink = nodeAux.link(between(nodeAux.port(SOUTH).port(), parent.port(NORTH)));
-            links.insert(nodeAuxLink);*/
         }
-
-
-
 
         if (node instanceof InternalNode) {
 
@@ -233,62 +190,93 @@ public class TreePrinter {
 
             int i = 0;
             for (datastructures.RTree.Node child: childs) {
-                this.printRTreeImmersion(child, node2, tags[i], nodes, links);
+                this.printRTreeImmersion(child, node2, tags[i], links);
                 i++;
             }
         }
-        else if (node instanceof LeafNode) {
-
-            LeafNode leafNode = (LeafNode) node;
-            Post[] posts = leafNode.getPosts();
-
-            /*for (Post post: posts) {
-                this.printRTreeImmersion(post, node2, nodes, links);
-            }*/
-        }
-
-
-
     }
 
-    public void printRTreeExample() {
+    public static Trie initTrieExample1() {
+        Trie trie = new Trie();
 
-        java.lang.String[] records = new java.lang.String[]{
-                rec("f0", ""),
-                rec("f1", ""),
-                rec("f2", ""),
-                rec("f3", ""),
-                rec("f4", "")
-        };
+        LinkedList<datastructures.Trie.Node> nodeLinkedList1 = new LinkedList<>();
+        for (int i = 0; i < 5; i++) {
+            datastructures.Trie.Node node1 = initRandomNode();
+            node1.setKey(StringUtilities.computeRandomString(IntegerUtilities.computeRandomIntegerBetween(6, 9)));
+            nodeLinkedList1.insert(node1);
 
-        Node
-                node0 = node("node0").with(Records.of(records)),
-                node1 = node("node1").with(Records.of(rec("n4"), rec("v", "719"), rec(""))),
-                node2 = node("node2").with(Records.of(rec("a1"), rec("805"), rec("p", ""))),
-                node3 = node("node3").with(Records.of(rec("i9"), rec("718"), rec(""))),
-                node4 = node("node4").with(Records.of(rec("e5"), rec("989"), rec("p", ""))),
-                node5 = node("node5").with(Records.of(rec("t2"), rec("v", "959"), rec(""))),
-                node6 = node("node6").with(Records.of(rec("o1"), rec("794"), rec(""))),
-                node7 = node("node7").with(Records.of(rec("s7"), rec("659"), rec(""), rec("tag294", "show_this<br>wsds\ncoord 43")));
+            LinkedList<datastructures.Trie.Node> nodeLinkedList2 = new LinkedList<>();
+            for (int j = 0; j < 4; j++) {
+                datastructures.Trie.Node node2 = initRandomNode();
+                node2.setKey(StringUtilities.computeRandomString(IntegerUtilities.computeRandomIntegerBetween(6, 9)));
+                nodeLinkedList2.insert(node2);
 
-        Graph g = graph("example3").directed()
-                .graphAttr().with(RankDir.TOP_TO_BOTTOM)
-                .with(
-                        new Node[]{node0.link(
-                                between(port("f0"), node1.port("v", SOUTH)),
-                                between(port("f1"), node2.port(WEST)),
-                                between(port("f2"), node3.port(WEST)),
-                                between(port("f3"), node4.port(WEST)),
-                                between(port("f4"), node5.port("v", NORTH))),
-                                node2.link(between(port("p"), node6.port(NORTH_WEST))),
-                                node4.link(between(node4.port(SOUTH).port(), node7.port(NORTH)))}
-                );
+                LinkedList<datastructures.Trie.Node> nodeLinkedList3 = new LinkedList<>();
+                for (int k = 0; k < 3; k++) {
+                    datastructures.Trie.Node node3 = initRandomNode();
+                    node3.setKey(StringUtilities.computeRandomString(IntegerUtilities.computeRandomIntegerBetween(6, 9)));
+                    nodeLinkedList3.insert(node3);
+                }
+                node2.setChilds(nodeLinkedList3);
+            }
+            node1.setChilds(nodeLinkedList2);
+        }
+        trie.setNodes(nodeLinkedList1);
+
+        return trie;
+    }
+
+    private static datastructures.Trie.Node initRandomNode() {
+        if (IntegerUtilities.computeRandomIntegerBetween(1, 2) == 1) {
+            return new datastructures.Trie.Node();
+        }
+        return new datastructures.Trie.WordNode(IntegerUtilities.computeRandomIntegerBetween(1, 30));
+    }
+
+    public void printTrie(Trie trie) {
+
+        // Create root node
+        datastructures.Trie.Node start = new datastructures.Trie.Node();
+        start.setKey("");
+        start.setChilds(trie.getNodes());
+        LinkTarget[] linkTargets = this.printTrieImmersion(start);
+
+        this.count++;
+        Graph g = graph("tree").directed().with(
+                node(this.count + "").with(Label.html("<b>" + start.getPrintName() + "</b>")).link(linkTargets));
 
         try {
-            Graphviz.fromGraph(g).width(900).render(Format.PNG).toFile(new File("out/r_tree_example.png"));
-        }
-        catch (IOException e) {
+            Graphviz.fromGraph(g).height(2000).render(Format.PNG).toFile(new File("out/" + TreePrinter.images_count + ".png"));
+            TreePrinter.images_count++;
+        } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private LinkTarget[] printTrieImmersion(PrintableNode start) {
+        if (TreePrinter.max_recursive <= 0) return new LinkTarget[] {};
+
+        TreePrinter.max_recursive--;
+
+        LinkTarget[] linkTargets = new LinkTarget[start.getConnections().length];
+
+        for (int i = 0; i < start.getConnections().length; i++) {
+
+            PrintableNode connection = start.getConnections()[i];
+
+            if (connection == null) {
+                this.count++;
+                linkTargets[i] = to(node("null: " + this.count).with(Label.html("."), Color.WHITE));
+                continue;
+            }
+            else {
+                LinkTarget[] linkTargets1 = this.printNodeInfo(connection);
+                this.count++;
+                linkTargets[i] = to(node(this.count + "").with(Label.html(connection.getPrintName()), Color.BLACK).link(linkTargets1)).with(Label.html(""), Color.BLACK);
+                continue;
+            }
+        }
+
+        return linkTargets;
     }
 }

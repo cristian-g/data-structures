@@ -32,4 +32,10 @@ public class IntegerUtilities {
         int randomId = random.nextInt(100000);
         return randomId;
     }
+
+    public static int computeRandomIntegerBetween(int min, int max) {
+        Random random = new Random();
+        int randomNumber = random.nextInt(max + 1 - min) + min;
+        return randomNumber;
+    }
 }

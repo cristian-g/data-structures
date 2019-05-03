@@ -1,5 +1,7 @@
 package utils;
 
+import java.security.SecureRandom;
+
 /**
  * Useful functions to deal with strings.
  *
@@ -57,5 +59,17 @@ public class StringUtilities {
 
     public static void printTabbedLine(String string) {
         System.out.println(string.replace("\n", "\n\t"));
+    }
+
+    //static final String CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    static final String CHARACTERS = "0123456789abcdefghijklmnopqrstuvwxyz";
+    static SecureRandom secureRandom = new SecureRandom();
+
+    public static String computeRandomString(int length) {
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            sb.append(CHARACTERS.charAt(secureRandom.nextInt(CHARACTERS.length())));
+        }
+        return sb.toString();
     }
 }

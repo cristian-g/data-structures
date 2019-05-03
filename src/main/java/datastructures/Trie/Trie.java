@@ -6,12 +6,36 @@ public class Trie {
 
     private int words;  //Max number of suggestions.
     private int users;  //Number of usernames stored in the structure.
-    private Node root;
+    private LinkedList<Node> nodes;
 
     public Trie() {
-        words = 20;
-        users = 0;
-        root = new Node();
+        this.words = 20;
+        this.users = 0;
+        this.nodes = new LinkedList<>();
+    }
+
+    public int getWords() {
+        return words;
+    }
+
+    public void setWords(int words) {
+        this.words = words;
+    }
+
+    public int getUsers() {
+        return users;
+    }
+
+    public void setUsers(int users) {
+        this.users = users;
+    }
+
+    public LinkedList<Node> getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(LinkedList<Node> nodes) {
+        this.nodes = nodes;
     }
 
     public void addUser(String username) {
@@ -19,7 +43,7 @@ public class Trie {
     }
 
     public void deleteUser(Node actualNode, String username) {
-        Node[] children = actualNode.getChilds();
+        Node[] children = actualNode.getChilds().toArray(new Node[actualNode.getChilds().getSize()]);
         for(Node n: children) {
             //Si el node actual és el node que conté el username:
             if(n.getKey().equals(username)) {
