@@ -1,6 +1,5 @@
 package utils.print;
 
-import com.sun.org.apache.xpath.internal.operations.String;
 import datastructures.LinkedList.LinkedList;
 import datastructures.RTree.InternalNode;
 import datastructures.RTree.LeafNode;
@@ -76,7 +75,7 @@ public class TreePrinter {
         count = 0;
     }
 
-    private RTree initRTreeExample1() {
+    public static RTree initRTreeExample1() {
         RTree rTree = new RTree();
 
         InternalNode internalNode = new InternalNode(null);
@@ -85,15 +84,15 @@ public class TreePrinter {
 
         InternalNode[] nodes = new InternalNode[RTree.ARRAY_SIZE];
         for (int i = 0; i < nodes.length; i++) {
+            nodes[i] = new InternalNode(internalNode);
+            nodes[i].fillCornersWithRandomGeographicCoordinates();
+
             LeafNode[] nodes2 = new LeafNode[RTree.ARRAY_SIZE];
             for (int j = 0; j < nodes2.length; j++) {
                 LeafNode leafNode = new LeafNode(null);
                 leafNode.fillWithPostsWithRandomGeographicCoordinates(0);
                 nodes2[j] = leafNode;
             }
-            nodes[i] = new InternalNode(internalNode);
-            nodes[i].fillCornersWithRandomGeographicCoordinates();
-
             nodes[i].setChild(nodes2);
         }
         internalNode.setChild(nodes);
@@ -101,15 +100,13 @@ public class TreePrinter {
         return rTree;
     }
 
-    public void printRTree() {
-
-        RTree rTree = initRTreeExample1();
+    public void printRTree(RTree rTree) {
 
         LinkedList<Node> nodes = new LinkedList<>();
         LinkedList<Node> links = new LinkedList<>();
 
 
-        this.printRTreeImmersion(rTree.getRoot(), null, nodes, links);
+        this.printRTreeImmersion(rTree.getRoot(), null, "", nodes, links);
 
 
 
@@ -142,18 +139,32 @@ public class TreePrinter {
         }
     }
 
-    public void printRTreeImmersion(datastructures.RTree.Node node, Node parent, LinkedList<Node> nodes, LinkedList<Node> links) {
+    public void printRTreeImmersion(datastructures.RTree.Node node, Node parent, String tag, LinkedList<Node> nodes, LinkedList<Node> links) {
+
+
+        if (this.count == 29) {
+            System.out.println(node instanceof InternalNode);
+            System.out.println(node instanceof LeafNode);
+            System.out.println();
+            System.out.println();
+        }
+
 
         LinkedList<java.lang.String> records = new LinkedList<>();
+        java.lang.String[] tags = null;
 
         // Prepare boxes of current node
         if (node instanceof InternalNode) {
             InternalNode internalNode = (InternalNode) node;
 
-            datastructures.RTree.Node[] childs = ((InternalNode) node).getChild();
+            datastructures.RTree.Node[] childs = internalNode.getChild();
+            tags = new java.lang.String[childs.length];
 
+            int i = 0;
             for (datastructures.RTree.Node child: childs) {
+                tags[i] = "tag" + (this.count);
                 records.insert(rec("tag" + (this.count++), child.computeLabelOfGeographicCoordinates()));
+                i++;
             }
         }
         else if (node instanceof LeafNode) {
@@ -182,7 +193,7 @@ public class TreePrinter {
 
             node2 = node("node" + (this.count++)).with(Records.of(records2));
 
-            Node node3 = nodeRoot.link(between(nodeRoot.port(NORTH).port(), node2.port(SOUTH)));
+            Node node3 = node2.link(between(nodeRoot.port(NORTH).port(), nodeRoot.port(SOUTH)));
             links.insert(node3);
         }
         else {
@@ -191,11 +202,25 @@ public class TreePrinter {
 
             node2 = node("node" + (this.count++)).with(Records.of(records2));
 
-            Node node3 = parent.link(between(parent.port(NORTH).port(), node2.port(SOUTH)));
+            Node node3 = node2.link(between(node2.port(NORTH).port(), parent.port(tag, SOUTH)));
             links.insert(node3);
 
             Node node4 = node2.link(between(node2.port(NORTH).port(), node3.port(SOUTH)));
-            links.insert(node4);
+            //links.insert(node4);
+
+
+
+
+
+
+            /*java.lang.String[] recordsAux = new java.lang.String[]{
+                    rec("rec" + (this.count++), "aux"),
+            };
+
+            Node nodeAux = node(Integer.toString(this.count++)).with(Records.of(recordsAux));
+
+            Node nodeAuxLink = nodeAux.link(between(nodeAux.port(SOUTH).port(), parent.port(NORTH)));
+            links.insert(nodeAuxLink);*/
         }
 
 
@@ -204,10 +229,12 @@ public class TreePrinter {
         if (node instanceof InternalNode) {
 
             InternalNode internalNode = (InternalNode) node;
-            datastructures.RTree.Node[] childs = ((InternalNode) node).getChild();
+            datastructures.RTree.Node[] childs = internalNode.getChild();
 
+            int i = 0;
             for (datastructures.RTree.Node child: childs) {
-                this.printRTreeImmersion(child, node2, nodes, links);
+                this.printRTreeImmersion(child, node2, tags[i], nodes, links);
+                i++;
             }
         }
         else if (node instanceof LeafNode) {

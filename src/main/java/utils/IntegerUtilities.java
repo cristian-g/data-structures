@@ -26,4 +26,10 @@ public class IntegerUtilities {
         for (int i = 0; i < n; i++) array[i] = random.nextInt(100000);
         return array;
     }
+
+    public static int computeRandomId() {
+        Random random = new Random();
+        int randomId = random.nextInt(100000);
+        return randomId;
+    }
 }

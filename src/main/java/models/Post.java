@@ -5,6 +5,7 @@ import controller.InstaSalle;
 import datastructures.ElementWithCoordinates;
 import datastructures.ElementWithIntegerKey;
 import utils.DoubleUtilities;
+import utils.IntegerUtilities;
 
 import java.util.LinkedList;
 
@@ -205,11 +206,20 @@ public class Post implements ElementWithIntegerKey, ElementWithCoordinates {
         this.isVisible = true;
     }
 
+    public void fillWithRandomInfo() {
+        this.fillWithRandomGeographicCoordinates();
+        this.fillWithRandomId();
+    }
+
     public void fillWithRandomGeographicCoordinates() {
         this.location = DoubleUtilities.computeRandomGeographicCoordinates();
     }
 
+    public void fillWithRandomId() {
+        this.id = IntegerUtilities.computeRandomId();
+    }
+
     public String computeLabel() {
-        return "Post " + this.id + ": latitude " + DoubleUtilities.computeFormattedGeographicCoordinate(this.location[0]) + " longitude " + DoubleUtilities.computeFormattedGeographicCoordinate(this.location[1]);
+        return "Post " + this.id + ":\nlatitude " + DoubleUtilities.computeFormattedGeographicCoordinate(this.location[0]) + "\nlongitude " + DoubleUtilities.computeFormattedGeographicCoordinate(this.location[1]);
     }
 }
