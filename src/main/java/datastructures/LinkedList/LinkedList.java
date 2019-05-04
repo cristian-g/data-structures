@@ -4,6 +4,7 @@ import datastructures.ElementWithIntegerKey;
 
 public class LinkedList<E> {
 
+    public static String DATA_STRUCTURE_NAME = "Linked list";
     private Node first;
     private Node last;
     private int size;

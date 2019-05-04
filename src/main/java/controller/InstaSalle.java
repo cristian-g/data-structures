@@ -3,20 +3,13 @@ package controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import datastructures.AVLTree.AVLTree;
-import datastructures.ElementWithIntegerKey;
 import datastructures.LinkedList.LinkedList;
 import models.Hashtag;
 import models.Post;
 import models.User;
 import utils.JsonReader;
-import utils.print.TreePrinter;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class InstaSalle {

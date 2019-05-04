@@ -6,6 +6,8 @@ import java.util.LinkedList;
 
 public class AVLTree {
 
+    public static String DATA_STRUCTURE_NAME = "AVL Tree";
+
     private AVLNode root;
 
     public AVLNode getRoot() {
