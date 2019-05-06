@@ -39,19 +39,42 @@ public class Trie {
     }
 
     public void addUser(String username) {
-
+        char[] charArray = username.toCharArray();
+        String auxKey = "";
+        LinkedList<Node> actualNodes = nodes;
+        for(int i = 0; i < charArray.length; i++) {
+            auxKey += charArray[i];
+            for(int j = 0; j < actualNodes.getSize(); j++) {
+                String key = actualNodes.getByKey(j).getKey();
+                char[] charkey = username.toCharArray();
+                if(charArray[i] == charkey[i]) {
+                    actualNodes = actualNodes.getByKey(j).getChilds();
+                }
+            }
+            //Arriba aquí si ha reccoregut els fills i cap té la lletra.
+            //Per tant, creo el node necessari i l'afegeixo.
+            if(i == charArray.length - 1) {
+                WordNode newNode = new WordNode(auxKey);
+                actualNodes.insert(newNode);    //Això modifica el actualNodes però no la LinkedList original crec. No sé com agafar la referència.
+            } else {
+                Node newNode = new Node(auxKey);
+                actualNodes.insert(newNode);    //Això modifica el actualNodes però no la LinkedList original crec. No sé com agafar la referència.
+            }
+        }
     }
 
     public void deleteUser(Node actualNode, String username) {
         Node[] children = actualNode.getChilds().toArray(new Node[actualNode.getChilds().getSize()]);
         for(Node n: children) {
             //Si el node actual és el node que conté el username:
-            if(n.getKey().equals(username)) {
+            if(n.getKey().equals(username) && (n instanceof WordNode)) {
                 if(n.getChilds() == null) {
-                    //Eliminar referència al Node.
-                    //Si la resta no tenen fills s'ha d'anar eliminant recursivament cap a dalt??
+                    //Eliminar referència al Node des del pare.
+                    //Si el pare no té fills s'ha d'anar eliminant recursivament cap a dalt fins que tingui fills??
                 } else {
-                    //Eliminar paraula però no Node.
+                    Node newNode = new Node((WordNode)n);
+                    //Ara necessito que el pare tingui la referència al newNode com a child.
+                    //Potser cada node hauria de tenir un punter al pare??
                 }
             } else {
                 //Mirar si algun fill te com a seguent lletra, la seguent lletra del username
@@ -63,7 +86,9 @@ public class Trie {
     }
 
     public void addAllUsers(LinkedList<String> usernames) {
-
+        for(int i = 0; i < usernames.getSize(); i++) {
+            addUser(usernames.getByKey(i));
+        }
     }
 
     public String[] getSuggestions(String partialName) {

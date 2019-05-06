@@ -5,13 +5,9 @@ import utils.print.PrintableNode;
 public class WordNode extends Node implements PrintableNode {
     private int searches;
 
-    public WordNode() {
-        super();
-    }
-
-    public WordNode(int searches) {
-        super();
-        this.searches = searches;
+    public WordNode(String key) {
+        super(key);
+        this.searches = 0;
     }
 
     public int getSearches() {

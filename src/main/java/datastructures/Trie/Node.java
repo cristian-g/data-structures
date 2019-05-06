@@ -7,7 +7,8 @@ public class Node implements PrintableNode {
     private String key;
     private LinkedList<Node> childs;
 
-    public Node() {
+    public Node(String key) {
+        this.key = key;
         this.childs = new LinkedList<>();
     }
 
@@ -37,6 +38,10 @@ public class Node implements PrintableNode {
 
     public void setChilds(LinkedList<Node> childs) {
         this.childs = childs;
+    }
+
+    public void addChild(Node n) {
+        childs.insert(n);
     }
 
     @Override
