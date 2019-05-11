@@ -94,12 +94,40 @@ public class Trie {
     }
 
     public void addAllUsers(LinkedList<String> usernames) {
-        for(int i = 0; i < usernames.getSize(); i++) {
-            addUser(usernames.getByKey(i));
+        String[] users = usernames.toArray(new String[usernames.getSize()]);
+        for(String u: users) {
+            addUser(u);
         }
     }
 
-    public String[] getSuggestions(String partialName) {
+    public LinkedList<String> getSuggestions(String partialName) {
+        partialName = partialName.toLowerCase();
+        char[] charArray = partialName.toCharArray();
+        String auxKey = "";
+        LinkedList<Node> actualNodes = nodes;
+        //Per totes les lletres de la paraula:
+        for(int i = 0; i < charArray.length; i++) {
+            auxKey += charArray[i];
+            //Si hi ha la lletra en els nodes actuals:
+            if (actualNodes.contains(charArray[i])) {
+                String key = actualNodes.getByKey(charArray[i]).getWord();
+                char[] charkey = key.toCharArray();
+                //Si la lletra coincideix, seguir aquell camí:
+                if (charArray[i] == charkey[i]) {
+                    actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
+                }
+                //Si no hi ha la lletra en els nodes actuals:
+            } else {
+                //No hi ha cap suggerència.
+                return new LinkedList<>();
+            }
+        }
+        Node[] nodesActuals = actualNodes.toArray(new Node[actualNodes.getSize()]);
+
+        for(Node n: nodesActuals) {
+            System.out.println("Hello");
+            //Implementar funció recursiva de cerca que recorri totes les branques i retorni les primeres "word" paraules d'aquestes.
+        }
         return null;
     }
 

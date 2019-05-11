@@ -1,4 +1,5 @@
 import controller.InstaSalle;
+import datastructures.LinkedList.LinkedList;
 import datastructures.Trie.Trie;
 import utils.print.TreePrinter;
 
@@ -18,8 +19,15 @@ public class Main {
         t.addUser("paed");
         t.addUser("pernia");
         t.addUser("pernil");
+        LinkedList<String> l = new LinkedList<>();
+        l.insert("hola");
+        l.insert("adeu");
+        t.addAllUsers(l);
         TreePrinter tp = new TreePrinter();
         tp.printTrie(t);
+        t.getSuggestions("hol");
+        System.out.println("---");
+        t.getSuggestions("f");
         //Tests end.
 
         InstaSalle instasalle = new InstaSalle();
