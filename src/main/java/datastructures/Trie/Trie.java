@@ -44,40 +44,24 @@ public class Trie {
         char[] charArray = username.toCharArray();
         String auxKey = "";
         LinkedList<Node> actualNodes = nodes;
-        if(nodes.getSize() > 0) {
-            //Per totes les lletres de la paraula:
-            for(int i = 0; i < charArray.length; i++) {
-                auxKey += charArray[i];
-                //Si hi ha la lletra en els nodes actuals:
-                if (actualNodes.contains(charArray[i])) {
-                    String key = actualNodes.getByKey(charArray[i]).getWord();
-                    char[] charkey = key.toCharArray();
-                    //Si la lletra coincideix, seguir aquell camí:
-                    if (charArray[i] == charkey[i]) {
-                        actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
-                    }
-                //Si no hi ha la lletra en els nodes actuals:
-                } else {
-                    //Si es la ultima lletra de la paraula, inserir word:
-                    if (i == charArray.length - 1) {
-                        WordNode newNode = new WordNode(auxKey);
-                        actualNodes.insert(newNode);
-                        //Si no es la ultima lletra de la paraula, inserir cami:
-                    } else {
-                        Node newNode = new Node(auxKey);
-                        actualNodes.insert(newNode);
-                        actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
-                    }
+        //Per totes les lletres de la paraula:
+        for(int i = 0; i < charArray.length; i++) {
+            auxKey += charArray[i];
+            //Si hi ha la lletra en els nodes actuals:
+            if (actualNodes.contains(charArray[i])) {
+                String key = actualNodes.getByKey(charArray[i]).getWord();
+                char[] charkey = key.toCharArray();
+                //Si la lletra coincideix, seguir aquell camí:
+                if (charArray[i] == charkey[i]) {
+                    actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
                 }
-            }
-        } else {
-            for(int i = 0; i < charArray.length; i++) {
-                auxKey += charArray[i];
+            //Si no hi ha la lletra en els nodes actuals:
+            } else {
                 //Si es la ultima lletra de la paraula, inserir word:
-                if(i == charArray.length - 1) {
+                if (i == charArray.length - 1) {
                     WordNode newNode = new WordNode(auxKey);
                     actualNodes.insert(newNode);
-                //Si no es la ultima lletra de la paraula, inserir cami:
+                    //Si no es la ultima lletra de la paraula, inserir cami:
                 } else {
                     Node newNode = new Node(auxKey);
                     actualNodes.insert(newNode);
