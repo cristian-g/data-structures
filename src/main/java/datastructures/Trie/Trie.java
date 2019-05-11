@@ -39,26 +39,50 @@ public class Trie {
     }
 
     public void addUser(String username) {
+        this.users++;
+        username = username.toLowerCase();
         char[] charArray = username.toCharArray();
         String auxKey = "";
         LinkedList<Node> actualNodes = nodes;
-        for(int i = 0; i < charArray.length; i++) {
-            auxKey += charArray[i];
-            for(int j = 0; j < actualNodes.getSize(); j++) {
-                String key = actualNodes.getByKey(j).getKey();
-                char[] charkey = username.toCharArray();
-                if(charArray[i] == charkey[i]) {
-                    actualNodes = actualNodes.getByKey(j).getChilds();
+        if(nodes.getSize() > 0) {
+            //Per totes les lletres de la paraula:
+            for(int i = 0; i < charArray.length; i++) {
+                auxKey += charArray[i];
+                //Si hi ha la lletra en els nodes actuals:
+                if (actualNodes.contains(charArray[i])) {
+                    String key = actualNodes.getByKey(charArray[i]).getWord();
+                    char[] charkey = key.toCharArray();
+                    //Si la lletra coincideix, seguir aquell camí:
+                    if (charArray[i] == charkey[i]) {
+                        actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
+                    }
+                //Si no hi ha la lletra en els nodes actuals:
+                } else {
+                    //Si es la ultima lletra de la paraula, inserir word:
+                    if (i == charArray.length - 1) {
+                        WordNode newNode = new WordNode(auxKey);
+                        actualNodes.insert(newNode);
+                        //Si no es la ultima lletra de la paraula, inserir cami:
+                    } else {
+                        Node newNode = new Node(auxKey);
+                        actualNodes.insert(newNode);
+                        actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
+                    }
                 }
             }
-            //Arriba aquí si ha reccoregut els fills i cap té la lletra.
-            //Per tant, creo el node necessari i l'afegeixo.
-            if(i == charArray.length - 1) {
-                WordNode newNode = new WordNode(auxKey);
-                actualNodes.insert(newNode);    //Això modifica el actualNodes però no la LinkedList original crec. No sé com agafar la referència.
-            } else {
-                Node newNode = new Node(auxKey);
-                actualNodes.insert(newNode);    //Això modifica el actualNodes però no la LinkedList original crec. No sé com agafar la referència.
+        } else {
+            for(int i = 0; i < charArray.length; i++) {
+                auxKey += charArray[i];
+                //Si es la ultima lletra de la paraula, inserir word:
+                if(i == charArray.length - 1) {
+                    WordNode newNode = new WordNode(auxKey);
+                    actualNodes.insert(newNode);
+                //Si no es la ultima lletra de la paraula, inserir cami:
+                } else {
+                    Node newNode = new Node(auxKey);
+                    actualNodes.insert(newNode);
+                    actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
+                }
             }
         }
     }
@@ -67,10 +91,10 @@ public class Trie {
         Node[] children = actualNode.getChilds().toArray(new Node[actualNode.getChilds().getSize()]);
         for(Node n: children) {
             //Si el node actual és el node que conté el username:
-            if(n.getKey().equals(username) && (n instanceof WordNode)) {
+            if(n.getWord().equals(username) && (n instanceof WordNode)) {
                 if(n.getChilds() == null) {
                     //Eliminar referència al Node des del pare.
-                    //Si el pare no té fills s'ha d'anar eliminant recursivament cap a dalt fins que tingui fills??
+                    //Si el pare no té fills s'ha d'anar eliminant recursivament cap a dalt fins que tingui fills o siguin WordNode??
                 } else {
                     Node newNode = new Node((WordNode)n);
                     //Ara necessito que el pare tingui la referència al newNode com a child.

@@ -1,19 +1,24 @@
 package datastructures.Trie;
 
+import datastructures.ElementWithIntegerKey;
 import datastructures.LinkedList.LinkedList;
 import utils.print.PrintableNode;
 
-public class Node implements PrintableNode {
-    private String key;
+public class Node implements PrintableNode, ElementWithIntegerKey {
+    private String word;
     private LinkedList<Node> childs;
 
-    public Node(String key) {
-        this.key = key;
+    public Node() {
+        this.childs = new LinkedList<>();
+    }
+
+    public Node(String word) {
+        this.word = word;
         this.childs = new LinkedList<>();
     }
 
     public Node(WordNode node) {
-        this.key = node.getKey();
+        this.word = node.getWord();
         this.childs = node.getChilds();
     }
 
@@ -24,16 +29,20 @@ public class Node implements PrintableNode {
      */
 
 
-    public String getKey() {
-        return key;
+    public int getKey() {
+        return word.charAt(word.length() - 1);
+    }
+
+    public String getWord() {
+        return word;
     }
 
     public LinkedList<Node> getChilds() {
         return childs;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setWord(String word) {
+        this.word = word;
     }
 
     public void setChilds(LinkedList<Node> childs) {
@@ -52,7 +61,7 @@ public class Node implements PrintableNode {
 
     @Override
     public String getPrintName() {
-        String string = this.key;
+        String string = this.word;
         if (string.length() > 0) {
             return string.substring(string.length() - 1);
         }

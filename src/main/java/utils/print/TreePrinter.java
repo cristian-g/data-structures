@@ -202,19 +202,19 @@ public class TreePrinter {
         LinkedList<datastructures.Trie.Node> nodeLinkedList1 = new LinkedList<>();
         for (int i = 0; i < 5; i++) {
             datastructures.Trie.Node node1 = initRandomNode();
-            node1.setKey(StringUtilities.computeRandomString(IntegerUtilities.computeRandomIntegerBetween(6, 9)));
+            node1.setWord(StringUtilities.computeRandomString(IntegerUtilities.computeRandomIntegerBetween(6, 9)));
             nodeLinkedList1.insert(node1);
 
             LinkedList<datastructures.Trie.Node> nodeLinkedList2 = new LinkedList<>();
             for (int j = 0; j < 4; j++) {
                 datastructures.Trie.Node node2 = initRandomNode();
-                node2.setKey(StringUtilities.computeRandomString(IntegerUtilities.computeRandomIntegerBetween(6, 9)));
+                node2.setWord(StringUtilities.computeRandomString(IntegerUtilities.computeRandomIntegerBetween(6, 9)));
                 nodeLinkedList2.insert(node2);
 
                 LinkedList<datastructures.Trie.Node> nodeLinkedList3 = new LinkedList<>();
                 for (int k = 0; k < 3; k++) {
                     datastructures.Trie.Node node3 = initRandomNode();
-                    node3.setKey(StringUtilities.computeRandomString(IntegerUtilities.computeRandomIntegerBetween(6, 9)));
+                    node3.setWord(StringUtilities.computeRandomString(IntegerUtilities.computeRandomIntegerBetween(6, 9)));
                     nodeLinkedList3.insert(node3);
                 }
                 node2.setChilds(nodeLinkedList3);
@@ -237,7 +237,7 @@ public class TreePrinter {
 
         // Create root node
         datastructures.Trie.Node start = new datastructures.Trie.Node();
-        start.setKey("");
+        start.setWord("");
         start.setChilds(trie.getNodes());
         LinkTarget[] linkTargets = this.printTrieImmersion(start);
 
