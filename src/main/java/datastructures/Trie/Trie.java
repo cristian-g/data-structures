@@ -48,20 +48,26 @@ public class Trie {
         for(int i = 0; i < charArray.length; i++) {
             auxKey += charArray[i];
             //Si hi ha la lletra en els nodes actuals:
-            if (actualNodes.contains(charArray[i])) {
-                String key = actualNodes.getByKey(charArray[i]).getWord();
-                char[] charkey = key.toCharArray();
-                //Si la lletra coincideix, seguir aquell camí:
-                if (charArray[i] == charkey[i]) {
-                    actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
+            if(actualNodes.contains(charArray[i])) {
+                if(i == charArray.length - 1) {
+                    WordNode newNode = new WordNode(actualNodes.getByKey(charArray[i]));
+                    actualNodes.removeByKey(charArray[i]);
+                    actualNodes.insert(newNode);
+                } else {
+                    String key = actualNodes.getByKey(charArray[i]).getWord();
+                    char[] charkey = key.toCharArray();
+                    //Si la lletra coincideix, seguir aquell camí:
+                    if(charArray[i] == charkey[i]) {
+                        actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
+                    }
                 }
             //Si no hi ha la lletra en els nodes actuals:
             } else {
                 //Si es la ultima lletra de la paraula, inserir word:
-                if (i == charArray.length - 1) {
+                if(i == charArray.length - 1) {
                     WordNode newNode = new WordNode(auxKey);
                     actualNodes.insert(newNode);
-                    //Si no es la ultima lletra de la paraula, inserir cami:
+                //Si no es la ultima lletra de la paraula, inserir cami:
                 } else {
                     Node newNode = new Node(auxKey);
                     actualNodes.insert(newNode);
@@ -71,25 +77,42 @@ public class Trie {
         }
     }
 
-    public void deleteUser(Node actualNode, String username) {
-        Node[] children = actualNode.getChilds().toArray(new Node[actualNode.getChilds().getSize()]);
-        for(Node n: children) {
-            //Si el node actual és el node que conté el username:
-            if(n.getWord().equals(username) && (n instanceof WordNode)) {
-                if(n.getChilds() == null) {
-                    //Eliminar referència al Node des del pare.
-                    //Si el pare no té fills s'ha d'anar eliminant recursivament cap a dalt fins que tingui fills o siguin WordNode??
-                } else {
-                    Node newNode = new Node((WordNode)n);
-                    //Ara necessito que el pare tingui la referència al newNode com a child.
-                    //Potser cada node hauria de tenir un punter al pare??
-                }
-            } else {
-                //Mirar si algun fill te com a seguent lletra, la seguent lletra del username
-                //En cas de que la tingui, l'agafo com a actualNode.
-                //En cas que no la tingui, miro el seguent.
-                //Si cap fill la te, significa que el user no existeix.
+    public void deleteUser(String username) {
+        username = username.toLowerCase();
+        char[] charArray = username.toCharArray();
+        LinkedList<Node> actualNodes = nodes;
+        Node[] path = new Node[username.length()];
+
+        for(int i = 0; i < username.length() ; i++) {
+            Node nodeActual = actualNodes.getByKey(charArray[i]);
+            System.out.println(nodeActual.getWord());
+            path[i] = nodeActual;
+            if(i < username.length() - 1) {
+                actualNodes = nodeActual.getChilds();
             }
+        }
+        if(actualNodes.getByKey(charArray[username.length() - 1]).getChilds().getSize() == 0) {
+            //Si no te fills, eliminar Node:
+            //TODO: mirar per què polles no elimina de l'original
+            actualNodes.removeByKey(charArray[username.length() - 1]);
+            System.out.println("Remove");
+        } else {
+            //Si te fills, convertir WordNode a Node:
+            Node newNode = new Node(actualNodes.getByKey(charArray[username.length() - 1]).getWord(), actualNodes.getByKey(charArray[username.length() - 1]).getChilds());
+            actualNodes.removeByKey(charArray[username.length() - 1]);
+            actualNodes.insert(newNode);
+            System.out.println("Convert");
+        }
+        //Cami ascendent borrant referencies:
+        for(int i = username.length() - 2; i > -1; i--) {
+            actualNodes = nodes;
+            for(int j = 0; j < i; j++) {
+                actualNodes = actualNodes.getByKey(charArray[j]).getChilds();
+            }
+            if(actualNodes.getByKey(charArray[i]).getChilds().getSize() > 0) {
+                break;
+            }
+            actualNodes.removeByKey(charArray[i]);
         }
     }
 
@@ -118,7 +141,7 @@ public class Trie {
                 }
                 //Si no hi ha la lletra en els nodes actuals:
             } else {
-                //No hi ha cap suggerència.
+                //No hi ha cap suggerència, retorna una llista buida:
                 return new LinkedList<>();
             }
         }

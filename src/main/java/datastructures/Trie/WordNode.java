@@ -10,8 +10,13 @@ public class WordNode extends Node implements PrintableNode {
         this.searches = searches;
     }
 
-    public WordNode(String key) {
-        super(key);
+    public WordNode(String word) {
+        super(word);
+        this.searches = 0;
+    }
+
+    public WordNode(Node n) {
+        super(n.getWord(), n.getChilds());
         this.searches = 0;
     }
 

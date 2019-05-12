@@ -19,6 +19,8 @@ public class Main {
         t.addUser("paed");
         t.addUser("pernia");
         t.addUser("pernil");
+        t.addUser("perni");
+        t.addUser("pernilet");
         LinkedList<String> l = new LinkedList<>();
         l.insert("hola");
         l.insert("adeu");
@@ -28,6 +30,7 @@ public class Main {
         t.getSuggestions("hol");
         System.out.println("---");
         t.getSuggestions("f");
+        t.deleteUser("sushi");
         //Tests end.
 
         InstaSalle instasalle = new InstaSalle();

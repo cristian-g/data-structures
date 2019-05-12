@@ -8,6 +8,11 @@ public class Node implements PrintableNode, ElementWithIntegerKey {
     private String word;
     private LinkedList<Node> childs;
 
+    public Node(String word, LinkedList<Node> childs) {
+        this.word = word;
+        this.childs = childs;
+    }
+
     public Node() {
         this.childs = new LinkedList<>();
     }
@@ -15,11 +20,6 @@ public class Node implements PrintableNode, ElementWithIntegerKey {
     public Node(String word) {
         this.word = word;
         this.childs = new LinkedList<>();
-    }
-
-    public Node(WordNode node) {
-        this.word = node.getWord();
-        this.childs = node.getChilds();
     }
 
     /*
