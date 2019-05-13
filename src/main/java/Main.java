@@ -25,12 +25,19 @@ public class Main {
         l.insert("hola");
         l.insert("adeu");
         t.addAllUsers(l);
-        TreePrinter tp = new TreePrinter();
-        tp.printTrie(t);
+
         t.getSuggestions("hol");
         System.out.println("---");
         t.getSuggestions("f");
+        System.out.println("---");
+        t.getSuggestions("s");
+
         t.deleteUser("sushi");
+        t.deleteUser("perni");
+        t.deleteUser("pernil");
+
+        TreePrinter tp = new TreePrinter();
+        tp.printTrie(t);
         //Tests end.
 
         InstaSalle instasalle = new InstaSalle();

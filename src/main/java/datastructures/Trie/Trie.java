@@ -93,15 +93,12 @@ public class Trie {
         }
         if(actualNodes.getByKey(charArray[username.length() - 1]).getChilds().getSize() == 0) {
             //Si no te fills, eliminar Node:
-            //TODO: mirar per què polles no elimina de l'original
             actualNodes.removeByKey(charArray[username.length() - 1]);
-            System.out.println("Remove");
         } else {
             //Si te fills, convertir WordNode a Node:
             Node newNode = new Node(actualNodes.getByKey(charArray[username.length() - 1]).getWord(), actualNodes.getByKey(charArray[username.length() - 1]).getChilds());
             actualNodes.removeByKey(charArray[username.length() - 1]);
             actualNodes.insert(newNode);
-            System.out.println("Convert");
         }
         //Cami ascendent borrant referencies:
         for(int i = username.length() - 2; i > -1; i--) {
