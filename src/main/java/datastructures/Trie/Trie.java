@@ -2,24 +2,26 @@ package datastructures.Trie;
 
 import datastructures.LinkedList.LinkedList;
 
+import java.util.Arrays;
+
 public class Trie {
 
-    private int words;  //Max number of suggestions.
+    private int limit;  //Max number of suggestions.
     private int users;  //Number of usernames stored in the structure.
     private LinkedList<Node> nodes;
 
     public Trie() {
-        this.words = 20;
+        this.limit = 20;
         this.users = 0;
         this.nodes = new LinkedList<>();
     }
 
-    public int getWords() {
-        return words;
+    public int getLimit() {
+        return limit;
     }
 
-    public void setWords(int words) {
-        this.words = words;
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 
     public int getUsers() {
@@ -78,6 +80,7 @@ public class Trie {
     }
 
     public void deleteUser(String username) {
+        this.users--;
         username = username.toLowerCase();
         char[] charArray = username.toCharArray();
         LinkedList<Node> actualNodes = nodes;
@@ -113,8 +116,11 @@ public class Trie {
     }
 
     public void addAllUsers(LinkedList<String> usernames) {
-        String[] users = usernames.toArray(new String[usernames.getSize()]);
-        for(String u: users) {
+        String[] usernamesArr = usernames.toArray(new String[usernames.getSize()]);
+        for(String u: usernamesArr) {
+            if(users == limit) {
+                break;
+            }
             addUser(u);
         }
     }
@@ -151,10 +157,54 @@ public class Trie {
             String[] auxArray = aux.toArray(new String[aux.getSize()]);
             for(String s: auxArray) {
                 suggestions.insert(s);
-                if(suggestions.getSize() == words) {
-                    return suggestions;
-                }
             }
+        }
+        return suggestions;
+    }
+
+    private LinkedList<Word> getWords(String partialName) {
+        partialName = partialName.toLowerCase();
+        char[] charArray = partialName.toCharArray();
+        String auxKey = "";
+        LinkedList<Node> actualNodes = nodes;
+        LinkedList<Word> suggestions = new LinkedList<>();
+        //Per totes les lletres de la paraula:
+        for(int i = 0; i < charArray.length; i++) {
+            auxKey += charArray[i];
+            //Si hi ha la lletra en els nodes actuals:
+            if(actualNodes.contains(charArray[i])) {
+                String key = actualNodes.getByKey(charArray[i]).getWord();
+                char[] charkey = key.toCharArray();
+                //Si la lletra coincideix, seguir aquell camí:
+                if(charArray[i] == charkey[i]) {
+                    if(i == charArray.length - 1 && actualNodes.getByKey(charArray[i]) instanceof WordNode) {
+                        suggestions.insert(new Word(actualNodes.getByKey(charArray[i]).getWord(), ((WordNode) actualNodes.getByKey(charArray[i])).getSearches()));
+                    }
+                    actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
+                }
+            } else {
+                //No hi ha cap suggerència, retorna una llista buida:
+                return new LinkedList<>();
+            }
+        }
+        Node[] nodesActuals = actualNodes.toArray(new Node[actualNodes.getSize()]);
+        for(Node n: nodesActuals) {
+            LinkedList<Word> aux = searchForWordAux(n, new LinkedList<>());
+            Word[] auxArray = aux.toArray(new Word[aux.getSize()]);
+            for(Word w: auxArray) {
+                suggestions.insert(w);
+            }
+        }
+        return suggestions;
+    }
+
+    private LinkedList<Word> searchForWordAux(Node nodeActual, LinkedList<Word> suggestions) {
+        if(nodeActual instanceof WordNode) {
+            suggestions.insert(new Word(nodeActual.getWord(), ((WordNode) nodeActual).getSearches()));
+        }
+        Node[] actualNodes = nodeActual.getChilds().toArray(new Node[nodeActual.getChilds().getSize()]);
+        for(Node n: actualNodes) {
+            searchForWordAux(n, suggestions);
         }
         return suggestions;
     }
@@ -171,7 +221,20 @@ public class Trie {
         return suggestions;
     }
 
-    public void limitMemory(int words) {
-        this.words = words;
+    public void limitMemory(int limit) {
+        this.limit = limit;
+
+        if(limit < users) {
+            //Agafa tots els noms guardats per ordre de cerques ascendent:
+            LinkedList<Word> wordList = getWords("");
+            Word[] usernames = wordList.toArray(new Word[wordList.getSize()]);
+            Arrays.sort(usernames);
+
+            //Elimina els noms guardats amb menys cerques fins que quedin 'limit' noms:
+            int i = 0;
+            while(limit < users) {
+                deleteUser(usernames[i++].getWord());
+            }
+        }
     }
 }
