@@ -119,6 +119,7 @@ public class Trie {
         String[] usernamesArr = usernames.toArray(new String[usernames.getSize()]);
         for(String u: usernamesArr) {
             if(users == limit) {
+                System.out.println("Se han introducido los " + limit + " primeros usuarios!");
                 break;
             }
             addUser(u);
