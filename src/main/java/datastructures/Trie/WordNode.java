@@ -24,8 +24,8 @@ public class WordNode extends Node implements PrintableNode {
         return searches;
     }
 
-    public void setSearches(int searches) {
-        this.searches = searches;
+    public void incrementSearches() {
+        searches++;
     }
 
     @Override

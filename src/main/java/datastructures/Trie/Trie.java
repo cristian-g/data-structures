@@ -136,6 +136,7 @@ public class Trie {
                 if(charArray[i] == charkey[i]) {
                     if(i == charArray.length - 1 && actualNodes.getByKey(charArray[i]) instanceof WordNode) {
                         suggestions.insert(actualNodes.getByKey(charArray[i]).getWord());
+                        ((WordNode) actualNodes.getByKey(charArray[i])).incrementSearches();
                     }
                     actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
                 }
@@ -161,6 +162,7 @@ public class Trie {
     private LinkedList<String> searchForWord(Node nodeActual, LinkedList<String> suggestions) {
         if(nodeActual instanceof WordNode) {
             suggestions.insert(nodeActual.getWord());
+            ((WordNode) nodeActual).incrementSearches();
         }
         Node[] actualNodes = nodeActual.getChilds().toArray(new Node[nodeActual.getChilds().getSize()]);
         for(Node n: actualNodes) {
