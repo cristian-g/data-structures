@@ -85,7 +85,6 @@ public class Trie {
 
         for(int i = 0; i < username.length() ; i++) {
             Node nodeActual = actualNodes.getByKey(charArray[i]);
-            System.out.println(nodeActual.getWord());
             path[i] = nodeActual;
             if(i < username.length() - 1) {
                 actualNodes = nodeActual.getChilds();
@@ -125,30 +124,49 @@ public class Trie {
         char[] charArray = partialName.toCharArray();
         String auxKey = "";
         LinkedList<Node> actualNodes = nodes;
+        LinkedList<String> suggestions = new LinkedList<>();
         //Per totes les lletres de la paraula:
         for(int i = 0; i < charArray.length; i++) {
             auxKey += charArray[i];
             //Si hi ha la lletra en els nodes actuals:
-            if (actualNodes.contains(charArray[i])) {
+            if(actualNodes.contains(charArray[i])) {
                 String key = actualNodes.getByKey(charArray[i]).getWord();
                 char[] charkey = key.toCharArray();
                 //Si la lletra coincideix, seguir aquell camí:
-                if (charArray[i] == charkey[i]) {
+                if(charArray[i] == charkey[i]) {
+                    if(i == charArray.length - 1 && actualNodes.getByKey(charArray[i]) instanceof WordNode) {
+                        suggestions.insert(actualNodes.getByKey(charArray[i]).getWord());
+                    }
                     actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
                 }
-                //Si no hi ha la lletra en els nodes actuals:
             } else {
                 //No hi ha cap suggerència, retorna una llista buida:
                 return new LinkedList<>();
             }
         }
         Node[] nodesActuals = actualNodes.toArray(new Node[actualNodes.getSize()]);
-
         for(Node n: nodesActuals) {
-            System.out.println("Hello");
-            //Implementar funció recursiva de cerca que recorri totes les branques i retorni les primeres "word" paraules d'aquestes.
+            LinkedList<String> aux = searchForWord(n, new LinkedList<>());
+            String[] auxArray = aux.toArray(new String[aux.getSize()]);
+            for(String s: auxArray) {
+                suggestions.insert(s);
+                if(suggestions.getSize() == words) {
+                    return suggestions;
+                }
+            }
         }
-        return null;
+        return suggestions;
+    }
+
+    private LinkedList<String> searchForWord(Node nodeActual, LinkedList<String> suggestions) {
+        if(nodeActual instanceof WordNode) {
+            suggestions.insert(nodeActual.getWord());
+        }
+        Node[] actualNodes = nodeActual.getChilds().toArray(new Node[nodeActual.getChilds().getSize()]);
+        for(Node n: actualNodes) {
+            searchForWord(n, suggestions);
+        }
+        return suggestions;
     }
 
     public void limitMemory(int words) {

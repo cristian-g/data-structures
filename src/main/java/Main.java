@@ -26,15 +26,34 @@ public class Main {
         l.insert("adeu");
         t.addAllUsers(l);
 
-        t.getSuggestions("hol");
-        System.out.println("---");
-        t.getSuggestions("f");
-        System.out.println("---");
-        t.getSuggestions("s");
+
+        LinkedList<String> suggestions = t.getSuggestions("f");
+        String[] sugg = suggestions.toArray(new String[suggestions.getSize()]);
+        System.out.println("\n f");
+        for(String s: sugg) {
+            System.out.println("\t" + s);
+        }
+
+        suggestions = t.getSuggestions("hol");
+        sugg = suggestions.toArray(new String[suggestions.getSize()]);
+        System.out.println("\n hol");
+        for(String s: sugg) {
+            System.out.println("\t" + s);
+        }
+
+        suggestions = t.getSuggestions("perni");
+        sugg = suggestions.toArray(new String[suggestions.getSize()]);
+        System.out.println("\n perni");
+        for(String s: sugg) {
+            System.out.println("\t" + s);
+        }
+
 
         t.deleteUser("sushi");
         t.deleteUser("perni");
         t.deleteUser("pernil");
+
+        t.getSuggestions("s");
 
         TreePrinter tp = new TreePrinter();
         tp.printTrie(t);
