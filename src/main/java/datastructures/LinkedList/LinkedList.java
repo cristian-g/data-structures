@@ -9,18 +9,6 @@ public class LinkedList<E> {
     private Node last;
     private int size;
 
-    private static class Node<E> {
-        E item;
-        Node<E> next;
-        Node<E> prev;
-
-        Node(Node<E> prev, E element, Node<E> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
-    }
-
     public LinkedList() {
         this.size = 0;
     }
@@ -48,7 +36,7 @@ public class LinkedList<E> {
         }
         else {
             // Insert the new node as last node
-            l.next = newNode;
+            l.setNext(newNode);
         }
 
         this.size++;
@@ -59,14 +47,14 @@ public class LinkedList<E> {
         Node currentNode = this.first;
 
         while (currentNode != null) {
-            System.out.println(currentNode.item);
-            currentNode = currentNode.next;// Next node
+            System.out.println(currentNode.getItem());
+            currentNode = currentNode.getNext();// Next node
         }
     }
 
     public boolean removeByKey(int key) {
-        for (Node<E> x = first; x != null; x = x.next) {
-            ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) x.item;
+        for (Node<E> x = first; x != null; x = x.getNext()) {
+            ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) x.getItem();
             if (elementWithIntegerKey.getKey() == key) {
                 unlink(x);
                 return true;
@@ -76,25 +64,25 @@ public class LinkedList<E> {
     }
 
     E unlink(Node<E> x) {
-        final E element = x.item;
-        final Node<E> next = x.next;
-        final Node<E> prev = x.prev;
+        final E element = x.getItem();
+        final Node<E> next = x.getNext();
+        final Node<E> prev = x.getPrev();
 
         if (prev == null) {
             first = next;
         } else {
-            prev.next = next;
-            x.prev = null;
+            prev.setNext(next);
+            x.setPrev(null);
         }
 
         if (next == null) {
             last = prev;
         } else {
-            next.prev = prev;
-            x.next = null;
+            next.setPrev(prev);
+            x.setNext(null);
         }
 
-        x.item = null;
+        x.setItem(null);
         size--;
         return element;
     }
@@ -104,7 +92,7 @@ public class LinkedList<E> {
         // Check if first node contains the key we are searching
         Node currentNode = this.first;
         if (currentNode != null) {
-            ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) currentNode.item;
+            ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) currentNode.getItem();
             if (elementWithIntegerKey.getKey() == key) {
                 return true;
             }
@@ -113,9 +101,9 @@ public class LinkedList<E> {
         // Search the key in the next nodes
         while (true) {
             if (currentNode != null) {
-                ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) currentNode.item;
+                ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) currentNode.getItem();
                 if (elementWithIntegerKey.getKey() != key) {
-                    currentNode = currentNode.next;
+                    currentNode = currentNode.getNext();
                 }
                 else {
                     break;
@@ -140,18 +128,18 @@ public class LinkedList<E> {
         // Check if first node contains the key we are searching
         Node currentNode = this.first;
         if (currentNode != null) {
-            ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) currentNode.item;
+            ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) currentNode.getItem();
             if (elementWithIntegerKey.getKey() == key) {
-                return (E) currentNode.item;
+                return (E) currentNode.getItem();
             }
         }
 
         // Search the key in the next nodes
         while (true) {
             if (currentNode != null) {
-                ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) currentNode.item;
+                ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) currentNode.getItem();
                 if (elementWithIntegerKey.getKey() != key) {
-                    currentNode = currentNode.next;
+                    currentNode = currentNode.getNext();
                 }
                 else {
                     break;
@@ -164,7 +152,7 @@ public class LinkedList<E> {
 
         // Check if the key has been found
         if (currentNode != null) {
-            return (E) currentNode.item;
+            return (E) currentNode.getItem();
         }
 
         // Key has not been found
@@ -174,8 +162,8 @@ public class LinkedList<E> {
     public Object[] toArray() {
         Object[] result = new Object[size];
         int i = 0;
-        for (Node<E> x = this.first; x != null; x = x.next)
-            result[i++] = x.item;
+        for (Node<E> x = this.first; x != null; x = x.getNext())
+            result[i++] = x.getItem();
         return result;
     }
 
@@ -185,8 +173,8 @@ public class LinkedList<E> {
                     a.getClass().getComponentType(), size);
         int i = 0;
         Object[] result = a;
-        for (Node<E> x = first; x != null; x = x.next)
-            result[i++] = x.item;
+        for (Node<E> x = first; x != null; x = x.getNext())
+            result[i++] = x.getItem();
 
         if (a.length > size)
             a[size] = null;

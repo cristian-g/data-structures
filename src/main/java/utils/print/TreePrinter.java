@@ -1,5 +1,6 @@
 package utils.print;
 
+import datastructures.HashTable.HashTable;
 import datastructures.LinkedList.LinkedList;
 import datastructures.RTree.InternalNode;
 import datastructures.RTree.LeafNode;
@@ -11,7 +12,9 @@ import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.LinkTarget;
 import guru.nidi.graphviz.model.Node;
+import models.Hashtag;
 import models.Post;
+import test.SimpleElementWithIntegerKey;
 import utils.IntegerUtilities;
 import utils.StringUtilities;
 
@@ -278,5 +281,69 @@ public class TreePrinter {
         }
 
         return linkTargets;
+    }
+
+    public static HashTable initHashTableExample1() {
+        HashTable hashTable = new HashTable();
+
+        int size = hashTable.getArray().length;
+        for (int i = 0; i < size; i++) {
+            int size2 = IntegerUtilities.computeRandomIntegerBetween(3, 10);
+            for (int j = 0; j < size2; j++) {
+                SimpleElementWithIntegerKey element = new SimpleElementWithIntegerKey(IntegerUtilities.computeRandomIntegerBetween(0, 10000));
+                hashTable.addOn(i, element);
+            }
+        }
+
+        return hashTable;
+    }
+
+    public void printHashTable(HashTable hashTable) {
+
+        LinkedList<Node> links = new LinkedList<>();
+
+        // Print array
+        int size = hashTable.getArray().length;
+        java.lang.String[] recordsRoot = new java.lang.String[hashTable.getArray().length];
+        for (int i = 0; i < size; i++) {
+            recordsRoot[i] = rec("tag" + i, "\n\n\n");
+        }
+
+        Node nodeRoot = node(Integer.toString(this.count++)).with(Records.of(recordsRoot));
+
+        int size2 = hashTable.getArray().length;
+        for (int i = 0; i < size2; i++) {
+            datastructures.LinkedList.Node first = hashTable.getArray()[i].getFirst();
+            this.printHashTableImmersion(first, nodeRoot, "tag" + i, links);
+        }
+
+        Node[] nodeArray = links.toArray(new Node[links.getSize()]);
+
+        Graph g = graph("hash_table").directed()
+                .graphAttr().with(RankDir.RIGHT_TO_LEFT)
+                .with(
+                        nodeArray
+                );
+
+        try {
+            Graphviz.fromGraph(g).width(9000).render(Format.PNG).toFile(new File("out/hash_table.png"));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void printHashTableImmersion(datastructures.LinkedList.Node<SimpleElementWithIntegerKey> node, Node parent, String tag, LinkedList<Node> links) {
+        java.lang.String[] records = new java.lang.String[]{
+                rec("hashtag"),
+        };
+        Node node2 = node("node" + (this.count++)).with(Records.of(records));
+
+        Node node3 = node2.link(between(node2.port(WEST).port(), parent.port(tag, EAST)).with(Arrow.NORMAL.dir(Arrow.DirType.BACK)));
+        links.insert(node3);
+
+        if (node.getNext() != null) {
+            this.printHashTableImmersion(node.getNext(), node2, "", links);
+        }
     }
 }
