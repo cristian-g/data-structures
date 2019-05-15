@@ -1,5 +1,6 @@
 package utils.print;
 
+import datastructures.AVLTree.AVLTree;
 import datastructures.HashTable.HashTable;
 import datastructures.LinkedList.LinkedList;
 import datastructures.RTree.InternalNode;
@@ -34,19 +35,24 @@ public class TreePrinter {
         this.count = 0;
     }
 
-    public void printGraph(PrintableNode start) {
+    public String printAVLTree(AVLTree avlTree) throws IOException {
+        return this.printAVLTreeImmersion(avlTree.getRoot());
+    }
+
+    public String printAVLTreeImmersion(PrintableNode start) throws IOException {
+
+        final String filename = "out/avl_tree_" + TreePrinter.images_count + ".png";
+
         LinkTarget[] linkTargets = this.printNodeInfo(start);
 
         this.count++;
         Graph g = graph("tree").directed().with(
                 node(this.count + "").with(Label.html("<b>" + start.getPrintName() + "</b>")).link(linkTargets));
 
-        try {
-            Graphviz.fromGraph(g).height(2000).render(Format.PNG).toFile(new File("out/" + TreePrinter.images_count + ".png"));
-            TreePrinter.images_count++;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Graphviz.fromGraph(g).height(2000).render(Format.PNG).toFile(new File(filename));
+        TreePrinter.images_count++;
+
+        return filename;
     }
 
     private LinkTarget[] printNodeInfo(PrintableNode start) {
@@ -105,7 +111,9 @@ public class TreePrinter {
         return rTree;
     }
 
-    public void printRTree(RTree rTree) {
+    public String printRTree(RTree rTree) throws IOException {
+
+        final String filename = "out/r_tree.png";
 
         LinkedList<Node> links = new LinkedList<>();
 
@@ -119,12 +127,9 @@ public class TreePrinter {
                         nodeArray
                 );
 
-        try {
-            Graphviz.fromGraph(g).width(9000).render(Format.PNG).toFile(new File("out/r_tree.png"));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        Graphviz.fromGraph(g).width(9000).render(Format.PNG).toFile(new File(filename));
+
+        return filename;
     }
 
     public void printRTreeImmersion(datastructures.RTree.Node node, Node parent, String tag, LinkedList<Node> links) {
@@ -235,7 +240,9 @@ public class TreePrinter {
         return new datastructures.Trie.WordNode(IntegerUtilities.computeRandomIntegerBetween(1, 30));
     }
 
-    public void printTrie(Trie trie) {
+    public String printTrie(Trie trie) throws IOException {
+
+        final String filename = "out/" + TreePrinter.images_count + ".png";
 
         // Create root node
         datastructures.Trie.Node start = new datastructures.Trie.Node();
@@ -247,12 +254,10 @@ public class TreePrinter {
         Graph g = graph("tree").directed().with(
                 node(this.count + "").with(Label.html("<b>" + start.getPrintName() + "</b>")).link(linkTargets));
 
-        try {
-            Graphviz.fromGraph(g).height(2000).render(Format.PNG).toFile(new File("out/" + TreePrinter.images_count + ".png"));
-            TreePrinter.images_count++;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Graphviz.fromGraph(g).height(2000).render(Format.PNG).toFile(new File(filename));
+        TreePrinter.images_count++;
+
+        return filename;
     }
 
     private LinkTarget[] printTrieImmersion(PrintableNode start) {
@@ -297,7 +302,9 @@ public class TreePrinter {
         return hashTable;
     }
 
-    public void printHashTable(HashTable hashTable) {
+    public String printHashTable(HashTable hashTable) throws IOException {
+
+        final String filename = "out/hash_table.png";
 
         LinkedList<Node> links = new LinkedList<>();
 
@@ -324,12 +331,9 @@ public class TreePrinter {
                         nodeArray
                 );
 
-        try {
-            Graphviz.fromGraph(g).width(9000).render(Format.PNG).toFile(new File("out/hash_table.png"));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        Graphviz.fromGraph(g).width(9000).render(Format.PNG).toFile(new File(filename));
+
+        return filename;
     }
 
     public void printHashTableImmersion(datastructures.LinkedList.Node<SimpleElementWithIntegerKey> node, Node parent, String tag, LinkedList<Node> links) {
