@@ -137,10 +137,20 @@ public class InstaSalle {
         System.out.println("Select an option:");
         System.out.println("    1. Export of files in JSON format of users and posts");
         System.out.println("    2. Export of files in JSON format of all the structures");
+        System.out.println("    3. Export of files in JSON format of an specific structure");
+    }
+
+    public void showExportSpecificMenu() {
+        System.out.println("Which structure do you want to export?");
+        System.out.println("    1. Trie");
+        System.out.println("    2. R-Tree");
+        System.out.println("    3. AVL Tree");
+        System.out.println("    4. Hash table");
+        System.out.println("    5. Graph");
     }
 
     public void showVisualizationMenu() {
-        System.out.println("What structure do you want to see?");
+        System.out.println("Which structure do you want to see?");
         System.out.println("    1. Trie");
         System.out.println("    2. R-Tree");
         System.out.println("    3. AVL Tree");
@@ -149,19 +159,19 @@ public class InstaSalle {
     }
 
     public void showInsertionMenu() {
-        System.out.println("What type of information do you want to add?");
+        System.out.println("Which type of information do you want to add?");
         System.out.println("    1. New user");
         System.out.println("    2. New post");
     }
 
     public void showEliminationMenu() {
-        System.out.println("What type of information do you want to delete?");
+        System.out.println("Which type of information do you want to delete?");
         System.out.println("    1. User");
         System.out.println("    2. Post");
     }
 
     public void showSearchMenu() {
-        System.out.println("What type of information do you want to search?");
+        System.out.println("Which type of information do you want to search?");
         System.out.println("    1. User");
         System.out.println("    2. Post");
         System.out.println("    3. According to hashtag");
@@ -426,6 +436,71 @@ public class InstaSalle {
                 System.out.println("TODO export of files in JSON format of all structures");
 
                 break;
+
+            case 3:// Export of files in JSON format of an specific structure
+
+                int exportSpecificOption;
+                showExportSpecificMenu();
+
+                try {
+                    exportSpecificOption = Integer.parseInt(scanner.nextLine());
+                    this.handleSpecificExportOption(exportSpecificOption);
+                }
+                catch (NumberFormatException e) {
+                    System.out.println("Wrong option.\n");
+                }
+
+                break;
+        }
+    }
+
+    /**
+     * Start one of the application options.
+     *
+     * @param exportSpecificOption The selected functionality.
+     */
+    private void handleSpecificExportOption(int exportSpecificOption) {
+
+        switch (exportSpecificOption) {
+
+            case 1:// Trie export
+
+                // TODO Trie export
+                System.out.println("TODO Trie export");
+
+                break;
+
+            case 2:// R-Tree export
+
+                // TODO R-Tree export
+                System.out.println("TODO R-Tree export");
+
+                break;
+
+            case 3:// AVL Tree export
+
+
+
+                System.out.println("Rendering image of AVL Tree...");
+
+                break;
+
+            case 4:// Hash table export
+
+                // TODO Hash table export
+                System.out.println("TODO Hash table export");
+
+
+                TreePrinter treePrinter = new TreePrinter();
+                treePrinter.printHashTable(TreePrinter.initHashTableExample1());
+
+                break;
+
+            case 5:// Graph export
+
+
+
+                break;
         }
     }
 
@@ -594,7 +669,13 @@ public class InstaSalle {
             try {
                 functionalityOption = Integer.parseInt(scanner.nextLine());
                 if (functionalityOption == 8) break;
-                handleOption(functionalityOption);
+
+                try {
+                    handleOption(functionalityOption);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             } catch (NumberFormatException e) {
                 System.out.println("Wrong option, please input a number...");
             }
