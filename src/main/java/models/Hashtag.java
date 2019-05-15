@@ -1,8 +1,7 @@
 package models;
 
-import datastructures.ElementWithIntegerKey;
-
-import java.util.LinkedList;
+import datastructures.ElementWithStringKey;
+import datastructures.LinkedList.LinkedList;
 
 /**
  * This class contains the details of the hashtag.
@@ -10,7 +9,7 @@ import java.util.LinkedList;
  * @author Cristian, Ferran, Iscle
  *
  */
-public class Hashtag implements ElementWithIntegerKey {
+public class Hashtag implements ElementWithStringKey {
     private String id;
     private LinkedList<Post> posts;
 
@@ -67,7 +66,7 @@ public class Hashtag implements ElementWithIntegerKey {
     }
 
     @Override
-    public int getKey() {
-        return this.id.hashCode();
+    public String getKey() {
+        return this.id;
     }
 }

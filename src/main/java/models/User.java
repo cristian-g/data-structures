@@ -4,8 +4,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import controller.InstaSalle;
 import datastructures.ElementWithIntegerKey;
+import datastructures.ElementWithStringKey;
+import datastructures.LinkedList.LinkedList;
 
-import java.util.LinkedList;
 
 /**
  * This class contains the details of the user.
@@ -16,7 +17,7 @@ import java.util.LinkedList;
  * @author Cristian, Ferran, Iscle
  *
  */
-public class User implements ElementWithIntegerKey {
+public class User implements ElementWithStringKey {
 
     private String username;
     private int creation;
@@ -111,25 +112,33 @@ public class User implements ElementWithIntegerKey {
     public String toString() {
 
         StringBuilder sb1 = new StringBuilder();
-        for (User user: this.getFollowing()) {
+        LinkedList<User> linkedList1 = this.getFollowing();
+        User[] array1 = linkedList1.toArray(new User[linkedList1.getSize()]);
+        for (User user: array1) {
             sb1.append('\n');
             sb1.append(user.toLittleString());
         }
 
         StringBuilder sb2 = new StringBuilder();
-        for (User user: this.getFollowers()) {
+        LinkedList<User> linkedList2 = this.getFollowers();
+        User[] array2 = linkedList2.toArray(new User[linkedList2.getSize()]);
+        for (User user: array2) {
             sb2.append('\n');
             sb2.append(user.toLittleString());
         }
 
         StringBuilder sb3 = new StringBuilder();
-        for (Post post: this.getPosts()) {
+        LinkedList<Post> linkedList3 = this.getPosts();
+        Post[] array3 = linkedList3.toArray(new Post[linkedList3.getSize()]);
+        for (Post post: array3) {
             sb3.append('\n');
             sb3.append(post.toLittleString());
         }
 
         StringBuilder sb4 = new StringBuilder();
-        for (Post post: this.getLikedPosts()) {
+        LinkedList<Post> linkedList4 = this.getLikedPosts();
+        Post[] array4 = linkedList4.toArray(new Post[linkedList4.getSize()]);
+        for (Post post: array4) {
             sb4.append('\n');
             sb4.append(post.toLittleString());
         }
@@ -152,8 +161,8 @@ public class User implements ElementWithIntegerKey {
     }
 
     @Override
-    public int getKey() {
-        return this.username.hashCode();
+    public String getKey() {
+        return this.username;
     }
 
     public void fillFromUserInput() {

@@ -12,7 +12,6 @@ import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.LinkTarget;
 import guru.nidi.graphviz.model.Node;
-import models.Hashtag;
 import models.Post;
 import test.SimpleElementWithIntegerKey;
 import utils.IntegerUtilities;
@@ -143,7 +142,7 @@ public class TreePrinter {
             int i = 0;
             for (datastructures.RTree.Node child: childs) {
                 tags[i] = "tag" + (this.count);
-                records.insert(rec("tag" + (this.count++), child.computeLabelOfGeographicCoordinates()));
+                records.add(rec("tag" + (this.count++), child.computeLabelOfGeographicCoordinates()));
                 i++;
             }
         }
@@ -153,7 +152,7 @@ public class TreePrinter {
             Post[] posts = leafNode.getPosts();
 
             for (Post post: posts) {
-                records.insert(rec("tag" + (this.count++), post.computeLabel()));
+                records.add(rec("tag" + (this.count++), post.computeLabel()));
             }
         }
 
@@ -174,7 +173,7 @@ public class TreePrinter {
             node2 = node("node" + (this.count++)).with(Records.of(records2));
 
             Node node3 = node2.link(between(nodeRoot.port(NORTH).port(), nodeRoot.port(SOUTH)));
-            links.insert(node3);
+            links.add(node3);
         }
         else {
 
@@ -183,7 +182,7 @@ public class TreePrinter {
             node2 = node("node" + (this.count++)).with(Records.of(records2));
 
             Node node3 = node2.link(between(node2.port(NORTH).port(), parent.port(tag, SOUTH)));
-            links.insert(node3);
+            links.add(node3);
         }
 
         if (node instanceof InternalNode) {
@@ -206,19 +205,19 @@ public class TreePrinter {
         for (int i = 0; i < 5; i++) {
             datastructures.Trie.Node node1 = initRandomNode();
             node1.setWord(StringUtilities.computeRandomString(IntegerUtilities.computeRandomIntegerBetween(6, 9)));
-            nodeLinkedList1.insert(node1);
+            nodeLinkedList1.add(node1);
 
             LinkedList<datastructures.Trie.Node> nodeLinkedList2 = new LinkedList<>();
             for (int j = 0; j < 4; j++) {
                 datastructures.Trie.Node node2 = initRandomNode();
                 node2.setWord(StringUtilities.computeRandomString(IntegerUtilities.computeRandomIntegerBetween(6, 9)));
-                nodeLinkedList2.insert(node2);
+                nodeLinkedList2.add(node2);
 
                 LinkedList<datastructures.Trie.Node> nodeLinkedList3 = new LinkedList<>();
                 for (int k = 0; k < 3; k++) {
                     datastructures.Trie.Node node3 = initRandomNode();
                     node3.setWord(StringUtilities.computeRandomString(IntegerUtilities.computeRandomIntegerBetween(6, 9)));
-                    nodeLinkedList3.insert(node3);
+                    nodeLinkedList3.add(node3);
                 }
                 node2.setChilds(nodeLinkedList3);
             }
@@ -340,7 +339,7 @@ public class TreePrinter {
         Node node2 = node("node" + (this.count++)).with(Records.of(records));
 
         Node node3 = node2.link(between(node2.port(WEST).port(), parent.port(tag, EAST)).with(Arrow.NORMAL.dir(Arrow.DirType.BACK)));
-        links.insert(node3);
+        links.add(node3);
 
         if (node.getNext() != null) {
             this.printHashTableImmersion(node.getNext(), node2, "", links);

@@ -3,11 +3,14 @@ package controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import datastructures.AVLTree.AVLTree;
+import datastructures.HashTable.HashTable;
 import datastructures.LinkedList.LinkedList;
+import datastructures.Trie.Trie;
 import models.Hashtag;
 import models.Post;
 import models.User;
 import utils.JsonReader;
+import utils.print.TreePrinter;
 
 import java.io.*;
 import java.util.*;
@@ -15,39 +18,38 @@ import java.util.*;
 public class InstaSalle {
     public static Scanner scanner;
 
-    // Graph
-    private LinkedList<User> usersByUsername;
-    private LinkedList<Post> postsById;
-    private LinkedList<Hashtag> hashtagsByName;
+    // Lists
+    private LinkedList<User> usersList;
+    private LinkedList<Post> postsList;
+    private LinkedList<Hashtag> hashtagsList;
+
+    // Hash tables
+    private HashTable<User> usersByUsername;
+    private HashTable<Hashtag> hashtagsByName;
+
+    // Trie
+    private Trie trie;
 
     // AVL Tree
     private AVLTree avlTree;
 
     public InstaSalle() {
         scanner = new Scanner(System.in);
-        avlTree = new AVLTree();
+
+        // Init structures
+        this.usersList = new LinkedList<>();
+        this.postsList = new LinkedList<>();
+        this.hashtagsList = new LinkedList<>();
+        this.trie = new Trie();
+        this.avlTree = new AVLTree();
     }
 
     private void computeInitialGraph(User[] users, Post[] posts) {
-
-        // Store users
-        this.usersByUsername = new LinkedList<>();
-        for (User user: users) {
-            usersByUsername.insert(user);
-        }
-
-        // Store users
-        this.postsById = new LinkedList<>();
-        for (Post post: posts) {
-            postsById.insert(post);
-        }
 
         // Compute graph for each user
         for (User user: users) {
             this.computeGraph(user);
         }
-
-        this.hashtagsByName = new LinkedList<>();
 
         // Compute graph for each post
         for (Post post: posts) {
@@ -58,9 +60,18 @@ public class InstaSalle {
     private void computeGraph(User user) {
         // Connect following users
         for (String usernameToFollow: user.getToFollowUsernames()) {
-            User toFollow = (User) usersByUsername.getByKey(usernameToFollow.hashCode());
+            User toFollow = (User) usersByUsername.get(usernameToFollow);
             user.getFollowing().add(toFollow);
             toFollow.getFollowers().add(user);
+        }
+    }
+
+    private void removeFromGraph(User user) {
+        // Disconnect follower users
+        LinkedList<User> linkedList = user.getFollowers();
+        User[] array = linkedList.toArray(new User[linkedList.getSize()]);
+        for (User follower: array) {
+            follower.getFollowing().removeByStringKey(user.getKey());
         }
     }
 
@@ -68,19 +79,19 @@ public class InstaSalle {
 
         // Post liked by...
         for (String usernameWhoLiked: post.getLikedByUsernames()) {
-            User likedBy = (User) usersByUsername.getByKey(usernameWhoLiked.hashCode());
+            User likedBy = (User) usersByUsername.get(usernameWhoLiked);
             post.getLikedBy().add(likedBy);
             likedBy.getLikedPosts().add(post);
         }
 
         // Post published by...
-        User author = (User) usersByUsername.getByKey(post.getPublishedByUsername().hashCode());
+        User author = (User) usersByUsername.get(post.getPublishedByUsername());
         author.getPosts().add(post);
         post.setPublishedBy(author);
 
         // Post with hashtags...
         for (String hashtagId: post.getHashtagIds()) {
-            Hashtag hashtag = (Hashtag) hashtagsByName.getByKey(hashtagId.hashCode());
+            Hashtag hashtag = (Hashtag) hashtagsByName.get(hashtagId);
             if (hashtag == null) {
                 hashtag = new Hashtag(hashtagId);
                 hashtagsByName.insert(hashtag);
@@ -88,7 +99,25 @@ public class InstaSalle {
             hashtag.getPosts().add(post);
             post.getHashtags().add(hashtag);
         }
+    }
 
+    private void removeFromGraph(Post post) {
+
+        // Remove reference of users who gave like...
+        for (String usernameWhoLiked: post.getLikedByUsernames()) {
+            User likedBy = (User) this.usersByUsername.get(usernameWhoLiked);
+            likedBy.getLikedPosts().removeByIntegerKey(post.getKey());
+        }
+
+        // Remove reference from author...
+        User author = (User) usersByUsername.get(post.getPublishedByUsername());
+        author.getPosts().removeByIntegerKey(post.getKey());
+
+        // Remove post from hashtag list...
+        for (String hashtagId: post.getHashtagIds()) {
+            Hashtag hashtag = (Hashtag) hashtagsByName.get(hashtagId);
+            hashtag.getPosts().removeByIntegerKey(post.getKey());
+        }
     }
 
     public void showFunctionalitiesMenu() {
@@ -120,7 +149,7 @@ public class InstaSalle {
     }
 
     public void showInsertionMenu() {
-        System.out.println("What type of information do you want to insert?");
+        System.out.println("What type of information do you want to add?");
         System.out.println("    1. New user");
         System.out.println("    2. New post");
     }
@@ -184,6 +213,17 @@ public class InstaSalle {
                     posts = JsonReader.parsePosts(fileNamePosts);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                }
+
+                // Store users into list and hash table
+                for (User user: users) {
+                    usersList.add(user);
+                    usersByUsername.insert(user);
+                }
+
+                // Store posts into list and hash table
+                for (Post post: posts) {
+                    postsList.add(post);
                 }
 
                 // Compute graph
@@ -319,12 +359,18 @@ public class InstaSalle {
                 System.out.println("Inorder:");
                 avlTree.inOrder(avlTree.getRoot());
 
+                System.out.println("Rendering image of AVL Tree...");
+
                 break;
 
             case 4:// Hash table visualization
 
                 // TODO Hash table visualization
                 System.out.println("TODO Hash table visualization");
+
+
+                TreePrinter treePrinter = new TreePrinter();
+                treePrinter.printHashTable(TreePrinter.initHashTableExample1());
 
                 break;
 
@@ -357,7 +403,7 @@ public class InstaSalle {
                 // Export users
                 try (Writer writer = new FileWriter("out/datasets/users.json")) {
                     Gson gson = new GsonBuilder().create();
-                    User[] usersArray = this.usersByUsername.toArray(new User[this.usersByUsername.getSize()]);
+                    User[] usersArray = this.usersList.toArray(new User[this.usersList.getSize()]);
                     gson.toJson(usersArray, writer);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -366,7 +412,7 @@ public class InstaSalle {
                 // Export posts
                 try (Writer writer = new FileWriter("out/datasets/posts.json")) {
                     Gson gson = new GsonBuilder().create();
-                    Post[] postsArray = this.postsById.toArray(new Post[this.postsById.getSize()]);
+                    Post[] postsArray = this.postsList.toArray(new Post[this.postsList.getSize()]);
                     gson.toJson(postsArray, writer);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -399,9 +445,15 @@ public class InstaSalle {
 
                 // Graph
                 this.computeGraph(user);
+
+                // Add to list
+                this.usersList.add(user);
+
+                // Add to hashtable
                 this.usersByUsername.insert(user);
 
-                // TODO Insert to Trie
+                // Insert to Trie
+                this.trie.addUser(user.getUsername());
 
                 break;
 
@@ -412,9 +464,11 @@ public class InstaSalle {
 
                 // Graph
                 this.computeGraph(post);
-                this.postsById.insert(post);
 
-                // AVL Tree
+                // Add to list
+                this.postsList.add(post);
+
+                // Add to AVL Tree
                 this.avlTree.insert(post);
 
                 break;
@@ -432,15 +486,48 @@ public class InstaSalle {
 
             case 1:// Delete user
 
-                // TODO elimination of user
-                System.out.println("TODO elimination of user");
+                System.out.println("Specify username of the user you want do delete:");
+                String desiredUsername = scanner.nextLine();
+
+                System.out.println("Processing request...");
+
+                // Find user
+                User user = this.usersByUsername.get(desiredUsername);
+
+                // Remove from graph
+                // Disconnect follower users
+                this.removeFromGraph(user);
+
+                // Remove from list
+                this.usersList.removeByStringKey(user.getKey());
+
+                // Remove from hashtable
+                this.usersByUsername.remove(user.getKey());
+
+                // Remove from Trie
+                this.trie.deleteUser(user.getUsername());
+
+                System.out.println("\nThe user \"" + desiredUsername + "\" has been successfully removed from the system.\n");
 
                 break;
 
             case 2:// Delete post
 
-                // TODO elimination of post
-                System.out.println("TODO elimination of post");
+                System.out.println("Specify ID of the post you want do delete:");
+                int desiredPost = Integer.parseInt(scanner.nextLine());
+
+                System.out.println("Processing request...");
+
+                // Find post
+                Post post = (Post) this.avlTree.findNodeWithKey(desiredPost);
+
+                // Remove from graph
+                this.removeFromGraph(post);
+
+                // Remove from list
+                this.postsList.removeByIntegerKey(desiredPost);
+
+                System.out.println("\nThe post with ID " + desiredPost + " has been successfully removed from the system.\n");
 
                 break;
         }
@@ -457,8 +544,10 @@ public class InstaSalle {
 
             case 1:// Search user
 
-                // TODO search user
-                System.out.println("TODO search user");
+                System.out.println("Specify username of the user you want to search:");
+                String desiredUsername = scanner.nextLine();
+
+                System.out.println("Processing request...");
 
                 break;
 
@@ -472,8 +561,16 @@ public class InstaSalle {
 
             case 3:// Search according to hashtag
 
-                // TODO search according to hashtag
-                System.out.println("TODO search according to hashtag");
+                System.out.println("Enter hashtag:");
+                String desiredHashtag = scanner.nextLine();
+
+                Hashtag hashtag = this.hashtagsByName.get(desiredHashtag);
+
+                int desiredSize = 5;
+                Post[] posts = hashtag.getPosts().toArrayOfFirst(new Post[desiredSize], desiredSize);
+                for (Post post: posts) {
+                    System.out.println(post);
+                }
 
                 break;
 
@@ -481,13 +578,6 @@ public class InstaSalle {
 
                 // TODO search according to location
                 System.out.println("TODO search according to location");
-
-                break;
-
-            case 5:// Search personalized
-
-                // TODO search personalized
-                System.out.println("TODO search personalized");
 
                 break;
         }

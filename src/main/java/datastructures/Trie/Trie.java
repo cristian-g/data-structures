@@ -52,15 +52,15 @@ public class Trie {
             //Si hi ha la lletra en els nodes actuals:
             if(actualNodes.contains(charArray[i])) {
                 if(i == charArray.length - 1) {
-                    WordNode newNode = new WordNode(actualNodes.getByKey(charArray[i]));
-                    actualNodes.removeByKey(charArray[i]);
-                    actualNodes.insert(newNode);
+                    WordNode newNode = new WordNode(actualNodes.getByIntegerKey(charArray[i]));
+                    actualNodes.removeByIntegerKey(charArray[i]);
+                    actualNodes.add(newNode);
                 } else {
-                    String key = actualNodes.getByKey(charArray[i]).getWord();
+                    String key = actualNodes.getByIntegerKey(charArray[i]).getWord();
                     char[] charkey = key.toCharArray();
                     //Si la lletra coincideix, seguir aquell camí:
                     if(charArray[i] == charkey[i]) {
-                        actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
+                        actualNodes = actualNodes.getByIntegerKey(charArray[i]).getChilds();
                     }
                 }
             //Si no hi ha la lletra en els nodes actuals:
@@ -68,12 +68,12 @@ public class Trie {
                 //Si es la ultima lletra de la paraula, inserir word:
                 if(i == charArray.length - 1) {
                     WordNode newNode = new WordNode(auxKey);
-                    actualNodes.insert(newNode);
+                    actualNodes.add(newNode);
                 //Si no es la ultima lletra de la paraula, inserir cami:
                 } else {
                     Node newNode = new Node(auxKey);
-                    actualNodes.insert(newNode);
-                    actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
+                    actualNodes.add(newNode);
+                    actualNodes = actualNodes.getByIntegerKey(charArray[i]).getChilds();
                 }
             }
         }
@@ -87,31 +87,31 @@ public class Trie {
         Node[] path = new Node[username.length()];
 
         for(int i = 0; i < username.length() ; i++) {
-            Node nodeActual = actualNodes.getByKey(charArray[i]);
+            Node nodeActual = actualNodes.getByIntegerKey(charArray[i]);
             path[i] = nodeActual;
             if(i < username.length() - 1) {
                 actualNodes = nodeActual.getChilds();
             }
         }
-        if(actualNodes.getByKey(charArray[username.length() - 1]).getChilds().getSize() == 0) {
+        if(actualNodes.getByIntegerKey(charArray[username.length() - 1]).getChilds().getSize() == 0) {
             //Si no te fills, eliminar Node:
-            actualNodes.removeByKey(charArray[username.length() - 1]);
+            actualNodes.removeByIntegerKey(charArray[username.length() - 1]);
         } else {
             //Si te fills, convertir WordNode a Node:
-            Node newNode = new Node(actualNodes.getByKey(charArray[username.length() - 1]).getWord(), actualNodes.getByKey(charArray[username.length() - 1]).getChilds());
-            actualNodes.removeByKey(charArray[username.length() - 1]);
-            actualNodes.insert(newNode);
+            Node newNode = new Node(actualNodes.getByIntegerKey(charArray[username.length() - 1]).getWord(), actualNodes.getByIntegerKey(charArray[username.length() - 1]).getChilds());
+            actualNodes.removeByIntegerKey(charArray[username.length() - 1]);
+            actualNodes.add(newNode);
         }
         //Cami ascendent borrant referencies:
         for(int i = username.length() - 2; i > -1; i--) {
             actualNodes = nodes;
             for(int j = 0; j < i; j++) {
-                actualNodes = actualNodes.getByKey(charArray[j]).getChilds();
+                actualNodes = actualNodes.getByIntegerKey(charArray[j]).getChilds();
             }
-            if(actualNodes.getByKey(charArray[i]).getChilds().getSize() > 0) {
+            if(actualNodes.getByIntegerKey(charArray[i]).getChilds().getSize() > 0) {
                 break;
             }
-            actualNodes.removeByKey(charArray[i]);
+            actualNodes.removeByIntegerKey(charArray[i]);
         }
     }
 
@@ -137,15 +137,15 @@ public class Trie {
             auxKey += charArray[i];
             //Si hi ha la lletra en els nodes actuals:
             if(actualNodes.contains(charArray[i])) {
-                String key = actualNodes.getByKey(charArray[i]).getWord();
+                String key = actualNodes.getByIntegerKey(charArray[i]).getWord();
                 char[] charkey = key.toCharArray();
                 //Si la lletra coincideix, seguir aquell camí:
                 if(charArray[i] == charkey[i]) {
-                    if(i == charArray.length - 1 && actualNodes.getByKey(charArray[i]) instanceof WordNode) {
-                        suggestions.insert(actualNodes.getByKey(charArray[i]).getWord());
-                        ((WordNode) actualNodes.getByKey(charArray[i])).incrementSearches();
+                    if(i == charArray.length - 1 && actualNodes.getByIntegerKey(charArray[i]) instanceof WordNode) {
+                        suggestions.add(actualNodes.getByIntegerKey(charArray[i]).getWord());
+                        ((WordNode) actualNodes.getByIntegerKey(charArray[i])).incrementSearches();
                     }
-                    actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
+                    actualNodes = actualNodes.getByIntegerKey(charArray[i]).getChilds();
                 }
             } else {
                 //No hi ha cap suggerència, retorna una llista buida:
@@ -157,7 +157,7 @@ public class Trie {
             LinkedList<String> aux = searchForWord(n, new LinkedList<>());
             String[] auxArray = aux.toArray(new String[aux.getSize()]);
             for(String s: auxArray) {
-                suggestions.insert(s);
+                suggestions.add(s);
             }
         }
         return suggestions;
@@ -174,14 +174,14 @@ public class Trie {
             auxKey += charArray[i];
             //Si hi ha la lletra en els nodes actuals:
             if(actualNodes.contains(charArray[i])) {
-                String key = actualNodes.getByKey(charArray[i]).getWord();
+                String key = actualNodes.getByIntegerKey(charArray[i]).getWord();
                 char[] charkey = key.toCharArray();
                 //Si la lletra coincideix, seguir aquell camí:
                 if(charArray[i] == charkey[i]) {
-                    if(i == charArray.length - 1 && actualNodes.getByKey(charArray[i]) instanceof WordNode) {
-                        suggestions.insert(new Word(actualNodes.getByKey(charArray[i]).getWord(), ((WordNode) actualNodes.getByKey(charArray[i])).getSearches()));
+                    if(i == charArray.length - 1 && actualNodes.getByIntegerKey(charArray[i]) instanceof WordNode) {
+                        suggestions.add(new Word(actualNodes.getByIntegerKey(charArray[i]).getWord(), ((WordNode) actualNodes.getByIntegerKey(charArray[i])).getSearches()));
                     }
-                    actualNodes = actualNodes.getByKey(charArray[i]).getChilds();
+                    actualNodes = actualNodes.getByIntegerKey(charArray[i]).getChilds();
                 }
             } else {
                 //No hi ha cap suggerència, retorna una llista buida:
@@ -193,7 +193,7 @@ public class Trie {
             LinkedList<Word> aux = searchForWordAux(n, new LinkedList<>());
             Word[] auxArray = aux.toArray(new Word[aux.getSize()]);
             for(Word w: auxArray) {
-                suggestions.insert(w);
+                suggestions.add(w);
             }
         }
         return suggestions;
@@ -201,7 +201,7 @@ public class Trie {
 
     private LinkedList<Word> searchForWordAux(Node nodeActual, LinkedList<Word> suggestions) {
         if(nodeActual instanceof WordNode) {
-            suggestions.insert(new Word(nodeActual.getWord(), ((WordNode) nodeActual).getSearches()));
+            suggestions.add(new Word(nodeActual.getWord(), ((WordNode) nodeActual).getSearches()));
         }
         Node[] actualNodes = nodeActual.getChilds().toArray(new Node[nodeActual.getChilds().getSize()]);
         for(Node n: actualNodes) {
@@ -212,7 +212,7 @@ public class Trie {
 
     private LinkedList<String> searchForWord(Node nodeActual, LinkedList<String> suggestions) {
         if(nodeActual instanceof WordNode) {
-            suggestions.insert(nodeActual.getWord());
+            suggestions.add(nodeActual.getWord());
             ((WordNode) nodeActual).incrementSearches();
         }
         Node[] actualNodes = nodeActual.getChilds().toArray(new Node[nodeActual.getChilds().getSize()]);

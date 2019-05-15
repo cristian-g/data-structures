@@ -105,7 +105,7 @@ class Test {
 
             // Insert elements into the data structure
             for (SimpleElementWithIntegerKey element: elements) {
-                dataStructure.insert(element);
+                dataStructure.add(element);
             }
 
             // Using Java LinkedList
@@ -116,11 +116,11 @@ class Test {
             assertEqualsCustom(dataStructure, javaLinkedList);
 
             // Delete node with key 2
-            dataStructure.removeByKey(elements[2].getKey());
+            dataStructure.removeByIntegerKey(elements[2].getKey());
             javaLinkedList.remove(new SimpleElementWithIntegerKey(elements[2].getKey()));
 
             // Delete node with key 4
-            dataStructure.removeByKey(elements[4].getKey());
+            dataStructure.removeByIntegerKey(elements[4].getKey());
             javaLinkedList.remove(new SimpleElementWithIntegerKey(elements[4].getKey()));
 
             // Assert
@@ -147,10 +147,10 @@ class Test {
         for (ElementWithIntegerKey element: arrayByJava) {
             boolean contains = dataStructure.contains(element.getKey());
             assertTrue(contains);
-            dataStructure.removeByKey(element.getKey());
+            dataStructure.removeByIntegerKey(element.getKey());
         }
 
         // Regenerate data structure
-        for(int i = 0; i < keysLength; i++) dataStructure.insert(array[i]);
+        for(int i = 0; i < keysLength; i++) dataStructure.add(array[i]);
     }
 }

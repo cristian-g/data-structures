@@ -1,6 +1,7 @@
 package datastructures.LinkedList;
 
 import datastructures.ElementWithIntegerKey;
+import datastructures.ElementWithStringKey;
 
 public class LinkedList<E> {
 
@@ -25,7 +26,7 @@ public class LinkedList<E> {
         return last;
     }
 
-    public void insert(E e) {
+    public void add(E e) {
         final Node<E> l = this.last;
         final Node<E> newNode = new Node<>(l, e, null);
         last = newNode;
@@ -52,10 +53,21 @@ public class LinkedList<E> {
         }
     }
 
-    public boolean removeByKey(int key) {
+    public boolean removeByIntegerKey(int key) {
         for (Node<E> x = first; x != null; x = x.getNext()) {
-            ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) x.getItem();
-            if (elementWithIntegerKey.getKey() == key) {
+            ElementWithIntegerKey element = (ElementWithIntegerKey) x.getItem();
+            if (element.getKey() == key) {
+                unlink(x);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean removeByStringKey(String key) {
+        for (Node<E> x = first; x != null; x = x.getNext()) {
+            ElementWithStringKey element = (ElementWithStringKey) x.getItem();
+            if (element.getKey().equals(key)) {
                 unlink(x);
                 return true;
             }
@@ -123,7 +135,7 @@ public class LinkedList<E> {
         return false;
     }
 
-    public E getByKey(int key) {
+    public E getByIntegerKey(int key) {
 
         // Check if first node contains the key we are searching
         Node currentNode = this.first;
@@ -139,6 +151,42 @@ public class LinkedList<E> {
             if (currentNode != null) {
                 ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) currentNode.getItem();
                 if (elementWithIntegerKey.getKey() != key) {
+                    currentNode = currentNode.getNext();
+                }
+                else {
+                    break;
+                }
+            }
+            else {
+                break;
+            }
+        }
+
+        // Check if the key has been found
+        if (currentNode != null) {
+            return (E) currentNode.getItem();
+        }
+
+        // Key has not been found
+        return null;
+    }
+
+    public E getByStringKey(String key) {
+
+        // Check if first node contains the key we are searching
+        Node currentNode = this.first;
+        if (currentNode != null) {
+            ElementWithStringKey elementWithStringKey = (ElementWithStringKey) currentNode.getItem();
+            if (elementWithStringKey.getKey().equals(key)) {
+                return (E) currentNode.getItem();
+            }
+        }
+
+        // Search the key in the next nodes
+        while (true) {
+            if (currentNode != null) {
+                ElementWithStringKey elementWithStringKey = (ElementWithStringKey) currentNode.getItem();
+                if (!elementWithStringKey.getKey().equals(key)) {
                     currentNode = currentNode.getNext();
                 }
                 else {
@@ -179,6 +227,14 @@ public class LinkedList<E> {
         if (a.length > size)
             a[size] = null;
 
+        return a;
+    }
+
+    public <T> T[] toArrayOfFirst(T[] a, int firstN) {
+        int i = 0;
+        Object[] result = a;
+        for (Node<E> x = first; x != null && i < firstN; x = x.getNext())
+            result[i++] = x.getItem();
         return a;
     }
 }

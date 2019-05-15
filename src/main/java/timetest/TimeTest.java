@@ -47,7 +47,7 @@ public class TimeTest {
             Timer timer = new Timer();
             timer.triggerStart();
             for (SimpleElementWithIntegerKey element: elements) {
-                linkedList.insert(element);
+                linkedList.add(element);
             }
             timer.triggerEnd();
 

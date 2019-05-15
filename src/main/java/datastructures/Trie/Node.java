@@ -50,7 +50,7 @@ public class Node implements PrintableNode, ElementWithIntegerKey {
     }
 
     public void addChild(Node n) {
-        childs.insert(n);
+        childs.add(n);
     }
 
     @Override
