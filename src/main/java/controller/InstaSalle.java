@@ -419,7 +419,7 @@ public class InstaSalle {
                 for (Post post: array2) {
                     System.out.println(post);
                 }
-                
+
                 break;
         }
     }
@@ -469,61 +469,11 @@ public class InstaSalle {
 
                 try {
                     exportSpecificOption = Integer.parseInt(scanner.nextLine());
-                    this.handleSpecificExportOption(exportSpecificOption);
+                    this.handleVisualizationOption(exportSpecificOption);
                 }
                 catch (NumberFormatException e) {
                     System.out.println("Wrong option.\n");
                 }
-
-                break;
-        }
-    }
-
-    /**
-     * Start one of the application options.
-     *
-     * @param exportSpecificOption The selected functionality.
-     */
-    private void handleSpecificExportOption(int exportSpecificOption) {
-
-        switch (exportSpecificOption) {
-
-            case 1:// Trie export
-
-                // TODO Trie export
-                System.out.println("TODO Trie export");
-
-                break;
-
-            case 2:// R-Tree export
-
-                // TODO R-Tree export
-                System.out.println("TODO R-Tree export");
-
-                break;
-
-            case 3:// AVL Tree export
-
-
-
-                System.out.println("Rendering image of AVL Tree...");
-
-                break;
-
-            case 4:// Hash table export
-
-                // TODO Hash table export
-                System.out.println("TODO Hash table export");
-
-
-                TreePrinter treePrinter = new TreePrinter();
-                treePrinter.printHashTable(TreePrinter.initHashTableExample1());
-
-                break;
-
-            case 5:// Graph export
-
-
 
                 break;
         }
