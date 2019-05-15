@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import datastructures.AVLTree.AVLTree;
 import datastructures.HashTable.HashTable;
 import datastructures.LinkedList.LinkedList;
+import datastructures.RTree.RTree;
 import datastructures.Trie.Trie;
 import models.Hashtag;
 import models.Post;
@@ -32,6 +33,9 @@ public class InstaSalle {
 
     // AVL Tree
     private AVLTree avlTree;
+
+    // R-Tree
+    private RTree rTree;
 
     public InstaSalle() {
         scanner = new Scanner(System.in);
@@ -348,19 +352,30 @@ public class InstaSalle {
      */
     private void handleVisualizationOption(int visualizationOption) {
 
+        TreePrinter treePrinter = new TreePrinter();
+
         switch (visualizationOption) {
 
             case 1:// Trie visualization
 
-                // TODO Trie visualization
-                System.out.println("TODO Trie visualization");
+                System.out.println("Rendering image of Trie...");
+                try {
+                    System.out.println("Rendered image successfully: " + treePrinter.printTrie(this.trie));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 break;
 
             case 2:// R-Tree visualization
 
-                // TODO R-Tree visualization
-                System.out.println("TODO R-Tree visualization");
+                System.out.println("Rendering image of R-Tree...");
+                try {
+                    System.out.println("Rendered image successfully: " + treePrinter.printRTree(this.rTree));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
                 break;
 
@@ -370,31 +385,41 @@ public class InstaSalle {
                 avlTree.inOrder(avlTree.getRoot());
 
                 System.out.println("Rendering image of AVL Tree...");
+                try {
+                    System.out.println("Rendered image successfully: " + treePrinter.printAVLTree(this.avlTree));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 break;
 
             case 4:// Hash table visualization
 
-                // TODO Hash table visualization
                 System.out.println("TODO Hash table visualization");
 
-
-                TreePrinter treePrinter = new TreePrinter();
-                treePrinter.printHashTable(TreePrinter.initHashTableExample1());
+                System.out.println("Rendering image of hash table...");
+                try {
+                    System.out.println("Rendered image successfully: " + treePrinter.printHashTable(this.hashtagsByName));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 break;
 
             case 5:// Graph visualization
 
-                // TODO pending of email answer
-                /*for (User user: this.users) {
+                LinkedList<User> linkedList1 = this.usersList;
+                User[] array1 = linkedList1.toArray(new User[linkedList1.getSize()]);
+                for (User user: array1) {
                     System.out.println(user);
                 }
 
-                for (Post post: this.posts) {
+                LinkedList<Post> linkedList2 = this.postsList;
+                Post[] array2 = linkedList2.toArray(new Post[linkedList2.getSize()]);
+                for (Post post: array2) {
                     System.out.println(post);
-                }*/
-
+                }
+                
                 break;
         }
     }
