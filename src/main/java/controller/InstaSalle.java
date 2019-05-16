@@ -128,7 +128,7 @@ public class InstaSalle {
     }
 
     public void showFunctionalitiesMenu() {
-        System.out.println("---------- InstaSalle ------------");
+        System.out.println("\n---------- InstaSalle ------------");
         System.out.println("    1. Import files");
         System.out.println("    2. Export files");
         System.out.println("    3. Visualization of the structure's state");
@@ -236,7 +236,7 @@ public class InstaSalle {
                 for (User user: users) {
                     usersList.add(user);
                     usersByUsername.insert(user);
-                    trie.addUser(user.getUsername());
+                    trie.addUser(user);
                 }
 
                 // Store posts into list and hash table
@@ -513,7 +513,7 @@ public class InstaSalle {
                 this.usersByUsername.insert(user);
 
                 // Insert to Trie
-                this.trie.addUser(user.getUsername());
+                this.trie.addUser(user);
 
                 break;
 
@@ -606,13 +606,37 @@ public class InstaSalle {
 
                 System.out.println("Specify username of the user you want to search:");
 
-                // TODO loop
+                java.lang.String desiredUsername = "";
+                User desiredUser = null;
+                User[] suggestionsArray = null;
+                int desiredOption = -1;
 
-                char x = scanner.next().charAt(0);
+                while (true) {
+                    String toAdd = scanner.nextLine();
 
-                trie.getSuggestions("");
+                    desiredUsername = desiredUsername + toAdd;
 
-                System.out.println("Processing request...");
+                    final LinkedList<User> suggestions = trie.getSuggestions(desiredUsername);
+                    suggestionsArray = suggestions.toArray(new User[suggestions.getSize()]);
+                    System.out.println("Suggestions:");
+                    for (int i = 0; i < suggestionsArray.length; i++) {
+                        System.out.println((i+1) + ". " + suggestionsArray[i].getUsername());
+                    }
+                    System.out.println((suggestionsArray.length+1) + ". None of the suggested");
+
+                    desiredOption = Integer.parseInt(scanner.nextLine());
+                    if (desiredOption != suggestionsArray.length+1) {
+                        desiredUser = suggestionsArray[desiredOption - 1];
+                        desiredUsername =  desiredUser.getUsername();
+                    }
+                    System.out.println("Load information of user [" + desiredUsername + "]? [Y/N]");
+                    String answer = scanner.nextLine();
+                    if (answer.equals("Y")) {
+                        break;
+                    }
+                }
+
+                System.out.println("\n" + desiredUser.toString());
 
                 break;
 

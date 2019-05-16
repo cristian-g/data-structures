@@ -127,12 +127,12 @@ public class Trie {
         }
     }
 
-    public LinkedList<String> getSuggestions(String partialName) {
+    public LinkedList<User> getSuggestions(String partialName) {
         partialName = partialName.toLowerCase();
         char[] charArray = partialName.toCharArray();
         String auxKey = "";
         LinkedList<Node> actualNodes = nodes;
-        LinkedList<String> suggestions = new LinkedList<>();
+        LinkedList<User> suggestions = new LinkedList<>();
         //Per totes les lletres de la paraula:
         for(int i = 0; i < charArray.length; i++) {
             auxKey += charArray[i];
@@ -143,7 +143,7 @@ public class Trie {
                 //Si la lletra coincideix, seguir aquell camí:
                 if(charArray[i] == charkey[i]) {
                     if(i == charArray.length - 1 && actualNodes.getByIntegerKey(charArray[i]) instanceof WordNode) {
-                        suggestions.add(actualNodes.getByIntegerKey(charArray[i]).getWord());
+                        suggestions.add(((WordNode) actualNodes.getByIntegerKey(charArray[i])).getUser());
                         ((WordNode) actualNodes.getByIntegerKey(charArray[i])).incrementSearches();
                     }
                     actualNodes = actualNodes.getByIntegerKey(charArray[i]).getChilds();
@@ -155,10 +155,10 @@ public class Trie {
         }
         Node[] nodesActuals = actualNodes.toArray(new Node[actualNodes.getSize()]);
         for(Node n: nodesActuals) {
-            LinkedList<String> aux = searchForWord(n, new LinkedList<>());
-            String[] auxArray = aux.toArray(new String[aux.getSize()]);
-            for(String s: auxArray) {
-                suggestions.add(s);
+            LinkedList<User> aux = searchForWord(n, new LinkedList<>());
+            User[] auxArray = aux.toArray(new User[aux.getSize()]);
+            for(User user: auxArray) {
+                suggestions.add(user);
             }
         }
         return suggestions;
@@ -211,9 +211,9 @@ public class Trie {
         return suggestions;
     }
 
-    private LinkedList<String> searchForWord(Node nodeActual, LinkedList<String> suggestions) {
+    private LinkedList<User> searchForWord(Node nodeActual, LinkedList<User> suggestions) {
         if(nodeActual instanceof WordNode) {
-            suggestions.add(nodeActual.getWord());
+            suggestions.add(((WordNode) nodeActual).getUser());
             ((WordNode) nodeActual).incrementSearches();
         }
         Node[] actualNodes = nodeActual.getChilds().toArray(new Node[nodeActual.getChilds().getSize()]);
