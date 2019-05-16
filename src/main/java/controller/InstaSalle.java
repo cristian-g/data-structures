@@ -198,12 +198,14 @@ public class InstaSalle {
             case 1:// Import files
 
                 System.out.println("Specify path of the file to import corresponding to users (default is /users.json):");
+                System.out.println("Hint: /extra/[small/medium/large]/users.json");
                 String fileNameUsers = scanner.nextLine();
                 if (fileNameUsers.equals("")) {
                     fileNameUsers = "/users.json";
                 }
 
                 System.out.println("Specify path of the file to be imported corresponding to posts (default is /posts.json)");
+                System.out.println("Hint: /extra/[small/medium/large]/posts.json");
                 String fileNamePosts = scanner.nextLine();
                 if (fileNamePosts.equals("")) {
                     fileNamePosts = "/posts.json";
