@@ -113,7 +113,7 @@ public class TreePrinter {
 
     public String printRTree(RTree rTree) throws IOException {
 
-        final String filename = "out/r_tree.png";
+        final String filename = "out/r_tree_" + TreePrinter.images_count + ".png";
 
         LinkedList<Node> links = new LinkedList<>();
 
@@ -242,7 +242,7 @@ public class TreePrinter {
 
     public String printTrie(Trie trie) throws IOException {
 
-        final String filename = "out/" + TreePrinter.images_count + ".png";
+        final String filename = "out/trie_" + TreePrinter.images_count + ".png";
 
         // Create root node
         datastructures.Trie.Node start = new datastructures.Trie.Node();
@@ -304,7 +304,7 @@ public class TreePrinter {
 
     public String printHashTable(HashTable hashTable) throws IOException {
 
-        final String filename = "out/hash_table.png";
+        final String filename = "out/hash_table_" + TreePrinter.images_count + ".png";
 
         LinkedList<Node> links = new LinkedList<>();
 
