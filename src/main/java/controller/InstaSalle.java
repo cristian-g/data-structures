@@ -46,6 +46,9 @@ public class InstaSalle {
         this.hashtagsList = new LinkedList<>();
         this.trie = new Trie();
         this.avlTree = new AVLTree();
+        this.rTree = new RTree();
+        this.usersByUsername = new HashTable<>();
+        this.hashtagsByName = new HashTable<>();
     }
 
     private void computeInitialGraph(User[] users, Post[] posts) {
@@ -229,10 +232,11 @@ public class InstaSalle {
                     e.printStackTrace();
                 }
 
-                // Store users into list and hash table
+                // Store users into list, hash table and trie
                 for (User user: users) {
                     usersList.add(user);
                     usersByUsername.insert(user);
+                    trie.addUser(user.getUsername());
                 }
 
                 // Store posts into list and hash table
@@ -331,8 +335,14 @@ public class InstaSalle {
 
             case 7:// Limit memory for autocomplete
 
-                // TODO limit memory for autocomplete
-                System.out.println("TODO limit memory for autocomplete");
+                System.out.println("At the moment the limit is set at " + trie.getLimit() + " words");
+                System.out.println("What do you want as new limit?");
+
+                int desiredLimit = Integer.parseInt(scanner.nextLine());
+
+                System.out.println("Processing request...");
+
+                trie.limitMemory(desiredLimit);
 
                 break;
 
@@ -595,7 +605,12 @@ public class InstaSalle {
             case 1:// Search user
 
                 System.out.println("Specify username of the user you want to search:");
-                String desiredUsername = scanner.nextLine();
+
+                // TODO loop
+
+                char x = scanner.next().charAt(0);
+
+                trie.getSuggestions("");
 
                 System.out.println("Processing request...");
 
