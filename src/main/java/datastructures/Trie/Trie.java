@@ -1,6 +1,7 @@
 package datastructures.Trie;
 
 import datastructures.LinkedList.LinkedList;
+import models.User;
 
 import java.util.Arrays;
 
@@ -40,9 +41,9 @@ public class Trie {
         this.nodes = nodes;
     }
 
-    public void addUser(String username) {
+    public void addUser(User u) {
         this.users++;
-        username = username.toLowerCase();
+        String username = u.getUsername().toLowerCase();
         char[] charArray = username.toCharArray();
         String auxKey = "";
         LinkedList<Node> actualNodes = nodes;
@@ -52,7 +53,7 @@ public class Trie {
             //Si hi ha la lletra en els nodes actuals:
             if(actualNodes.contains(charArray[i])) {
                 if(i == charArray.length - 1) {
-                    WordNode newNode = new WordNode(actualNodes.getByIntegerKey(charArray[i]));
+                    WordNode newNode = new WordNode(actualNodes.getByIntegerKey(charArray[i]), u);
                     actualNodes.removeByIntegerKey(charArray[i]);
                     actualNodes.add(newNode);
                 } else {
@@ -67,7 +68,7 @@ public class Trie {
             } else {
                 //Si es la ultima lletra de la paraula, inserir word:
                 if(i == charArray.length - 1) {
-                    WordNode newNode = new WordNode(auxKey);
+                    WordNode newNode = new WordNode(auxKey, u);
                     actualNodes.add(newNode);
                 //Si no es la ultima lletra de la paraula, inserir cami:
                 } else {
@@ -115,9 +116,9 @@ public class Trie {
         }
     }
 
-    public void addAllUsers(LinkedList<String> usernames) {
-        String[] usernamesArr = usernames.toArray(new String[usernames.getSize()]);
-        for(String u: usernamesArr) {
+    public void addAllUsers(LinkedList<User> usernames) {
+        User[] usernamesArr = usernames.toArray(new User[usernames.getSize()]);
+        for(User u: usernamesArr) {
             if(users == limit) {
                 System.out.println("Se han introducido los " + limit + " primeros usuarios!");
                 break;
