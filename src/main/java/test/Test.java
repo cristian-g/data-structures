@@ -40,7 +40,7 @@ class Test {
             for (SimpleElementWithIntegerKey element: elements) {
                 tree.insert(element);
                 //TreePrinter treePrinter = new TreePrinter();
-                //treePrinter.printGraph(tree.getRoot());
+                //treePrinter.printAVLTreeImmersion(tree.getRoot());
             }
 
             // Retrieve elements in order from data structure
