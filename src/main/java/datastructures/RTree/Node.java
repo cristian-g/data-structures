@@ -7,8 +7,8 @@ import static datastructures.RTree.RTree.ARRAY_SIZE;
 public abstract class Node {
     Node parent;
     int length;
-    private double[] start; // Upper left corner
-    private double[] end; // Lower right corner
+    double[] start; // Upper left corner
+    double[] end; // Lower right corner
 
     Node(Node parent) {
         this.parent = parent;

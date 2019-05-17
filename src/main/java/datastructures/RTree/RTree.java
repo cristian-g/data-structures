@@ -3,6 +3,9 @@ package datastructures.RTree;
 import datastructures.ElementWithCoordinates;
 import datastructures.LinkedList.LinkedList;
 import models.Post;
+import utils.print.TreePrinter;
+
+import java.util.Arrays;
 
 public class RTree {
     // TODO: Change "ARRAY_SIZE" to a more meaningful name
@@ -26,8 +29,53 @@ public class RTree {
         addPost(post, root);
     }
 
+    public static RTree getTestRTree() {
+        RTree rTree = new RTree();
+        rTree.root = new InternalNode(null);
+        rTree.root.length = 2;
+        LeafNode l1 = new LeafNode(rTree.root);
+        ((InternalNode) rTree.root).child[0] = l1;
+        LeafNode l2 = new LeafNode(rTree.root);
+        ((InternalNode) rTree.root).child[1] = l2;
+        l1.addPost(new Post(1, new double[] {0,0}));
+        l1.addPost(new Post(2, new double[] {5,5}));
+        l2.addPost(new Post(3, new double[] {6,6}));
+        l2.addPost(new Post(4, new double[] {7,7}));
+
+        rTree.root.start[0] = 0;
+        rTree.root.start[1] = 0;
+        rTree.root.end[0] = 7;
+        rTree.root.end[1] = 7;
+
+        l1.addPost(new Post(5, new double[]{0,5}));
+        l1.addPost(new Post(6, new double[]{5,0}));
+        l1.addPost(new Post(7, new double[]{5,0}));
+        return rTree;
+    }
+
+    public void findCandidates(double[] postLocation, Node root, LinkedList<Node> linkedList) {
+        if (postInTheRegion(root.getStart(), root.getEnd(), postLocation)) {
+            if (root instanceof LeafNode) {
+                linkedList.add(root);
+            } else {
+                for (Node n : ((InternalNode) root).getChild()) {
+                    findCandidates(postLocation, n, linkedList);
+                }
+            }
+        }
+    }
+
     public void addPost(Post post, Node nextNode) {
         double[] postLocation = post.getLocation();
+
+        LinkedList<Node> candidates = new LinkedList<>();
+        findCandidates(postLocation, nextNode, candidates);
+
+        /*
+        for (Node n : candidates) {
+
+        }
+        */
 
         while (!(nextNode instanceof LeafNode)) {
             Node[] child = ((InternalNode) nextNode).getChild();
@@ -36,7 +84,7 @@ public class RTree {
                 if (postInTheRegion(n.getStart(), n.getEnd(), postLocation)) {
                     if (n instanceof LeafNode) {
                         if (n.isFull()) {
-                            // TODO: fer el split
+                            // TODO: fer el split o comprovar si hi ha alguna altre regio en la que hi cap
                             System.out.println("Percal incoming. Post in the region but is full!");
                         } else {
                             // We can add the post, do it.
@@ -90,13 +138,42 @@ public class RTree {
         return (p2[0] - p1[0]) * (p2[1] - p1[1]);
     }
 
+    public Post getPost(double[] location, Node nextNode) {
+        if (postInTheRegion(nextNode.getStart(), nextNode.getEnd(), location)) {
+            if (nextNode instanceof InternalNode) {
+                Node[] child = ((InternalNode) nextNode).getChild();
+
+                for (Node n : child) {
+                    Post tmp = getPost(location, n);
+
+                    if (tmp == null) {
+                        continue;
+                    }
+
+                    return tmp;
+                }
+            } else if (nextNode instanceof LeafNode){
+                Post[] posts = ((LeafNode) nextNode).getPosts();
+
+                for (Post p : posts) {
+                    if (Arrays.equals(p.getLocation(), location)) {
+                        return p;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     // Returns the post on that specific location
     public Post getPost(double[] location) {
-        return null; // TODO: implement this function
+        return getPost(location, root);
     }
 
     // Returns the posts inside that region
-    public Post[] getPosts(double[] corners) {
+    public Post[] getPosts(double[] start, double[] end) {
+
         return null; // TODO: implement this function
     }
 
