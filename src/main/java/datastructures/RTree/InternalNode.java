@@ -1,13 +1,13 @@
 package datastructures.RTree;
 
-import static datastructures.RTree.RTree.ARRAY_SIZE;
+import static datastructures.RTree.RTree.MAX_ITEMS;
 
 public class InternalNode extends Node {
-    private Node[] child; // The maximum number of child is defined by the "ARRAY_SIZE" constant
+    private Node[] child; // The maximum number of child is defined by the "MAX_ITEMS" constant
 
     public InternalNode(Node parent) {
         super(parent);
-        this.child = new Node[ARRAY_SIZE];
+        this.child = new Node[MAX_ITEMS];
     }
 
     public void setChild(Node[] child) {

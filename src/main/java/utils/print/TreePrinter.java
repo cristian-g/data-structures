@@ -93,12 +93,12 @@ public class TreePrinter {
         internalNode.fillCornersWithRandomGeographicCoordinates();
         rTree.setRoot(internalNode);
 
-        InternalNode[] nodes = new InternalNode[RTree.ARRAY_SIZE];
+        InternalNode[] nodes = new InternalNode[RTree.MAX_ITEMS];
         for (int i = 0; i < nodes.length; i++) {
             nodes[i] = new InternalNode(internalNode);
             nodes[i].fillCornersWithRandomGeographicCoordinates();
 
-            LeafNode[] nodes2 = new LeafNode[RTree.ARRAY_SIZE];
+            LeafNode[] nodes2 = new LeafNode[RTree.MAX_ITEMS];
             for (int j = 0; j < nodes2.length; j++) {
                 LeafNode leafNode = new LeafNode(null);
                 leafNode.fillWithPostsWithRandomGeographicCoordinates(0);
