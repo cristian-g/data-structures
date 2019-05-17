@@ -2,7 +2,7 @@ package datastructures.RTree;
 
 import utils.DoubleUtilities;
 
-import static datastructures.RTree.RTree.ARRAY_SIZE;
+import static datastructures.RTree.RTree.MAX_ITEMS;
 
 public abstract class Node {
     Node parent;
@@ -30,7 +30,7 @@ public abstract class Node {
     }
 
     public boolean isFull() {
-        return length == ARRAY_SIZE;
+        return length == MAX_ITEMS;
     }
 
     public void setParent(Node parent) {

@@ -2,14 +2,14 @@ package datastructures.RTree;
 
 import models.Post;
 
-import static datastructures.RTree.RTree.ARRAY_SIZE;
+import static datastructures.RTree.RTree.MAX_ITEMS;
 
 public class LeafNode extends Node {
     private Post[] posts;
 
     public LeafNode(Node parent) {
         super(parent);
-        this.posts = new Post[ARRAY_SIZE];
+        this.posts = new Post[MAX_ITEMS];
     }
 
     public void setPosts(Post[] posts) {
@@ -90,7 +90,7 @@ public class LeafNode extends Node {
 
     public void fillWithPostsWithRandomGeographicCoordinates(int emptyBoxes) {
 
-        int desiredLength = RTree.ARRAY_SIZE;
+        int desiredLength = RTree.MAX_ITEMS;
 
         Post[] posts = new Post[desiredLength];
 
