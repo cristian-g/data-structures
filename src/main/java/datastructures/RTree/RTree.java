@@ -1,6 +1,7 @@
 package datastructures.RTree;
 
 import datastructures.ElementWithCoordinates;
+import datastructures.LinkedList.LinkedList;
 import models.Post;
 import utils.print.TreePrinter;
 
@@ -53,7 +54,7 @@ public class RTree {
         return rTree;
     }
 
-    public void findCandidates(double[] postLocation, Node root, LinkedList<Node> linkedList) {
+    public void findCandidates(double[] postLocation, Node root, LinkedList linkedList) {
         if (postInTheRegion(root.getStart(), root.getEnd(), postLocation)) {
             if (root instanceof LeafNode) {
                 linkedList.add(root);

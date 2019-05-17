@@ -41,6 +41,19 @@ public class Post implements ElementWithIntegerKey, ElementWithCoordinates {
         this.hashtags = new LinkedList<>();
     }
 
+    public Post(int id, double[] location) {
+        this.id = id;
+        this.location = location;
+        this.likedByUsernames = new String[0];
+        this.publishedWhen = 10;
+        this.publishedByUsername = "";
+        this.hashtagIds = new String[0];
+        this.likedBy = new LinkedList<>();
+        this.publishedBy = new User();
+        this.hashtags = new LinkedList<>();
+        this.isVisible = true;
+    }
+
     public int getId() {
         return id;
     }

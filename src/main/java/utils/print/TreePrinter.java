@@ -147,6 +147,7 @@ public class TreePrinter {
             int i = 0;
             for (datastructures.RTree.Node child: childs) {
                 tags[i] = "tag" + (this.count);
+                if (child == null) continue;
                 records.add(rec("tag" + (this.count++), child.computeLabelOfGeographicCoordinates()));
                 i++;
             }
@@ -157,6 +158,7 @@ public class TreePrinter {
             Post[] posts = leafNode.getPosts();
 
             for (Post post: posts) {
+                if (post == null) continue;
                 records.add(rec("tag" + (this.count++), post.computeLabel()));
             }
         }
