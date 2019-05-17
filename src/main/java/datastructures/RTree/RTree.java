@@ -3,7 +3,6 @@ package datastructures.RTree;
 import datastructures.ElementWithCoordinates;
 import datastructures.LinkedList.LinkedList;
 import models.Post;
-import utils.print.TreePrinter;
 
 import java.util.Arrays;
 
@@ -34,10 +33,15 @@ public class RTree {
         RTree rTree = new RTree();
         rTree.root = new InternalNode(null);
         rTree.root.length = 2;
+        InternalNode i1 = new InternalNode(rTree.root);
+        i1.setStart(new double[] {6, 6});
+        i1.setEnd(new double[] {7, 7});
         LeafNode l1 = new LeafNode(rTree.root);
         ((InternalNode) rTree.root).child[0] = l1;
-        LeafNode l2 = new LeafNode(rTree.root);
-        ((InternalNode) rTree.root).child[1] = l2;
+        LeafNode l2 = new LeafNode(i1);
+        ((InternalNode) rTree.root).child[1] = i1;
+        i1.child[0] = l2;
+
         l1.addPost(new Post(1, new double[] {0,0}));
         l1.addPost(new Post(2, new double[] {5,5}));
         l2.addPost(new Post(3, new double[] {6,6}));
@@ -48,9 +52,9 @@ public class RTree {
         rTree.root.end[0] = 7;
         rTree.root.end[1] = 7;
 
-        l1.addPost(new Post(5, new double[]{0,5}));
-        l1.addPost(new Post(6, new double[]{5,0}));
-        l1.addPost(new Post(7, new double[]{5,0}));
+        //l1.addPost(new Post(5, new double[]{0,5}));
+        //l1.addPost(new Post(6, new double[]{5,0}));
+        //l1.addPost(new Post(7, new double[]{5,0}));
         return rTree;
     }
 
@@ -60,6 +64,7 @@ public class RTree {
                 linkedList.add(root);
             } else {
                 for (Node n : ((InternalNode) root).getChild()) {
+                    if(n == null) continue;
                     findCandidates(postLocation, n, linkedList);
                 }
             }
@@ -82,7 +87,7 @@ public class RTree {
             Node[] child = ((InternalNode) nextNode).getChild();
 
             for (Node n : child) {
-                if (postInTheRegion(n.getStart(), n.getEnd(), postLocation)) {
+                if (n != null && postInTheRegion(n.getStart(), n.getEnd(), postLocation)) {
                     if (n instanceof LeafNode) {
                         if (n.isFull()) {
                             // TODO: fer el split o comprovar si hi ha alguna altre regio en la que hi cap
@@ -140,7 +145,7 @@ public class RTree {
     }
 
     public Post getPost(double[] location, Node nextNode) {
-        if (postInTheRegion(nextNode.getStart(), nextNode.getEnd(), location)) {
+        if (nextNode != null && postInTheRegion(nextNode.getStart(), nextNode.getEnd(), location)) {
             if (nextNode instanceof InternalNode) {
                 Node[] child = ((InternalNode) nextNode).getChild();
 
@@ -157,7 +162,7 @@ public class RTree {
                 Post[] posts = ((LeafNode) nextNode).getPosts();
 
                 for (Post p : posts) {
-                    if (Arrays.equals(p.getLocation(), location)) {
+                    if (p != null && Arrays.equals(p.getLocation(), location)) {
                         return p;
                     }
                 }
@@ -173,9 +178,32 @@ public class RTree {
     }
 
     // Returns the posts inside that region
-    public Post[] getPosts(double[] start, double[] end) {
+    public LinkedList<Post> getPosts(double[] start, double[] end, Node nextNode) {
+        LinkedList<Post> posts = new LinkedList<>();
+        Node[] child = ((InternalNode) nextNode).getChild();
 
-        return null; // TODO: implement this function
+        for(Node n : child) {
+            if(n instanceof InternalNode && regionIntersectsRegion(start, end, n.getStart(), n.getEnd())) {
+                LinkedList<Post> aux = getPosts(start, end, n);
+                Post[] auxArr = aux.toArray(new Post[aux.getSize()]);
+                for(Post p: auxArr) {
+                    posts.add(p);
+                }
+            }
+            if(n instanceof LeafNode) {
+                for(Post p: ((LeafNode) n).getPosts()) {
+                    if(p != null && postInTheRegion(start, end, p.getLocation())) {
+                        posts.add(p);
+                    }
+                }
+            }
+        }
+        return posts;
+    }
+
+    //Mira si hi ha interseccio entre dues regions:
+    private boolean regionIntersectsRegion(double[] start, double[] end, double[] startN, double[] endN) {
+        return (startN[0] > start[0] || endN[0] < end[0] || startN[1] > start[1] || endN[1] < end[1]);
     }
 
     public void removePost(ElementWithCoordinates post) {
