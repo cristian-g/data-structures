@@ -18,9 +18,13 @@ public class LeafNode extends Node {
 
     //TODO: call setVisible when you add a Post
     public void addPost(Post post) {
-        assert (!isFull()); // We can only add if we have space left in the array
+        if (isFull()) {
+            System.out.println("No space left in the array!");
+            return;
+        }
 
         double[] postLocation = post.getLocation(); // Get the location of the post we want to add
+
         for (int i = 0; i < length; i++) {
             double[] location = posts[i].getLocation(); // Get the location of the post in the current array position
             if (location[0] > postLocation[0] && location[1] > postLocation[1]) { // If x and y are bigger, do the insertion
@@ -32,6 +36,30 @@ public class LeafNode extends Node {
                 break; // Stop looking for more positions as we've already inserted it
             } else if (i == (length - 1)) { // If we've already tried all positions and none worked, do the insertion as the last item
                 posts[length] = post;
+            }
+        }
+
+        if (length == 0) {
+            posts[0] = post;
+            start[0] = postLocation[0];
+            start[1] = postLocation[1];
+            end[0] = postLocation[0];
+            end[1] = postLocation[1];
+        } else {
+            if (postLocation[0] > end[0]) {
+                end[0] = postLocation[0];
+            }
+
+            if (postLocation[1] > end[1]) {
+                end[1] = postLocation[1];
+            }
+
+            if (postLocation[0] < start[0]) {
+                start[0] = postLocation[0];
+            }
+
+            if (postLocation[1] < start[1]) {
+                start[1] = postLocation[1];
             }
         }
 
