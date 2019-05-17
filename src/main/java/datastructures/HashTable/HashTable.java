@@ -1,10 +1,17 @@
 package datastructures.HashTable;
 
+import com.sangupta.murmur.Murmur3;
 import datastructures.ElementWithStringKey;
 import datastructures.LinkedList.LinkedList;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+
+import static java.lang.Math.toIntExact;
+
 public class HashTable<E> {
-    public static int DEFAULT_SIZE = 30;
+    //public static int DEFAULT_SIZE = 20749;
+    public static int DEFAULT_SIZE = 20;
     private LinkedList<E>[] array;
 
     public HashTable() {
@@ -23,13 +30,13 @@ public class HashTable<E> {
     }
 
     private long hash(String key) {
-        // TODO
-        return 0;
+        byte[] bytes = key.getBytes(StandardCharsets.UTF_8);
+        return Math.abs(Murmur3.hash_x86_32(bytes, key.length(), 0));
     }
 
     private long hash(int key) {
-        // TODO
-        return 0;
+        byte[] bytes = BigInteger.valueOf(key).toByteArray();
+        return Math.abs(Murmur3.hash_x86_32(bytes, String.valueOf(key).length(), 0));
     }
 
     private long hashElement(E element) {
@@ -38,14 +45,14 @@ public class HashTable<E> {
     }
 
     public void insert(E element) {
-        long hash = this.hashElement(element);
-        int hashInt = (int) hash;
+        long hash = this.hashElement(element) % this.array.length;
+        int hashInt = toIntExact(hash);
         this.array[hashInt].add(element);
     }
 
     public E get(String key) {
-        long hash = this.hash(key);
-        int hashInt = (int) hash;
+        long hash = this.hash(key) % this.array.length;
+        int hashInt = toIntExact(hash);
         return this.array[hashInt].getByStringKey(key);
     }
 

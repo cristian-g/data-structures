@@ -320,7 +320,8 @@ public class TreePrinter {
         int size2 = hashTable.getArray().length;
         for (int i = 0; i < size2; i++) {
             datastructures.LinkedList.Node first = hashTable.getArray()[i].getFirst();
-            this.printHashTableImmersion(first, nodeRoot, "tag" + i, links);
+            if (first != null)
+                this.printHashTableImmersion(first, nodeRoot, "tag" + i, links);
         }
 
         Node[] nodeArray = links.toArray(new Node[links.getSize()]);
@@ -338,7 +339,7 @@ public class TreePrinter {
 
     public void printHashTableImmersion(datastructures.LinkedList.Node<SimpleElementWithIntegerKey> node, Node parent, String tag, LinkedList<Node> links) {
         java.lang.String[] records = new java.lang.String[]{
-                rec("hashtag"),
+                rec(node.getPrintName()),
         };
         Node node2 = node("node" + (this.count++)).with(Records.of(records));
 

@@ -388,7 +388,6 @@ public class InstaSalle {
                     e.printStackTrace();
                 }
 
-
                 break;
 
             case 3:// AVL Tree visualization
@@ -410,6 +409,7 @@ public class InstaSalle {
                 System.out.println("TODO Hash table visualization");
 
                 System.out.println("Rendering image of hash table...");
+
                 try {
                     System.out.println("Rendered image successfully: " + treePrinter.printHashTable(this.hashtagsByName));
                 } catch (IOException e) {
