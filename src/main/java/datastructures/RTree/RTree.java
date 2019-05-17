@@ -1,12 +1,12 @@
 package datastructures.RTree;
 
 import datastructures.ElementWithCoordinates;
-import datastructures.LinkedList.LinkedList;
 import models.Post;
 
 public class RTree {
-    // TODO: Change "ARRAY_SIZE" to a more meaningful name
-    public static final int ARRAY_SIZE = 4;
+    // TODO: Change "MAX_ITEMS" to a more meaningful name
+    public static final int MAX_ITEMS = 3;
+    public static final int MIN_ITEMS = MAX_ITEMS /2 + MAX_ITEMS %2;
 
     private Node root;
 
@@ -118,8 +118,10 @@ public class RTree {
     }
 
     private static boolean postInTheRegion(double[] start, double[] end, double[] location) {
-        if (start[0] <= location[0] && start[1] <= location[1]) {
-            if (location[0] <= end[0] && location[1] <= end[1]) {
+        //Mirem si la location esta dins de les x:
+        if(start[0] <= location[0] && start[1] <= location[1]) {
+            //Mirem si la location esta dins de les y:
+            if(location[0] <= end[0] && location[1] <= end[1]) {
                 return true;
             }
         }
@@ -160,18 +162,15 @@ public class RTree {
         int postsToAdd = postsArr.length - 2;
         for(Post p: postsArr) {
             if(p != posts[0] && p != posts[1]) {
-                boolean firstRegion = findNearestRegion(leaf1, leaf2, p);
-                if(postsToAdd > Math.abs(leaf1.getLength() - leaf2.getLength())) {
-                    if(firstRegion) {
-                        leaf1.addPost(p);
-                    } else {
-                        leaf2.addPost(p);
-                    }
+                if(MIN_ITEMS - leaf1.getLength() == postsToAdd) {
+                    leaf1.addPost(p);
+                } else if(MIN_ITEMS - leaf2.getLength() == postsToAdd) {
+                    leaf2.addPost(p);
                 } else {
-                    if(leaf1.getLength() > leaf2.getLength()) {
-                        leaf2.addPost(p);
-                    } else {
+                    if(findNearestRegion(leaf1, leaf2, p)) {
                         leaf1.addPost(p);
+                    } else {
+                        leaf2.addPost(p);
                     }
                 }
                 postsToAdd--;
