@@ -14,17 +14,9 @@ public class Main {
         /* TESTS BEGIN
         try {
             RTree rt = RTree.getTestRTree();
-            Post p = new Post(10, new double[] {7,7});
-            //rt.addPost(p);
-            Post p2 = rt.getPost(new double[] {7,7});
-            System.out.println(p == p2);
-            System.out.println(p2 == null);
-
-            LinkedList<Post> posts = rt.getPosts(new double[] {4,4}, new double[]{7,7}, rt.getRoot());
-            Post[] postsArr = posts.toArray(new Post[posts.getSize()]);
-            for(Post po: postsArr) {
-                System.out.println(po.getId());
-            }
+            Post p = new Post(10, new double[] {1,2});
+            rt.addPost(p);
+            rt.removePost(new double[] {6,6}, rt.getRoot());
 
             new TreePrinter().printRTree(rt);
         } catch (IOException e) {

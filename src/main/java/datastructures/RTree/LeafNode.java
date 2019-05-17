@@ -66,10 +66,10 @@ public class LeafNode extends Node {
         length++; // Increase the length of the node by 1
     }
 
-    // TODO: implement this function if we need it
+    //Get post by reference:
     public Post getPost(Post post) {
         for(Post p: posts) {
-            if(p.equals(post)) {
+            if(p != null && p.getLocation()[0] == post.getLocation()[0] && p.getLocation()[1] == post.getLocation()[1]) {
                 //If the post exists, return it.
                 return p;
             }
@@ -78,10 +78,36 @@ public class LeafNode extends Node {
         return null;
     }
 
-    // TODO: implement this function if we need it
+    //Remove post by reference:
     public void removePost(Post post) {
         Post p = getPost(post);
-        p.setInvisible();
+        if(p != null) {
+            p.setInvisible();
+        }
+    }
+
+    //Get post by location:
+    public Post getPost(double[] postLocation) {
+        for(Post p: posts) {
+            if(p != null && p.getLocation()[0] == postLocation[0] && p.getLocation()[1] == postLocation[1]) {
+                //If the post exists, return it.
+                return p;
+            }
+        }
+        //If the post doesn't exist, return null.
+        return null;
+    }
+
+    //Remove post by location:
+    public void removePost(double[] postLocation) {
+        Post p = getPost(postLocation);
+        if(p != null) {
+            p.setInvisible();
+        }
+    }
+
+    public void findNewLimits() {
+        //TODO: implement
     }
 
     public Post[] getPosts() {

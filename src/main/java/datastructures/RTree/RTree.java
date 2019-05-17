@@ -206,20 +206,43 @@ public class RTree {
         return (startN[0] > start[0] || endN[0] < end[0] || startN[1] > start[1] || endN[1] < end[1]);
     }
 
-    public void removePost(ElementWithCoordinates post) {
-        Node nextNode = root;
-        while (nextNode instanceof InternalNode) {
+    //Remove post by reference:
+    public void removePost(Post post, Node nextNode) {
+        if(nextNode instanceof InternalNode) {
             Node[] child = ((InternalNode) nextNode).getChild();
-            for (Node n : child) {
-                if (n instanceof LeafNode) {
-                    ((LeafNode) n).removePost((Post)post);
-                } else if (n instanceof InternalNode){
+            for(Node n : child) {
+                if(n instanceof LeafNode) {
+                    ((LeafNode) n).removePost(post);
+                } else if (n instanceof InternalNode) {
                     //Mira si els punts estan dins la regio:
                     if(postInTheRegion(n.getStart(), n.getEnd(), post.getLocation())) {
-                        nextNode = n;
+                        removePost(post, n);
                     }
                 }
             }
+        } else {
+            ((LeafNode) nextNode).removePost(post);
+            ((LeafNode) nextNode).findNewLimits();
+        }
+    }
+
+    //Remove post by location:
+    public void removePost(double[] postLocation, Node nextNode) {
+        if(nextNode instanceof InternalNode) {
+            Node[] child = ((InternalNode) nextNode).getChild();
+            for(Node n : child) {
+                if(n instanceof LeafNode) {
+                    ((LeafNode) n).removePost(postLocation);
+                } else if (n instanceof InternalNode) {
+                    //Mira si els punts estan dins la regio:
+                    if(postInTheRegion(n.getStart(), n.getEnd(), postLocation)) {
+                        removePost(postLocation, n);
+                    }
+                }
+            }
+        } else {
+            ((LeafNode) nextNode).removePost(postLocation);
+            ((LeafNode) nextNode).findNewLimits();
         }
     }
 
