@@ -107,7 +107,30 @@ public class LeafNode extends Node {
     }
 
     public void findNewLimits() {
-        //TODO: implement
+        //Actualitzem límits del node actual:
+        for(Post p: posts) {
+            if (p != null) {
+                double[] postLocation = p.getLocation();
+                end = new double[] {0, 0};
+                start = new double[] {0, 0};
+
+                if (postLocation[0] > end[0]) {
+                    end[0] = postLocation[0];
+                }
+
+                if (postLocation[1] > end[1]) {
+                    end[1] = postLocation[1];
+                }
+
+                if (postLocation[0] < start[0]) {
+                    start[0] = postLocation[0];
+                }
+
+                if (postLocation[1] < start[1]) {
+                    start[1] = postLocation[1];
+                }
+            }
+        }
     }
 
     public Post[] getPosts() {
