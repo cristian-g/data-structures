@@ -1,4 +1,5 @@
 import controller.InstaSalle;
+import timetest.TimeTest;
 import datastructures.LinkedList.LinkedList;
 import datastructures.RTree.RTree;
 import models.Post;
@@ -8,6 +9,8 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
+        TimeTest timeTest = new TimeTest();
+        timeTest.runTimeTest2();
         InstaSalle instasalle = new InstaSalle();
         instasalle.init();
 

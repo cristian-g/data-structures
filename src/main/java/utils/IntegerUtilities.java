@@ -1,5 +1,6 @@
 package utils;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -20,11 +21,36 @@ public class IntegerUtilities {
         return (a > b) ? a : b;
     }
 
-    public static int[] generateRandomArray(int n){
-        int[] array = new int[n];
+    public static int[] generateRandomArray(int size) {
+        int[] array = new int[size];
         Random random = new Random();
-        for (int i = 0; i < n; i++) array[i] = random.nextInt(100000);
+        for (int i = 0; i < size; i++) array[i] = random.nextInt(100000);
         return array;
+    }
+
+    public static int[] generateRandomArrayWithNoDuplicates(int size) {
+        int[] array = new int[size];
+
+        ArrayList<Integer> list = new ArrayList<Integer>(size);
+        for(int i = 1; i <= size; i++) {
+            list.add(i);
+        }
+
+        Random rand = new Random();
+        int count = 0;
+        while(list.size() > 0) {
+            int index = rand.nextInt(list.size());
+            array[count] = list.remove(index);
+            count++;
+        }
+
+        return array;
+    }
+
+    public static int[] generateCounterArray(int size) {
+        int[] result = new int[size];
+        for (int i = 0; i < size; i++) result[i] = i;
+        return result;
     }
 
     public static int computeRandomId() {
