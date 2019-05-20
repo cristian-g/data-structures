@@ -213,6 +213,8 @@ public class RTree {
             for(Node n : child) {
                 if(n instanceof LeafNode) {
                     ((LeafNode) n).removePost(post);
+                    ((LeafNode) n).findNewLimits();
+                    findNewLimits(n);
                 } else if (n instanceof InternalNode) {
                     //Mira si els punts estan dins la regio:
                     if(postInTheRegion(n.getStart(), n.getEnd(), post.getLocation())) {
@@ -223,7 +225,13 @@ public class RTree {
         } else {
             ((LeafNode) nextNode).removePost(post);
             ((LeafNode) nextNode).findNewLimits();
+            findNewLimits(nextNode);
         }
+    }
+
+    //Funció que troba els nous límits de tots els nodes interns fins arribar a l'arrel:
+    private void findNewLimits(Node n) {
+
     }
 
     //Remove post by location:
