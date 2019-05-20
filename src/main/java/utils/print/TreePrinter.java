@@ -159,6 +159,7 @@ public class TreePrinter {
 
             for (Post post: posts) {
                 if (post == null) continue;
+                if (!post.isVisible()) continue;
                 records.add(rec("tag" + (this.count++), post.computeLabel()));
             }
         }

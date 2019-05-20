@@ -219,6 +219,10 @@ public class Post implements ElementWithIntegerKey, ElementWithCoordinates {
         this.isVisible = true;
     }
 
+    public boolean isVisible() {
+        return isVisible;
+    }
+
     public void fillWithRandomInfo() {
         this.fillWithRandomGeographicCoordinates();
         this.fillWithRandomId();
