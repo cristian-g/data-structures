@@ -3,6 +3,7 @@ package controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import datastructures.AVLTree.AVLTree;
+import datastructures.Graph.Graph;
 import datastructures.HashTable.HashTable;
 import datastructures.LinkedList.LinkedList;
 import datastructures.RTree.RTree;
@@ -28,6 +29,9 @@ public class InstaSalle {
     private HashTable<User> usersByUsername;
     private HashTable<Hashtag> hashtagsByName;
 
+    // Graph
+    private Graph graph;
+
     // Trie
     private Trie trie;
 
@@ -49,82 +53,7 @@ public class InstaSalle {
         this.rTree = new RTree();
         this.usersByUsername = new HashTable<>();
         this.hashtagsByName = new HashTable<>();
-    }
-
-    private void computeInitialGraph(User[] users, Post[] posts) {
-
-        // Compute graph for each user
-        for (User user: users) {
-            this.computeGraph(user);
-        }
-
-        // Compute graph for each post
-        for (Post post: posts) {
-            this.computeGraph(post);
-        }
-    }
-
-    private void computeGraph(User user) {
-        // Connect following users
-        for (String usernameToFollow: user.getToFollowUsernames()) {
-            User toFollow = (User) usersByUsername.get(usernameToFollow);
-            user.getFollowing().add(toFollow);
-            toFollow.getFollowers().add(user);
-        }
-    }
-
-    private void removeFromGraph(User user) {
-        // Disconnect follower users
-        LinkedList<User> linkedList = user.getFollowers();
-        User[] array = linkedList.toArray(new User[linkedList.getSize()]);
-        for (User follower: array) {
-            follower.getFollowing().removeByStringKey(user.getKey());
-        }
-    }
-
-    private void computeGraph(Post post) {
-
-        // Post liked by...
-        for (String usernameWhoLiked: post.getLikedByUsernames()) {
-            User likedBy = (User) usersByUsername.get(usernameWhoLiked);
-            post.getLikedBy().add(likedBy);
-            likedBy.getLikedPosts().add(post);
-        }
-
-        // Post published by...
-        User author = (User) usersByUsername.get(post.getPublishedByUsername());
-        author.getPosts().add(post);
-        post.setPublishedBy(author);
-
-        // Post with hashtags...
-        for (String hashtagId: post.getHashtagIds()) {
-            Hashtag hashtag = (Hashtag) hashtagsByName.get(hashtagId);
-            if (hashtag == null) {
-                hashtag = new Hashtag(hashtagId);
-                hashtagsByName.insert(hashtag);
-            }
-            hashtag.getPosts().add(post);
-            post.getHashtags().add(hashtag);
-        }
-    }
-
-    private void removeFromGraph(Post post) {
-
-        // Remove reference of users who gave like...
-        for (String usernameWhoLiked: post.getLikedByUsernames()) {
-            User likedBy = (User) this.usersByUsername.get(usernameWhoLiked);
-            likedBy.getLikedPosts().removeByIntegerKey(post.getKey());
-        }
-
-        // Remove reference from author...
-        User author = (User) usersByUsername.get(post.getPublishedByUsername());
-        author.getPosts().removeByIntegerKey(post.getKey());
-
-        // Remove post from hashtag list...
-        for (String hashtagId: post.getHashtagIds()) {
-            Hashtag hashtag = (Hashtag) hashtagsByName.get(hashtagId);
-            hashtag.getPosts().removeByIntegerKey(post.getKey());
-        }
+        this.graph = new Graph(usersByUsername, hashtagsByName);
     }
 
     public void showFunctionalitiesMenu() {
@@ -246,8 +175,8 @@ public class InstaSalle {
                     postsList.add(post);
                 }
 
-                // Compute graph
-                this.computeInitialGraph(users, posts);
+                // Compute Graph
+                this.graph.computeInitialGraph(users, posts);
 
                 // Add data to AVL Tree
                 for (Post post: posts) {
@@ -506,7 +435,7 @@ public class InstaSalle {
                 user.fillFromUserInput();
 
                 // Graph
-                this.computeGraph(user);
+                this.graph.computeGraph(user);
 
                 // Add to list
                 this.usersList.add(user);
@@ -525,7 +454,7 @@ public class InstaSalle {
                 post.fillFromUserInput();
 
                 // Graph
-                this.computeGraph(post);
+                this.graph.computeGraph(post);
 
                 // Add to list
                 this.postsList.add(post);
@@ -556,9 +485,9 @@ public class InstaSalle {
                 // Find user
                 User user = this.usersByUsername.get(desiredUsername);
 
-                // Remove from graph
+                // Remove from Graph
                 // Disconnect follower users
-                this.removeFromGraph(user);
+                this.graph.removeFromGraph(user);
 
                 // Remove from list
                 this.usersList.removeByStringKey(user.getKey());
@@ -583,8 +512,8 @@ public class InstaSalle {
                 // Find post
                 Post post = (Post) this.avlTree.findNodeWithKey(desiredPost);
 
-                // Remove from graph
-                this.removeFromGraph(post);
+                // Remove from Graph
+                this.graph.removeFromGraph(post);
 
                 // Remove from list
                 this.postsList.removeByIntegerKey(desiredPost);
