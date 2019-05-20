@@ -43,9 +43,9 @@ public class CSVPrinter {
         this.names = names;
     }
 
-    public void print() {
+    public void print(String filename) {
         
-        try (PrintWriter writer = new PrintWriter(new File("out/time-tests/test" + (files_count + 1) + ".csv"))) {
+        try (PrintWriter writer = new PrintWriter(new File("out/time-tests/" + filename + (files_count + 1) + ".csv"))) {
 
             StringBuilder sb = new StringBuilder();
 
