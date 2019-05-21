@@ -14,8 +14,10 @@ import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.LinkTarget;
 import guru.nidi.graphviz.model.Node;
 import models.Post;
+import models.User;
 import test.SimpleElementWithIntegerKey;
 import utils.IntegerUtilities;
+import utils.ObjectFactory;
 import utils.StringUtilities;
 
 import java.io.File;
@@ -232,6 +234,17 @@ public class TreePrinter {
             node1.setChilds(nodeLinkedList2);
         }
         trie.setNodes(nodeLinkedList1);
+
+        return trie;
+    }
+
+    public static Trie initTrieExample2() {
+        Trie trie = new Trie();
+
+        User[] users = ObjectFactory.computeUsersWithRandomUsername(20);
+        for (User user: users) {
+            trie.addUser(user);
+        }
 
         return trie;
     }
