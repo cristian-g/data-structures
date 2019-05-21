@@ -28,7 +28,7 @@ public class LeafNode extends Node {
         for (int i = 0; i < length; i++) {
             double[] location = posts[i].getLocation(); // Get the location of the post in the current array position
             if (location[0] > postLocation[0] && location[1] > postLocation[1]) { // If x and y are bigger, do the insertion
-                int position  = i;
+                int position = i;
                 for (i = length; i > position; i--) {
                     posts[i] = posts[i - 1];
                 }
@@ -68,8 +68,8 @@ public class LeafNode extends Node {
 
     //Get post by reference:
     public Post getPost(Post post) {
-        for(Post p: posts) {
-            if(p != null && p.getLocation()[0] == post.getLocation()[0] && p.getLocation()[1] == post.getLocation()[1]) {
+        for (Post p : posts) {
+            if (p != null && p.getLocation()[0] == post.getLocation()[0] && p.getLocation()[1] == post.getLocation()[1]) {
                 //If the post exists, return it.
                 return p;
             }
@@ -81,15 +81,15 @@ public class LeafNode extends Node {
     //Remove post by reference:
     public void removePost(Post post) {
         Post p = getPost(post);
-        if(p != null) {
+        if (p != null) {
             p.setInvisible();
         }
     }
 
     //Get post by location:
     public Post getPost(double[] postLocation) {
-        for(Post p: posts) {
-            if(p != null && p.getLocation()[0] == postLocation[0] && p.getLocation()[1] == postLocation[1]) {
+        for (Post p : posts) {
+            if (p != null && p.getLocation()[0] == postLocation[0] && p.getLocation()[1] == postLocation[1]) {
                 //If the post exists, return it.
                 return p;
             }
@@ -101,18 +101,18 @@ public class LeafNode extends Node {
     //Remove post by location:
     public void removePost(double[] postLocation) {
         Post p = getPost(postLocation);
-        if(p != null) {
+        if (p != null) {
             p.setInvisible();
         }
     }
 
     public void findNewLimits() {
         //Actualitzem límits del node actual:
-        for(Post p: posts) {
+        for (Post p : posts) {
             if (p != null) {
                 double[] postLocation = p.getLocation();
-                end = new double[] {0, 0};
-                start = new double[] {0, 0};
+                end = new double[]{0, 0};
+                start = new double[]{0, 0};
 
                 if (postLocation[0] > end[0]) {
                     end[0] = postLocation[0];
