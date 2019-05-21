@@ -9,12 +9,15 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-        TimeTest timeTest = new TimeTest();
-        /*timeTest.runTimeTest1();
-        timeTest.runTimeTest2();
-        timeTest.runTimeTest3();*/
-        timeTest.runTimeTest4();
-        timeTest.runTimeTest5();
+
+
+
+        TreePrinter treePrinter = new TreePrinter();
+        try {
+            treePrinter.printTrie(TreePrinter.initTrieExample2());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         InstaSalle instasalle = new InstaSalle();

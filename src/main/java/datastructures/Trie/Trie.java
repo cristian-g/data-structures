@@ -44,7 +44,7 @@ public class Trie {
         this.nodes = nodes;
     }
 
-    public void addUser(User u) {
+    public void addUser(User u, int searches) {
         this.users++;
         String username = u.getUsername().toLowerCase();
         char[] charArray = username.toCharArray();
@@ -56,7 +56,7 @@ public class Trie {
             //Si hi ha la lletra en els nodes actuals:
             if(actualNodes.contains(charArray[i])) {
                 if(i == charArray.length - 1) {
-                    WordNode newNode = new WordNode(actualNodes.getByIntegerKey(charArray[i]), u);
+                    WordNode newNode = new WordNode(actualNodes.getByIntegerKey(charArray[i]), u, searches);
                     actualNodes.removeByIntegerKey(charArray[i]);
                     actualNodes.add(newNode);
                 } else {
@@ -71,7 +71,7 @@ public class Trie {
             } else {
                 //Si es la ultima lletra de la paraula, inserir word:
                 if(i == charArray.length - 1) {
-                    WordNode newNode = new WordNode(auxKey, u);
+                    WordNode newNode = new WordNode(auxKey, u, searches);
                     actualNodes.add(newNode);
                 //Si no es la ultima lletra de la paraula, inserir cami:
                 } else {
@@ -81,6 +81,10 @@ public class Trie {
                 }
             }
         }
+    }
+
+    public void addUser(User u) {
+        this.addUser(u, 0);
     }
 
     public void deleteUser(String username) {

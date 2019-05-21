@@ -97,7 +97,7 @@ public class TreePrinter {
 
         InternalNode[] nodes = new InternalNode[RTree.MAX_ITEMS];
         for (int i = 0; i < nodes.length; i++) {
-            nodes[i] = new InternalNode(internalNode);
+            //nodes[i] = new InternalNode(internalNode);
             nodes[i].fillCornersWithRandomGeographicCoordinates();
 
             LeafNode[] nodes2 = new LeafNode[RTree.MAX_ITEMS];
@@ -241,10 +241,19 @@ public class TreePrinter {
     public static Trie initTrieExample2() {
         Trie trie = new Trie();
 
-        User[] users = ObjectFactory.computeUsersWithRandomUsername(20);
+        /*User[] users = ObjectFactory.computeUsersWithRandomUsername(20);
         for (User user: users) {
             trie.addUser(user);
-        }
+        }*/
+        trie.addUser(new User("cristian"), 4);
+        trie.addUser(new User("cristina"), 2);
+        trie.addUser(new User("albert"), 5);
+        trie.addUser(new User("alboroto"), 3);
+        trie.addUser(new User("ferran"), 9);
+        trie.addUser(new User("ferro"), 1);
+        trie.addUser(new User("sashimi"), 2);
+        trie.addUser(new User("maki"), 3);
+        trie.addUser(new User("ma"), 6);
 
         return trie;
     }

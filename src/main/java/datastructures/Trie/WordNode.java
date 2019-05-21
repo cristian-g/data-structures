@@ -13,9 +13,21 @@ public class WordNode extends Node implements PrintableNode {
         this.user = user;
     }
 
+    public WordNode(String word, User user, int searches) {
+        super(word);
+        this.searches = searches;
+        this.user = user;
+    }
+
     public WordNode(Node n, User user) {
         super(n.getWord(), n.getChilds());
         this.searches = 0;
+        this.user = user;
+    }
+
+    public WordNode(Node n, User user, int searches) {
+        super(n.getWord(), n.getChilds());
+        this.searches = searches;
         this.user = user;
     }
 
