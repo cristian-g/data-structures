@@ -16,7 +16,7 @@ public class RTree {
     private Node root;
 
     public RTree() {
-        root = new LeafNode(null);
+        root = new LeafNode(this);
     }
 
     public Node getRoot() {
@@ -33,14 +33,14 @@ public class RTree {
 
     public static RTree getTestRTree() {
         RTree rTree = new RTree();
-        rTree.root = new InternalNode(null);
+        rTree.root = new InternalNode(rTree);
         rTree.root.length = 2;
-        InternalNode i1 = new InternalNode(rTree.root);
+        InternalNode i1 = new InternalNode(rTree);
         i1.setStart(new double[]{6, 6});
         i1.setEnd(new double[]{7, 7});
-        LeafNode l1 = new LeafNode(rTree.root);
+        LeafNode l1 = new LeafNode(rTree);
         ((InternalNode) rTree.root).child[0] = l1;
-        LeafNode l2 = new LeafNode(i1);
+        LeafNode l2 = new LeafNode(rTree);
         ((InternalNode) rTree.root).child[1] = i1;
         i1.child[0] = l2;
 

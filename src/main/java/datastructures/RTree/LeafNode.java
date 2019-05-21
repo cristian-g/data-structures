@@ -10,8 +10,8 @@ import static datastructures.RTree.RTree.MIN_ITEMS;
 public class LeafNode extends Node {
     private Post[] posts;
 
-    public LeafNode(Node parent) {
-        super(parent);
+    public LeafNode(RTree tree) {
+        super(tree);
         this.posts = new Post[MAX_ITEMS];
     }
 
@@ -53,8 +53,13 @@ public class LeafNode extends Node {
         setPosts(tmpPosts);
         setLength(1);
 
-        LeafNode newLeafNode = new LeafNode(null);
+        LeafNode newLeafNode = new LeafNode(tree);
         newLeafNode.addPost(furthestPosts[1]);
+        if (getParent() == null) {
+            InternalNode newRoot = new InternalNode(tree);
+            setParent(newRoot);
+            tree.setRoot(newRoot);
+        }
         ((InternalNode) getParent()).addChild(newLeafNode);
 
         // Ara que ja tenim els 2 posts en les seves regions, s'han d'afegir la resta de posts entre la R1 i la R2:

@@ -10,8 +10,8 @@ import static datastructures.RTree.RTree.MIN_ITEMS;
 public class InternalNode extends Node {
     public Node[] child; // The maximum number of child is defined by the "MAX_ITEMS" constant
 
-    public InternalNode(Node parent) {
-        super(parent);
+    public InternalNode(RTree tree) {
+        super(tree);
         this.child = new Node[MAX_ITEMS];
     }
 
@@ -109,7 +109,12 @@ public class InternalNode extends Node {
         tmpNodes[0] = furthestNodes[0];
         setChild(tmpNodes);
         setLength(1);
-        InternalNode newInternalNode = new InternalNode(getParent());
+        InternalNode newInternalNode = new InternalNode(tree);
+        if (getParent() == null) {
+            InternalNode newRoot = new InternalNode(tree);
+            setParent(newRoot);
+            tree.setRoot(newRoot);
+        }
         ((InternalNode) getParent()).addChild(newInternalNode);
         newInternalNode.addChild(furthestNodes[1]);
 

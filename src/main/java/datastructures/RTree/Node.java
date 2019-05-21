@@ -6,12 +6,14 @@ import static datastructures.RTree.RTree.MAX_ITEMS;
 
 public abstract class Node {
     Node parent;
+    RTree tree;
     int length;
     double[] start; // Upper left corner
     double[] end; // Lower right corner
 
-    Node(Node parent) {
-        this.parent = parent;
+    Node(RTree tree) {
+        this.tree = tree;
+        this.parent = null;
         this.length = 0;
         this.start = new double[2];
         this.end = new double[2];
