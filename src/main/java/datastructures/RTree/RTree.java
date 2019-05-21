@@ -1,6 +1,5 @@
 package datastructures.RTree;
 
-import datastructures.ElementWithCoordinates;
 import datastructures.LinkedList.LinkedList;
 import models.Post;
 
@@ -12,7 +11,7 @@ public class RTree {
 
     // TODO: Change "MAX_ITEMS" to a more meaningful name
     public static final int MAX_ITEMS = 3;
-    public static final int MIN_ITEMS = MAX_ITEMS /2 + MAX_ITEMS %2;
+    public static final int MIN_ITEMS = MAX_ITEMS / 2 + MAX_ITEMS % 2;
 
     private Node root;
 
@@ -37,18 +36,18 @@ public class RTree {
         rTree.root = new InternalNode(null);
         rTree.root.length = 2;
         InternalNode i1 = new InternalNode(rTree.root);
-        i1.setStart(new double[] {6, 6});
-        i1.setEnd(new double[] {7, 7});
+        i1.setStart(new double[]{6, 6});
+        i1.setEnd(new double[]{7, 7});
         LeafNode l1 = new LeafNode(rTree.root);
         ((InternalNode) rTree.root).child[0] = l1;
         LeafNode l2 = new LeafNode(i1);
         ((InternalNode) rTree.root).child[1] = i1;
         i1.child[0] = l2;
 
-        l1.addPost(new Post(1, new double[] {0,0}));
-        l1.addPost(new Post(2, new double[] {5,5}));
-        l2.addPost(new Post(3, new double[] {6,6}));
-        l2.addPost(new Post(4, new double[] {7,7}));
+        l1.addPost(new Post(1, new double[]{0, 0}));
+        l1.addPost(new Post(2, new double[]{5, 5}));
+        l2.addPost(new Post(3, new double[]{6, 6}));
+        l2.addPost(new Post(4, new double[]{7, 7}));
 
         rTree.root.start[0] = 0;
         rTree.root.start[1] = 0;
@@ -67,7 +66,7 @@ public class RTree {
                 linkedList.add(root);
             } else {
                 for (Node n : ((InternalNode) root).getChild()) {
-                    if(n == null) continue;
+                    if (n == null) continue;
                     findCandidates(postLocation, n, linkedList);
                 }
             }
@@ -118,7 +117,7 @@ public class RTree {
         }
     }
 
-    public void split (LeafNode n, Post p) {
+    public void split(LeafNode n, Post p) {
         Post[] postsToAdd = Arrays.copyOf(n.getPosts(), n.getLength() + 1);
         postsToAdd[n.getLength()] = p;
 
@@ -184,7 +183,7 @@ public class RTree {
 
                     return tmp;
                 }
-            } else if (nextNode instanceof LeafNode){
+            } else if (nextNode instanceof LeafNode) {
                 Post[] posts = ((LeafNode) nextNode).getPosts();
 
                 for (Post p : posts) {
@@ -208,17 +207,17 @@ public class RTree {
         LinkedList<Post> posts = new LinkedList<>();
         Node[] child = ((InternalNode) nextNode).getChild();
 
-        for(Node n : child) {
-            if(n instanceof InternalNode && regionIntersectsRegion(start, end, n.getStart(), n.getEnd())) {
+        for (Node n : child) {
+            if (n instanceof InternalNode && regionIntersectsRegion(start, end, n.getStart(), n.getEnd())) {
                 LinkedList<Post> aux = getPosts(start, end, n);
                 Post[] auxArr = aux.toArray(new Post[aux.getSize()]);
-                for(Post p: auxArr) {
+                for (Post p : auxArr) {
                     posts.add(p);
                 }
             }
-            if(n instanceof LeafNode) {
-                for(Post p: ((LeafNode) n).getPosts()) {
-                    if(p != null && postInTheRegion(start, end, p.getLocation())) {
+            if (n instanceof LeafNode) {
+                for (Post p : ((LeafNode) n).getPosts()) {
+                    if (p != null && postInTheRegion(start, end, p.getLocation())) {
                         posts.add(p);
                     }
                 }
@@ -234,15 +233,15 @@ public class RTree {
 
     //Remove post by reference:
     public void removePost(Post post, Node nextNode) {
-        if(nextNode instanceof InternalNode) {
+        if (nextNode instanceof InternalNode) {
             Node[] child = ((InternalNode) nextNode).getChild();
-            for(Node n : child) {
-                if(n instanceof LeafNode) {
+            for (Node n : child) {
+                if (n instanceof LeafNode) {
                     ((LeafNode) n).removePost(post);
                     ((LeafNode) n).findNewLimits();
                 } else if (n instanceof InternalNode) {
                     //Mira si els punts estan dins la regio:
-                    if(postInTheRegion(n.getStart(), n.getEnd(), post.getLocation())) {
+                    if (postInTheRegion(n.getStart(), n.getEnd(), post.getLocation())) {
                         removePost(post, n);
                     }
                 }
@@ -260,14 +259,14 @@ public class RTree {
 
     //Remove post by location:
     public void removePost(double[] postLocation, Node nextNode) {
-        if(nextNode instanceof InternalNode) {
+        if (nextNode instanceof InternalNode) {
             Node[] child = ((InternalNode) nextNode).getChild();
-            for(Node n : child) {
-                if(n instanceof LeafNode) {
+            for (Node n : child) {
+                if (n instanceof LeafNode) {
                     ((LeafNode) n).removePost(postLocation);
                 } else if (n instanceof InternalNode) {
                     //Mira si els punts estan dins la regio:
-                    if(postInTheRegion(n.getStart(), n.getEnd(), postLocation)) {
+                    if (postInTheRegion(n.getStart(), n.getEnd(), postLocation)) {
                         removePost(postLocation, n);
                     }
                 }
@@ -280,11 +279,9 @@ public class RTree {
 
     private static boolean postInTheRegion(double[] start, double[] end, double[] location) {
         //Mirem si la location esta dins de les x:
-        if(start[0] <= location[0] && start[1] <= location[1]) {
+        if (start[0] <= location[0] && start[1] <= location[1]) {
             //Mirem si la location esta dins de les y:
-            if(location[0] <= end[0] && location[1] <= end[1]) {
-                return true;
-            }
+            return location[0] <= end[0] && location[1] <= end[1];
         }
 
         return false;
@@ -292,14 +289,14 @@ public class RTree {
 
     public void addRemainingPosts(LeafNode l1, LeafNode l2, Post[] posts, Post[] furthestPosts) {
         int postsToAdd = posts.length - 2;
-        for(Post p: posts) {
-            if(p != furthestPosts[0] && p != furthestPosts[1]) {
-                if(MIN_ITEMS - l1.getLength() == postsToAdd) {
+        for (Post p : posts) {
+            if (p != furthestPosts[0] && p != furthestPosts[1]) {
+                if (MIN_ITEMS - l1.getLength() == postsToAdd) {
                     l1.addPost(p);
-                } else if(MIN_ITEMS - l2.getLength() == postsToAdd) {
+                } else if (MIN_ITEMS - l2.getLength() == postsToAdd) {
                     l2.addPost(p);
                 } else {
-                    if(findNearestRegion(l1, l2, p)) {
+                    if (findNearestRegion(l1, l2, p)) {
                         l1.addPost(p);
                     } else {
                         l2.addPost(p);
@@ -322,10 +319,10 @@ public class RTree {
     public Post[] findFurthestPosts(Post[] postsArr) {
         double max = 0;
         Post[] posts = new Post[2];
-        for(int i = 0; i < postsArr.length; i++) {
-            for(int j = i + 1; j < postsArr.length; j++) {
+        for (int i = 0; i < postsArr.length; i++) {
+            for (int j = i + 1; j < postsArr.length; j++) {
                 double dist = calculateDistance(postsArr[i], postsArr[j]);
-                if(dist > max) {
+                if (dist > max) {
                     max = dist;
                     posts[0] = postsArr[i];
                     posts[1] = postsArr[j];

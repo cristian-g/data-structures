@@ -60,6 +60,6 @@ public abstract class Node {
 
     public String computeLabelOfGeographicCoordinates() {
         return "Upper left corner:\nlatitude " + DoubleUtilities.computeFormattedGeographicCoordinate(this.start[0]) + "\nlongitude " + DoubleUtilities.computeFormattedGeographicCoordinate(this.start[1]) + "\n\n" +
-               "Lower right corner:\nlatitude " + DoubleUtilities.computeFormattedGeographicCoordinate(this.end[0]) + "\nlongitude " + DoubleUtilities.computeFormattedGeographicCoordinate(this.end[1]);
+                "Lower right corner:\nlatitude " + DoubleUtilities.computeFormattedGeographicCoordinate(this.end[0]) + "\nlongitude " + DoubleUtilities.computeFormattedGeographicCoordinate(this.end[1]);
     }
 }
