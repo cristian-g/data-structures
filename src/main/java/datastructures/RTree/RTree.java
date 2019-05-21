@@ -90,15 +90,22 @@ public class RTree {
                 }
             }
 
-            // Si arribem aqui es que no hi ha cap node que el pugui agafar (perque no esta "inTheRegion"...
+            // Si arribem aqui es que no hi ha cap node que el pugui agafar (perque no esta "inTheRegion")...
             // Ara hem de trobar el bounding rectangle a "nextNode" que augmenti area minima al insertar el post
+            Node minimumAreaNode = child[0];
+            double minimumAreaIncrease = calculaIncrement(child[0].start, child[0].end, post.getLocation());
 
-            /* aqui ho busquem */
+            for (int i = 1; i < nextNode.length; i++) {
+                Node n = child[i];
+                double a = calculaIncrement(n.start, n.end, post.getLocation());
+                if (a < minimumAreaIncrease) {
+                    minimumAreaNode = n;
+                    minimumAreaIncrease = a;
+                }
+            }
+
             // Quan trobem el que augmentaria minim l'area, fem crida recursiva per insertar el post a aquell node
-            //addPost(post, minimumAreaNode);
-
-            System.out.println("NOT IMPLEMENTED YET! Afegir when not in the region");
-
+            addPost(post, minimumAreaNode);
         } else {
             if (nextNode.isFull()) {
                 // Split the leaf node into 2 nodes
