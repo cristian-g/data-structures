@@ -7,6 +7,9 @@ import models.Post;
 import java.util.Arrays;
 
 public class RTree {
+
+    public static String DATA_STRUCTURE_NAME = "R-Tree";
+
     // TODO: Change "MAX_ITEMS" to a more meaningful name
     public static final int MAX_ITEMS = 3;
     public static final int MIN_ITEMS = MAX_ITEMS /2 + MAX_ITEMS %2;

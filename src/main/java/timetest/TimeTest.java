@@ -3,11 +3,21 @@ package timetest;
 import controller.Timer;
 import datastructures.AVLTree.AVLTree;
 import datastructures.ElementWithIntegerKey;
+import datastructures.Graph.Graph;
+import datastructures.HashTable.HashTable;
+import datastructures.RTree.RTree;
+import datastructures.Trie.Trie;
+import models.Post;
+import models.User;
 import test.SimpleElementWithIntegerKey;
+import test.SimpleElementWithStringKey;
 import utils.IntegerUtilities;
+import utils.JsonReader;
+import utils.ObjectFactory;
 import utils.print.CSVPrinter;
 import utils.print.TreePrinter;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -33,8 +43,12 @@ public class TimeTest {
         System.out.println("--------------------" + "\n");
 
         Object[] dataStructures = new Object[] {
-                new datastructures.LinkedList.LinkedList(),// LinkedList
+                new Trie(),// Trie
+                //new RTree(),// RTree
                 new AVLTree(),// AVLTree
+                new HashTable<SimpleElementWithStringKey>(),// HashTable
+                new Graph(),// Graph
+                new datastructures.LinkedList.LinkedList(),// LinkedList
         };
 
         int count = 0;
@@ -48,23 +62,70 @@ public class TimeTest {
                 // Init data structure
                 dataStructure = this.initDataStructure(dataStructure);
 
-                // Compute random keys
-                int[] keys = IntegerUtilities.generateRandomArrayWithNoDuplicates(size);
+                if (dataStructure instanceof Graph) {
+                    // Import data from json files
 
-                // Generate elements using generated keys
-                int keysLength = keys.length;
-                SimpleElementWithIntegerKey[] elements = new SimpleElementWithIntegerKey[keysLength];
-                for (int i = 0; i < keysLength; i++) elements[i] = new SimpleElementWithIntegerKey(keys[i]);
+                    final String[] filenamesUsers = new String[] {
+                            "/extra/small/users.json",
+                            "/extra/medium/users.json",
+                            "/extra/large/users.json",
+                    };
 
-                // Insert elements into the data structure
-                Timer timer = new Timer();
-                timer.triggerStart();
-                for (SimpleElementWithIntegerKey element: elements) {
-                    this.insert(dataStructure, element);
+                    final String[] filenamesPosts = new String[] {
+                            "/extra/small/posts.json",
+                            "/extra/medium/posts.json",
+                            "/extra/large/posts.json",
+                    };
+
+                    // Import data to arrays (they will be discarded by java garbage collector
+                    // after adding all the elements into the data structures)
+
+                    User[] users = null;
+                    try {
+                        users = JsonReader.parseUsers(filenamesUsers[0]);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    Post[] posts = null;
+                    try {
+                        posts = JsonReader.parsePosts(filenamesPosts[0]);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    Graph graph = (Graph) dataStructure;
+
+                    // Store users into hash table
+                    for (User user: users) {
+                        graph.getUsersByUsername().insert(user);
+                    }
+
+                    // Start timer
+                    Timer timer = new Timer();
+                    timer.triggerStart();
+
+                    // Compute Graph
+                    graph.computeInitialGraph(users, posts);
+
+                    timer.triggerEnd();
+
+                    csvPrinter.getTimes().get(count).add(timer.computeDuration());
                 }
-                timer.triggerEnd();
+                else {
+                    // Generate elements using generated random keys
+                    Object[] elements = this.computeElements(dataStructure, size);
 
-                csvPrinter.getTimes().get(count).add(timer.computeDuration());
+                    // Insert elements into the data structure
+                    Timer timer = new Timer();
+                    timer.triggerStart();
+                    for (Object element: elements) {
+                        this.insert(dataStructure, element);
+                    }
+                    timer.triggerEnd();
+
+                    csvPrinter.getTimes().get(count).add(timer.computeDuration());
+                }
             }
             count++;
         }
@@ -102,14 +163,8 @@ public class TimeTest {
             // Init data structure
             dataStructure = this.initDataStructure(dataStructure);
 
-            // Compute random keys
-            int[] keys = IntegerUtilities.generateRandomArrayWithNoDuplicates(maxSize);
-            //System.out.println(Arrays.toString(keys));
-
-            // Generate elements using generated keys
-            int keysLength = keys.length;
-            SimpleElementWithIntegerKey[] elements = new SimpleElementWithIntegerKey[keysLength];
-            for (int i = 0; i < keysLength; i++) elements[i] = new SimpleElementWithIntegerKey(keys[i]);
+            // Generate elements using generated random keys
+            Object[] elements = this.computeElements(dataStructure, maxSize);
 
             for (int size: sizes) {
 
@@ -132,8 +187,26 @@ public class TimeTest {
     }
 
     private Object initDataStructure(Object dataStructure) {
-        if (dataStructure instanceof AVLTree) {
+
+        // Options:
+        //new Trie(),// Trie
+        //new RTree(),// RTree
+        //new AVLTree(),// AVLTree
+        //new HashTable<SimpleElementWithStringKey>(),// HashTable
+        //new Graph(),// Graph
+        //new datastructures.LinkedList.LinkedList(),// LinkedList
+
+        if (dataStructure instanceof Trie) {
+            return new Trie();
+        }
+        else if (dataStructure instanceof AVLTree) {
             return new AVLTree();
+        }
+        else if (dataStructure instanceof HashTable) {
+            return new HashTable<SimpleElementWithStringKey>();
+        }
+        else if (dataStructure instanceof Graph) {
+            return new Graph();
         }
         else if (dataStructure instanceof datastructures.LinkedList.LinkedList) {
             return new datastructures.LinkedList.LinkedList();
@@ -142,9 +215,21 @@ public class TimeTest {
     }
 
     private void registerDataStructure(Object dataStructure, CSVPrinter csvPrinter) {
-        if (dataStructure instanceof AVLTree) {
+        if (dataStructure instanceof Trie) {
+            csvPrinter.getNames().add(Trie.DATA_STRUCTURE_NAME);
+            csvPrinter.getTimes().add(new LinkedList<>());
+        }
+        else if (dataStructure instanceof AVLTree) {
             AVLTree avlTree = ((AVLTree) dataStructure);
             csvPrinter.getNames().add(AVLTree.DATA_STRUCTURE_NAME);
+            csvPrinter.getTimes().add(new LinkedList<>());
+        }
+        else if (dataStructure instanceof HashTable) {
+            csvPrinter.getNames().add(HashTable.DATA_STRUCTURE_NAME);
+            csvPrinter.getTimes().add(new LinkedList<>());
+        }
+        else if (dataStructure instanceof Graph) {
+            csvPrinter.getNames().add(Graph.DATA_STRUCTURE_NAME);
             csvPrinter.getTimes().add(new LinkedList<>());
         }
         else if (dataStructure instanceof datastructures.LinkedList.LinkedList) {
@@ -169,9 +254,58 @@ public class TimeTest {
         }
     }
 
+    private Object[] computeElements(Object dataStructure, int size) {
+
+        // Options:
+        //new Trie(),// Trie
+        //new RTree(),// RTree
+        //new AVLTree(),// AVLTree
+        //new HashTable<SimpleElementWithStringKey>(),// HashTable
+        //new Graph(),// Graph
+        //new datastructures.LinkedList.LinkedList(),// LinkedList
+
+        if (dataStructure instanceof Trie) {
+            return ObjectFactory.computeUsersWithRandomUsername(size);
+        }
+        else if (dataStructure instanceof AVLTree || dataStructure instanceof datastructures.LinkedList.LinkedList) {
+
+            // Compute random keys
+            int[] keys = IntegerUtilities.generateRandomArrayWithNoDuplicates(size);
+            //System.out.println(Arrays.toString(keys));
+
+            // Generate elements using generated keys
+            int keysLength = keys.length;
+            SimpleElementWithIntegerKey[] elements = new SimpleElementWithIntegerKey[keysLength];
+            for (int i = 0; i < keysLength; i++) elements[i] = new SimpleElementWithIntegerKey(keys[i]);
+
+            return elements;
+        }
+        if (dataStructure instanceof HashTable) {
+            return ObjectFactory.computeHashtagsWithRandomNames(size);
+        }
+        else if (dataStructure instanceof Graph) {
+            return new Object[0];
+        }
+        return null;
+    }
+
     private void insert(Object dataStructure, Object elementToInsert) {
-        if (dataStructure instanceof AVLTree) {
+        if (dataStructure instanceof Trie) {
+            ((Trie) dataStructure).addUser((User) elementToInsert);
+        }
+        else if (dataStructure instanceof AVLTree) {
             ((AVLTree) dataStructure).insert((ElementWithIntegerKey) elementToInsert);
+        }
+        else if (dataStructure instanceof HashTable) {
+            ((HashTable) dataStructure).insert(elementToInsert);
+        }
+        else if (dataStructure instanceof Graph) {
+            if (elementToInsert instanceof User) {
+                ((Graph) dataStructure).computeGraph((User) elementToInsert);
+            }
+            else if (elementToInsert instanceof Post) {
+                ((Graph) dataStructure).computeGraph((Post) elementToInsert);
+            }
         }
         else if (dataStructure instanceof datastructures.LinkedList.LinkedList) {
             ((datastructures.LinkedList.LinkedList) dataStructure).add((SimpleElementWithIntegerKey) elementToInsert);

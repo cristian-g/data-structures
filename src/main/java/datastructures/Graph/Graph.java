@@ -7,14 +7,36 @@ import models.Post;
 import models.User;
 
 public class Graph {
+
+    public static String DATA_STRUCTURE_NAME = "Graph";
+
     // Hash tables
     private HashTable<User> usersByUsername;
     private HashTable<Hashtag> hashtagsByName;
 
-    private Graph() {}
+    public Graph() {
+        this.usersByUsername = new HashTable<>();
+        this.hashtagsByName = new HashTable<>();
+    }
 
     public Graph(HashTable<User> usersByUsername, HashTable<Hashtag> hashtagsByName) {
         this.usersByUsername = usersByUsername;
+        this.hashtagsByName = hashtagsByName;
+    }
+
+    public HashTable<User> getUsersByUsername() {
+        return usersByUsername;
+    }
+
+    public void setUsersByUsername(HashTable<User> usersByUsername) {
+        this.usersByUsername = usersByUsername;
+    }
+
+    public HashTable<Hashtag> getHashtagsByName() {
+        return hashtagsByName;
+    }
+
+    public void setHashtagsByName(HashTable<Hashtag> hashtagsByName) {
         this.hashtagsByName = hashtagsByName;
     }
 
