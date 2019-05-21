@@ -7,12 +7,15 @@ import java.util.Arrays;
 
 public class Trie {
 
+    public static String DATA_STRUCTURE_NAME = "Trie";
+
     private int limit;  //Max number of suggestions.
     private int users;  //Number of usernames stored in the structure.
     private LinkedList<Node> nodes;
 
     public Trie() {
-        this.limit = 20;
+        //this.limit = 20;
+        this.limit = Integer.MAX_VALUE;
         this.users = 0;
         this.nodes = new LinkedList<>();
     }

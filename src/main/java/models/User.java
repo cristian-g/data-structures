@@ -1,9 +1,7 @@
 package models;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import controller.InstaSalle;
-import datastructures.ElementWithIntegerKey;
 import datastructures.ElementWithStringKey;
 import datastructures.LinkedList.LinkedList;
 
@@ -36,6 +34,14 @@ public class User implements ElementWithStringKey {
         this.followers = new LinkedList<>();
         this.posts = new LinkedList<>();
         this.likedPosts = new LinkedList<>();
+    }
+
+    public User(String username) {
+        this.following = new LinkedList<>();
+        this.followers = new LinkedList<>();
+        this.posts = new LinkedList<>();
+        this.likedPosts = new LinkedList<>();
+        this.username = username;
     }
 
     public String getUsername() {

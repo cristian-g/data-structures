@@ -10,8 +10,11 @@ import java.nio.charset.StandardCharsets;
 import static java.lang.Math.toIntExact;
 
 public class HashTable<E> {
-    //public static int DEFAULT_SIZE = 20749;
-    public static int DEFAULT_SIZE = 20;
+
+    public static String DATA_STRUCTURE_NAME = "Hash table";
+
+    public static int DEFAULT_SIZE = 20749;
+    //public static int DEFAULT_SIZE = 20;
     private LinkedList<E>[] array;
 
     public HashTable() {
