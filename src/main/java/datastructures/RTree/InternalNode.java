@@ -25,16 +25,6 @@ public class InternalNode extends Node {
         } else {
             child.setParent(this);
             this.child[length++] = child;
-
-            if (length == 1) {
-                double [] childStart = child.getStart();
-                double[] childEnd = child.getEnd();
-
-                start[0] = childStart[0];
-                start[1] = childStart[1];
-                end[0] = childEnd[0];
-                end[1] = childEnd[1];
-            }
         }
 
         findNewLimits();
@@ -42,29 +32,30 @@ public class InternalNode extends Node {
     }
 
     public void findNewLimits() {
+        if (length == 0) return;
+
+        end = child[0].getEnd().clone();
+        start = child[0].getStart().clone();
+
         //Actualitzem límits del node actual:
-        for (Node n : child) {
-            if (n != null) {
-                double[] startChild = n.getStart();
-                double[] endChild = n.getEnd();
-                end = new double[]{0, 0};
-                start = new double[]{0, 0};
+        for (int i = 1; i < length; i++) {
+            double[] startChild = child[i].getStart();
+            double[] endChild = child[i].getEnd();
 
-                if (endChild[0] > end[0]) {
-                    end[0] = endChild[0];
-                }
+            if (endChild[0] > end[0]) {
+                end[0] = endChild[0];
+            }
 
-                if (endChild[1] > end[1]) {
-                    end[1] = endChild[1];
-                }
+            if (endChild[1] > end[1]) {
+                end[1] = endChild[1];
+            }
 
-                if (startChild[0] < start[0]) {
-                    start[0] = startChild[0];
-                }
+            if (startChild[0] < start[0]) {
+                start[0] = startChild[0];
+            }
 
-                if (startChild[1] < start[1]) {
-                    start[1] = startChild[1];
-                }
+            if (startChild[1] < start[1]) {
+                start[1] = startChild[1];
             }
         }
     }
@@ -73,6 +64,11 @@ public class InternalNode extends Node {
         Node tmpParent = getParent();
 
         while (tmpParent != null) {
+            if (tmpParent.getLength() == 1) {
+                tmpParent.setStart(start.clone());
+                tmpParent.setEnd(end.clone());
+            }
+
             double[] startParent = tmpParent.getStart();
             double[] endParent = tmpParent.getEnd();
 
@@ -96,27 +92,33 @@ public class InternalNode extends Node {
         }
     }
 
-    public void split(Node n2) {
+    @Override
+    public void setLength(int length) {
+        super.setLength(length);
+        findNewLimits();
+    }
+
+    public void split(Node n) {
         Node[] nodesToAdd = Arrays.copyOf(getChild(), getLength() + 1);
-        nodesToAdd[getLength()] = n2;
+        nodesToAdd[getLength()] = n;
 
         // Troba els 2 posts mes allunyats entre ells:
         Node[] furthestNodes = findFurthestChild(nodesToAdd);
 
         // Ara ja tenim els 2 posts mes allunyats entre ells.
         // Creem 2 regions i 2 leafNodes i inserim un post a cada leafNode:
-        Node[] tmpNodes = getChild();
+        Node[] tmpNodes = new Node[getChild().length];
         tmpNodes[0] = furthestNodes[0];
         setChild(tmpNodes);
         setLength(1);
-        InternalNode newInternalNode = new InternalNode(tree);
         if (getParent() == null) {
             InternalNode newRoot = new InternalNode(tree);
-            setParent(newRoot);
+            newRoot.addChild(this);
             tree.setRoot(newRoot);
         }
-        ((InternalNode) getParent()).addChild(newInternalNode);
+        InternalNode newInternalNode = new InternalNode(tree);
         newInternalNode.addChild(furthestNodes[1]);
+        ((InternalNode) getParent()).addChild(newInternalNode);
 
         // Ara que ja tenim els 2 posts en les seves regions, s'han d'afegir la resta de posts entre la R1 i la R2:
         addRemainingChilds(newInternalNode, nodesToAdd, furthestNodes);
