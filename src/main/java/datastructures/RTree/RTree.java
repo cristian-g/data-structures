@@ -74,19 +74,15 @@ public class RTree {
     }
 
     public void addPost(Post post, Node nextNode) {
+        post.setVisible();
         // Life saver: http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/3-index/R-tree.html
-        double[] postLocation = post.getLocation();
-
-        LinkedList<Node> candidates = new LinkedList<>();
-        findCandidates(postLocation, nextNode, candidates);
-
         if (nextNode instanceof InternalNode) {
             Node[] child = ((InternalNode) nextNode).getChild();
 
             // Provem a insertar el node a tots els child
             for (int i = 0; i < nextNode.length; i++) {
                 Node n = child[i];
-                if (postInTheRegion(n.getStart(), n.getEnd(), postLocation)) {
+                if (postInTheRegion(n.getStart(), n.getEnd(), post.getLocation())) {
                     addPost(post, n);
                     return;
                 }
@@ -109,34 +105,8 @@ public class RTree {
             // Quan trobem el que augmentaria minim l'area, fem crida recursiva per insertar el post a aquell node
             addPost(post, minimumAreaNode);
         } else {
-            if (nextNode.isFull()) {
-                split((LeafNode) nextNode, post);
-            } else {
-                ((LeafNode) nextNode).addPost(post);
-            }
+            ((LeafNode) nextNode).addPost(post);
         }
-    }
-
-    public void split(LeafNode n, Post p) {
-        Post[] postsToAdd = Arrays.copyOf(n.getPosts(), n.getLength() + 1);
-        postsToAdd[n.getLength()] = p;
-
-        // Troba els 2 posts mes allunyats entre ells:
-        Post[] furthestPosts = findFurthestPosts(postsToAdd);
-
-        // Ara ja tenim els 2 posts mes allunyats entre ells.
-        // Creem 2 regions i 2 leafNodes i inserim un post a cada leafNode:
-        Post[] tmpPosts = n.getPosts();
-        tmpPosts[0] = furthestPosts[0];
-        n.setPosts(tmpPosts);
-        n.setLength(1);
-        LeafNode newLeafNode = new LeafNode(n.getParent());
-        newLeafNode.addPost(furthestPosts[1]);
-
-        // Ara que ja tenim els 2 posts en les seves regions, s'han d'afegir la resta de posts entre la R1 i la R2:
-        addRemainingPosts(n, newLeafNode, postsToAdd, furthestPosts);
-
-        ((InternalNode) n.getParent()).addChild(newLeafNode);
     }
 
     private static double calculaIncrement(double[] start, double[] end, double[] location) {
@@ -163,10 +133,6 @@ public class RTree {
         double areaFinal = (endClone[0] - startClone[0]) * (endClone[1] - startClone[1]);
 
         return areaFinal - areaInicial;
-    }
-
-    private static double calculaArea(double[] p1, double[] p2) {
-        return (p2[0] - p1[0]) * (p2[1] - p1[1]);
     }
 
     public Post getPost(double[] location, Node nextNode) {
@@ -252,11 +218,6 @@ public class RTree {
         }
     }
 
-    //Funció que troba els nous límits de tots els nodes interns fins arribar a l'arrel:
-    private void findNewLimits(Node n) {
-
-    }
-
     //Remove post by location:
     public void removePost(double[] postLocation, Node nextNode) {
         if (nextNode instanceof InternalNode) {
@@ -286,57 +247,4 @@ public class RTree {
 
         return false;
     }
-
-    public void addRemainingPosts(LeafNode l1, LeafNode l2, Post[] posts, Post[] furthestPosts) {
-        int postsToAdd = posts.length - 2;
-        for (Post p : posts) {
-            if (p != furthestPosts[0] && p != furthestPosts[1]) {
-                if (MIN_ITEMS - l1.getLength() == postsToAdd) {
-                    l1.addPost(p);
-                } else if (MIN_ITEMS - l2.getLength() == postsToAdd) {
-                    l2.addPost(p);
-                } else {
-                    if (findNearestRegion(l1, l2, p)) {
-                        l1.addPost(p);
-                    } else {
-                        l2.addPost(p);
-                    }
-                }
-                postsToAdd--;
-            }
-        }
-    }
-
-    //Mira a quina de les dues regions hi hauria increment d'area mes petit per a inserir el post en aquella regio:
-    public boolean findNearestRegion(LeafNode leaf1, LeafNode leaf2, Post p) {
-        double inc1 = calculaIncrement(leaf1.getStart(), leaf1.getEnd(), p.getLocation());
-        double inc2 = calculaIncrement(leaf2.getStart(), leaf2.getEnd(), p.getLocation());
-        return inc1 > inc2;
-    }
-
-
-    // Retorna els dos posts mes allunyats entre ells:
-    public Post[] findFurthestPosts(Post[] postsArr) {
-        double max = 0;
-        Post[] posts = new Post[2];
-        for (int i = 0; i < postsArr.length; i++) {
-            for (int j = i + 1; j < postsArr.length; j++) {
-                double dist = calculateDistance(postsArr[i], postsArr[j]);
-                if (dist > max) {
-                    max = dist;
-                    posts[0] = postsArr[i];
-                    posts[1] = postsArr[j];
-                }
-            }
-        }
-        return posts;
-    }
-
-    //Retorna la distancia al quadrat que hi ha entre post1 i post2:
-    public double calculateDistance(Post post1, Post post2) {
-        double[] locationP1 = post1.getLocation();
-        double[] locationP2 = post2.getLocation();
-        return (Math.pow(locationP1[0] - locationP2[0], 2) + Math.pow(locationP1[1] - locationP2[1], 2));
-    }
-
 }
