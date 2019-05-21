@@ -112,7 +112,7 @@ public class Trie {
             for(int j = 0; j < i; j++) {
                 actualNodes = actualNodes.getByIntegerKey(charArray[j]).getChilds();
             }
-            if(actualNodes.getByIntegerKey(charArray[i]).getChilds().getSize() > 0) {
+            if(actualNodes.getByIntegerKey(charArray[i]) instanceof WordNode || actualNodes.getByIntegerKey(charArray[i]).getChilds().getSize() > 0) {
                 break;
             }
             actualNodes.removeByIntegerKey(charArray[i]);

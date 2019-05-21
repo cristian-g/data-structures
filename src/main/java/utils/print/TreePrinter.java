@@ -97,7 +97,7 @@ public class TreePrinter {
 
         InternalNode[] nodes = new InternalNode[RTree.MAX_ITEMS];
         for (int i = 0; i < nodes.length; i++) {
-            nodes[i] = new InternalNode(internalNode);
+            nodes[i] = new InternalNode(rTree);
             nodes[i].fillCornersWithRandomGeographicCoordinates();
 
             LeafNode[] nodes2 = new LeafNode[RTree.MAX_ITEMS];
