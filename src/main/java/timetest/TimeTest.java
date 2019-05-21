@@ -3,6 +3,7 @@ package timetest;
 import controller.Timer;
 import datastructures.AVLTree.AVLTree;
 import datastructures.ElementWithIntegerKey;
+import datastructures.ElementWithStringKey;
 import datastructures.Graph.Graph;
 import datastructures.HashTable.HashTable;
 import datastructures.RTree.RTree;
@@ -196,8 +197,12 @@ public class TimeTest {
         System.out.println("--------------------" + "\n");
 
         Object[] dataStructures = new Object[] {
-                new datastructures.LinkedList.LinkedList(),// LinkedList
+                new Trie(),// Trie
+                //new RTree(),// RTree
                 new AVLTree(),// AVLTree
+                new HashTable<SimpleElementWithStringKey>(),// HashTable
+                //new Graph(),// Graph
+                new datastructures.LinkedList.LinkedList(),// LinkedList
         };
 
         int count = 0;
@@ -230,6 +235,77 @@ public class TimeTest {
         csvPrinter.setnOfElements(sizes);
 
         csvPrinter.print(filename2);
+    }
+
+
+    public void runTimeTest5() {
+
+        CSVPrinter csvPrinter = new CSVPrinter();
+
+        int[] sizes = new int[10];
+        int length = sizes.length;
+        //for (int i = 0; i < length; i++) sizes[i] = (int) Math.pow(10, i+3);
+        sizes[0] = 10000;
+        sizes[1] = 50000;
+        sizes[2] = 100000;
+        sizes[3] = 150000;
+        sizes[4] = 200000;
+        sizes[5] = 250000;
+        sizes[6] = 300000;
+        sizes[7] = 400000;
+        sizes[8] = 500000;
+        sizes[9] = 600000;
+
+        System.out.println("\n" + "--------------------");
+        System.out.println("Starting the test... We will try collections of the following sizes:");
+        System.out.println(Arrays.toString(sizes));
+        System.out.println("--------------------" + "\n");
+
+        Object[] dataStructures = new Object[] {
+                new Trie(),// Trie
+                //new RTree(),// RTree
+                new AVLTree(),// AVLTree
+                new HashTable<SimpleElementWithStringKey>(),// HashTable
+                //new Graph(),// Graph
+                new datastructures.LinkedList.LinkedList(),// LinkedList
+        };
+
+        int count = 0;
+        for (Object dataStructure: dataStructures) {
+            // -------------------------------------
+            this.registerDataStructure(dataStructure, csvPrinter);
+            // -------------------------------------
+
+            for (int size: sizes) {
+                System.out.println("Size: " + size);
+
+                // Init data structure
+                dataStructure = this.initDataStructure(dataStructure);
+
+                // Generate elements using generated random keys
+                Object[] elements = this.computeElements(dataStructure, size);
+
+                // Insert elements into the data structure
+                for (Object element: elements) {
+                    this.insert(dataStructure, element);
+                }
+
+                // Delete elements from the data structure
+                Timer timer = new Timer();
+                timer.triggerStart();
+                for (Object element: elements) {
+                    this.delete(dataStructure, element);
+                }
+                timer.triggerEnd();
+
+                csvPrinter.getTimes().get(count).add(timer.computeDuration());
+            }
+            count++;
+        }
+
+        csvPrinter.setnOfElements(sizes);
+
+        csvPrinter.print(filename1);
     }
 
     private Object initDataStructure(Object dataStructure) {
@@ -363,18 +439,26 @@ public class TimeTest {
         }
     }
 
-    public void runTimeTest3() {
-        CSVPrinter csvPrinter = new CSVPrinter();
-        csvPrinter.print(filename3);
-    }
-
-    public void runTimeTest4() {
-        CSVPrinter csvPrinter = new CSVPrinter();
-        csvPrinter.print(filename4);
-    }
-
-    public void runTimeTest5() {
-        CSVPrinter csvPrinter = new CSVPrinter();
-        csvPrinter.print(filename5);
+    private void delete(Object dataStructure, Object elementToInsert) {
+        if (dataStructure instanceof Trie) {
+            ((Trie) dataStructure).deleteUser(((User) elementToInsert).getUsername());
+        }
+        else if (dataStructure instanceof AVLTree) {
+            ((AVLTree) dataStructure).deleteNode(((ElementWithIntegerKey) elementToInsert).getKey());
+        }
+        else if (dataStructure instanceof HashTable) {
+            ((HashTable) dataStructure).remove(((ElementWithStringKey) elementToInsert).getKey());
+        }
+        else if (dataStructure instanceof Graph) {
+            if (elementToInsert instanceof User) {
+                ((Graph) dataStructure).removeFromGraph((User) elementToInsert);
+            }
+            else if (elementToInsert instanceof Post) {
+                ((Graph) dataStructure).removeFromGraph((Post) elementToInsert);
+            }
+        }
+        else if (dataStructure instanceof datastructures.LinkedList.LinkedList) {
+            ((datastructures.LinkedList.LinkedList) dataStructure).removeByIntegerKey(((SimpleElementWithIntegerKey) elementToInsert).getKey());
+        }
     }
 }
