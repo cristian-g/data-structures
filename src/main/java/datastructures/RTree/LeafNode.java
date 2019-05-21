@@ -17,7 +17,15 @@ public class LeafNode extends Node {
 
     public void setPosts(Post[] posts) {
         this.posts = posts;
-        findNewLimits();
+    }
+
+    @Override
+    public void setLength(int length) {
+        super.setLength(length);
+        if (length == 1) {
+            start = posts[0].getLocation().clone();
+            end = posts[0].getLocation().clone();
+        }
     }
 
     public void addPost(Post post) {
@@ -25,14 +33,6 @@ public class LeafNode extends Node {
             split(post);
         } else {
             posts[length++] = post;
-
-            if (length == 1) {
-                double[] location = post.getLocation();
-                start[0] = location[0];
-                start[1] = location[1];
-                end[0] = location[0];
-                end[1] = location[1];
-            }
         }
 
         findNewLimits();
@@ -48,18 +48,17 @@ public class LeafNode extends Node {
 
         // Ara ja tenim els 2 posts mes allunyats entre ells.
         // Creem 2 regions i 2 leafNodes i inserim un post a cada leafNode:
-        Post[] tmpPosts = getPosts(); // Aixi no hem de tornar a crear un array amb max size
+        Post[] tmpPosts = new Post[getPosts().length];
         tmpPosts[0] = furthestPosts[0];
         setPosts(tmpPosts);
         setLength(1);
-
-        LeafNode newLeafNode = new LeafNode(tree);
-        newLeafNode.addPost(furthestPosts[1]);
         if (getParent() == null) {
             InternalNode newRoot = new InternalNode(tree);
-            setParent(newRoot);
+            newRoot.addChild(this);
             tree.setRoot(newRoot);
         }
+        LeafNode newLeafNode = new LeafNode(tree);
+        newLeafNode.addPost(furthestPosts[1]);
         ((InternalNode) getParent()).addChild(newLeafNode);
 
         // Ara que ja tenim els 2 posts en les seves regions, s'han d'afegir la resta de posts entre la R1 i la R2:
@@ -70,7 +69,7 @@ public class LeafNode extends Node {
     public double calculateDistance(Post post1, Post post2) {
         double[] locationP1 = post1.getLocation();
         double[] locationP2 = post2.getLocation();
-        return (Math.pow(locationP1[0] - locationP2[0], 2) + Math.pow(locationP1[1] - locationP2[1], 2));
+        return Math.sqrt((Math.pow(locationP1[0] - locationP2[0], 2) + Math.pow(locationP1[1] - locationP2[1], 2)));
     }
 
     // Retorna els dos posts mes allunyats entre ells:
@@ -147,6 +146,11 @@ public class LeafNode extends Node {
         Node tmpParent = getParent();
 
         while (tmpParent != null) {
+            if (tmpParent.getLength() == 1) {
+                tmpParent.setStart(start.clone());
+                tmpParent.setEnd(end.clone());
+            }
+
             double[] startParent = tmpParent.getStart();
             double[] endParent = tmpParent.getEnd();
 
@@ -211,28 +215,29 @@ public class LeafNode extends Node {
     }
 
     public void findNewLimits() {
+        if (length == 0) return;
+
+        end = posts[0].getLocation().clone();
+        start = posts[0].getLocation().clone();
+
         //Actualitzem límits del node actual:
-        for (Post p : posts) {
-            if (p != null) {
-                double[] postLocation = p.getLocation();
-                end = new double[]{0, 0};
-                start = new double[]{0, 0};
+        for (int i = 1; i < length; i++) {
+            double[] postLocation = posts[i].getLocation();
 
-                if (postLocation[0] > end[0]) {
-                    end[0] = postLocation[0];
-                }
+            if (postLocation[0] > end[0]) {
+                end[0] = postLocation[0];
+            }
 
-                if (postLocation[1] > end[1]) {
-                    end[1] = postLocation[1];
-                }
+            if (postLocation[1] > end[1]) {
+                end[1] = postLocation[1];
+            }
 
-                if (postLocation[0] < start[0]) {
-                    start[0] = postLocation[0];
-                }
+            if (postLocation[0] < start[0]) {
+                start[0] = postLocation[0];
+            }
 
-                if (postLocation[1] < start[1]) {
-                    start[1] = postLocation[1];
-                }
+            if (postLocation[1] < start[1]) {
+                start[1] = postLocation[1];
             }
         }
     }

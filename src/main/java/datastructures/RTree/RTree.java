@@ -31,49 +31,7 @@ public class RTree {
         addPost(post, root);
     }
 
-    public static RTree getTestRTree() {
-        RTree rTree = new RTree();
-        rTree.root = new InternalNode(rTree);
-        rTree.root.length = 2;
-        InternalNode i1 = new InternalNode(rTree);
-        i1.setStart(new double[]{6, 6});
-        i1.setEnd(new double[]{7, 7});
-        LeafNode l1 = new LeafNode(rTree);
-        ((InternalNode) rTree.root).child[0] = l1;
-        LeafNode l2 = new LeafNode(rTree);
-        ((InternalNode) rTree.root).child[1] = i1;
-        i1.child[0] = l2;
-
-        l1.addPost(new Post(1, new double[]{0, 0}));
-        l1.addPost(new Post(2, new double[]{5, 5}));
-        l2.addPost(new Post(3, new double[]{6, 6}));
-        l2.addPost(new Post(4, new double[]{7, 7}));
-
-        rTree.root.start[0] = 0;
-        rTree.root.start[1] = 0;
-        rTree.root.end[0] = 7;
-        rTree.root.end[1] = 7;
-
-        //l1.addPost(new Post(5, new double[]{0,5}));
-        //l1.addPost(new Post(6, new double[]{5,0}));
-        //l1.addPost(new Post(7, new double[]{5,0}));
-        return rTree;
-    }
-
-    public void findCandidates(double[] postLocation, Node root, LinkedList linkedList) {
-        if (postInTheRegion(root.getStart(), root.getEnd(), postLocation)) {
-            if (root instanceof LeafNode) {
-                linkedList.add(root);
-            } else {
-                for (Node n : ((InternalNode) root).getChild()) {
-                    if (n == null) continue;
-                    findCandidates(postLocation, n, linkedList);
-                }
-            }
-        }
-    }
-
-    public void addPost(Post post, Node nextNode) {
+    private void addPost(Post post, Node nextNode) {
         post.setVisible();
         // Life saver: http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/3-index/R-tree.html
         if (nextNode instanceof InternalNode) {
@@ -147,13 +105,15 @@ public class RTree {
                         continue;
                     }
 
+                    if (!tmp.isVisible()) return null;
+
                     return tmp;
                 }
             } else if (nextNode instanceof LeafNode) {
                 Post[] posts = ((LeafNode) nextNode).getPosts();
 
                 for (Post p : posts) {
-                    if (p != null && Arrays.equals(p.getLocation(), location)) {
+                    if (p != null && Arrays.equals(p.getLocation(), location) && p.isVisible()) {
                         return p;
                     }
                 }
@@ -195,6 +155,14 @@ public class RTree {
     //Mira si hi ha interseccio entre dues regions:
     private boolean regionIntersectsRegion(double[] start, double[] end, double[] startN, double[] endN) {
         return (startN[0] > start[0] || endN[0] < end[0] || startN[1] > start[1] || endN[1] < end[1]);
+    }
+
+    public void removePost(Post post) {
+        removePost(post, root);
+    }
+
+    public void removePost(double[] location) {
+        removePost(location, root);
     }
 
     //Remove post by reference:

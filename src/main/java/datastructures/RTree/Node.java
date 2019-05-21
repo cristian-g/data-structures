@@ -19,6 +19,8 @@ public abstract class Node {
         this.end = new double[2];
     }
 
+    public abstract void findNewLimits();
+
     public Node getParent() {
         return parent;
     }
