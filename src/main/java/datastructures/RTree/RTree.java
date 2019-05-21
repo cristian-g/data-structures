@@ -111,12 +111,7 @@ public class RTree {
             addPost(post, minimumAreaNode);
         } else {
             if (nextNode.isFull()) {
-                // Split the leaf node into 2 nodes
-                // Find the bounding box for all the objects in each node
-                // Replace the parent's bounding box by (i assume 1) of the 2 bounding boxes
-                // The parent node can overflow and split, we need an insert procedure into an internal node just
-                // like the b-tree algorithm
-                System.out.println("NOT IMPLEMENTED YET! L'hem trobat pero esta ple me caguen");
+                split((LeafNode) nextNode, post);
             } else {
                 ((LeafNode) nextNode).addPost(post);
             }
