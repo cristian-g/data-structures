@@ -218,7 +218,7 @@ public class TimeTest {
 
             for (int size: sizes) {
 
-                // Insert elements into the data structure
+                // Insert element into the data structure
                 Timer timer = new Timer();
                 timer.triggerStart();
                 this.insert(dataStructure, elements[size]);
@@ -234,6 +234,63 @@ public class TimeTest {
         csvPrinter.setnOfElements(sizes);
 
         csvPrinter.print(filename2);
+    }
+
+    public void runTimeTest3() {
+
+        int maxSize = 100000;
+
+        CSVPrinter csvPrinter = new CSVPrinter();
+
+        int[] sizes = IntegerUtilities.generateCounterArray(maxSize);
+
+        System.out.println("\n" + "--------------------");
+        System.out.println("Starting the test...");
+        //System.out.println(Arrays.toString(sizes));
+        System.out.println("--------------------" + "\n");
+
+        Object[] dataStructures = new Object[] {
+                new Trie(),// Trie
+                //new RTree(),// RTree
+                new AVLTree(),// AVLTree
+                new HashTable<SimpleElementWithStringKey>(),// HashTable
+                //new Graph(),// Graph
+                new datastructures.LinkedList.LinkedList(),// LinkedList
+        };
+
+        int count = 0;
+        for (Object dataStructure: dataStructures) {
+            // -------------------------------------
+            this.registerDataStructure(dataStructure, csvPrinter);
+            // -------------------------------------
+
+            // Init data structure
+            dataStructure = this.initDataStructure(dataStructure);
+
+            // Generate elements using generated random keys
+            Object[] elements = this.computeElements(dataStructure, maxSize);
+
+            for (int size: sizes) {
+
+                // Insert element into the data structure
+                this.insert(dataStructure, elements[size]);
+
+                // Search element through the data structure
+                Timer timer = new Timer();
+                timer.triggerStart();
+                this.search(dataStructure, elements[size]);
+                timer.triggerEnd();
+
+                csvPrinter.getTimes().get(count).add(timer.computeDuration());
+            }
+            count++;
+
+            //this.printDataStructure(dataStructure);
+        }
+
+        csvPrinter.setnOfElements(sizes);
+
+        csvPrinter.print(filename3);
     }
 
     public void runTimeTest4() {
@@ -609,6 +666,21 @@ public class TimeTest {
         }
         else if (dataStructure instanceof datastructures.LinkedList.LinkedList) {
             ((datastructures.LinkedList.LinkedList) dataStructure).removeByIntegerKey(((SimpleElementWithIntegerKey) elementToInsert).getKey());
+        }
+    }
+
+    private void search(Object dataStructure, Object elementToInsert) {
+        if (dataStructure instanceof Trie) {
+            ((Trie) dataStructure).getSuggestions(((User) elementToInsert).getUsername());
+        }
+        else if (dataStructure instanceof AVLTree) {
+            ((AVLTree) dataStructure).findNodeWithKey(((ElementWithIntegerKey) elementToInsert).getKey());
+        }
+        else if (dataStructure instanceof HashTable) {
+            ((HashTable) dataStructure).get(((ElementWithStringKey) elementToInsert).getKey());
+        }
+        else if (dataStructure instanceof datastructures.LinkedList.LinkedList) {
+            ((datastructures.LinkedList.LinkedList) dataStructure).getByIntegerKey(((SimpleElementWithIntegerKey) elementToInsert).getKey());
         }
     }
 }
