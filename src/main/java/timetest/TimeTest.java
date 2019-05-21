@@ -33,9 +33,19 @@ public class TimeTest {
 
         CSVPrinter csvPrinter = new CSVPrinter();
 
-        int[] sizes = new int[5];
+        int[] sizes = new int[10];
         int length = sizes.length;
-        for (int i = 0; i < length; i++) sizes[i] = (int) Math.pow(10, i+1);
+        //for (int i = 0; i < length; i++) sizes[i] = (int) Math.pow(10, i+3);
+        sizes[0] = 10000;
+        sizes[1] = 50000;
+        sizes[2] = 100000;
+        sizes[3] = 150000;
+        sizes[4] = 200000;
+        sizes[5] = 250000;
+        sizes[6] = 300000;
+        sizes[7] = 400000;
+        sizes[8] = 500000;
+        sizes[9] = 600000;
 
         System.out.println("\n" + "--------------------");
         System.out.println("Starting the test... We will try collections of the following sizes:");
@@ -47,7 +57,7 @@ public class TimeTest {
                 //new RTree(),// RTree
                 new AVLTree(),// AVLTree
                 new HashTable<SimpleElementWithStringKey>(),// HashTable
-                new Graph(),// Graph
+                //new Graph(),// Graph
                 new datastructures.LinkedList.LinkedList(),// LinkedList
         };
 
@@ -58,6 +68,7 @@ public class TimeTest {
             // -------------------------------------
 
             for (int size: sizes) {
+                System.out.println("Size: " + size);
 
                 // Init data structure
                 dataStructure = this.initDataStructure(dataStructure);
@@ -216,24 +227,29 @@ public class TimeTest {
 
     private void registerDataStructure(Object dataStructure, CSVPrinter csvPrinter) {
         if (dataStructure instanceof Trie) {
+            System.out.println("Data structure: " + Trie.DATA_STRUCTURE_NAME);
             csvPrinter.getNames().add(Trie.DATA_STRUCTURE_NAME);
             csvPrinter.getTimes().add(new LinkedList<>());
         }
         else if (dataStructure instanceof AVLTree) {
             AVLTree avlTree = ((AVLTree) dataStructure);
+            System.out.println("Data structure: " + AVLTree.DATA_STRUCTURE_NAME);
             csvPrinter.getNames().add(AVLTree.DATA_STRUCTURE_NAME);
             csvPrinter.getTimes().add(new LinkedList<>());
         }
         else if (dataStructure instanceof HashTable) {
+            System.out.println("Data structure: " + HashTable.DATA_STRUCTURE_NAME);
             csvPrinter.getNames().add(HashTable.DATA_STRUCTURE_NAME);
             csvPrinter.getTimes().add(new LinkedList<>());
         }
         else if (dataStructure instanceof Graph) {
+            System.out.println("Data structure: " + Graph.DATA_STRUCTURE_NAME);
             csvPrinter.getNames().add(Graph.DATA_STRUCTURE_NAME);
             csvPrinter.getTimes().add(new LinkedList<>());
         }
         else if (dataStructure instanceof datastructures.LinkedList.LinkedList) {
             datastructures.LinkedList.LinkedList linkedList = (datastructures.LinkedList.LinkedList) dataStructure;
+            System.out.println("Data structure: " + datastructures.LinkedList.LinkedList.DATA_STRUCTURE_NAME);
             csvPrinter.getNames().add(datastructures.LinkedList.LinkedList.DATA_STRUCTURE_NAME);
             csvPrinter.getTimes().add(new LinkedList<>());
         }
