@@ -138,13 +138,11 @@ public class AVLTree {
             // The key of the current node is less than the key we are looking for
             // Recursive descent through the left
             treeRoot.setLeft(deleteNodeImmersion(treeRoot.getLeft(), key));
-        }
-        else if (key > treeRoot.getKey()) {
+        } else if (key > treeRoot.getKey()) {
             // The key of the current node is greater than the key we are looking for
             // Recursive descent through the right
             treeRoot.setRight(deleteNodeImmersion(treeRoot.getRight(), key));
-        }
-        else {
+        } else {
             // Key already exists, so we cannot add a new element with the same key
             treeRoot = this.handleDeletion(treeRoot);
         }
@@ -177,8 +175,7 @@ public class AVLTree {
                 if (getBalance(treeRoot.getLeft()) >= 0) {
                     // Case Left Left: Right Rotation
                     return rightRotate(treeRoot);// Right Rotation
-                }
-                else if (getBalance(treeRoot.getLeft()) < 0) {
+                } else if (getBalance(treeRoot.getLeft()) < 0) {
                     // Case Left Right: Left Rotation and Right Rotation
                     treeRoot.setLeft(leftRotate(treeRoot.getLeft()));// Left Rotation
                     return rightRotate(treeRoot);// Right Rotation
@@ -188,8 +185,7 @@ public class AVLTree {
                 if (getBalance(treeRoot.getRight()) <= 0) {
                     // Case Right Right: Left Rotation
                     return leftRotate(treeRoot);// Left Rotation
-                }
-                else if (getBalance(treeRoot.getRight()) > 0) {
+                } else if (getBalance(treeRoot.getRight()) > 0) {
                     // Case Right Left: Right Rotation and Left Rotation
                     treeRoot.setRight(rightRotate(treeRoot.getRight()));// Right Rotation
                     return leftRotate(treeRoot);// Left Rotation
@@ -213,9 +209,9 @@ public class AVLTree {
 
             // Store the node which can be non-null
             AVLNode node = null;
-            if (node == treeRoot.getLeft())
+            if (node == treeRoot.getLeft()) {
                 node = treeRoot.getRight();
-            else {
+            } else {
                 node = treeRoot.getLeft();
             }
 
@@ -230,8 +226,7 @@ public class AVLTree {
             else { // One child case
                 treeRoot = node; // Copy the contents of the non-empty child
             }
-        }
-        else {
+        } else {
 
             // Case of node with two children
 
@@ -249,7 +244,7 @@ public class AVLTree {
     }
 
     // Right rotation
-    AVLNode rightRotate(AVLNode node) {
+    public AVLNode rightRotate(AVLNode node) {
 
         // Store childs
         AVLNode originalLeft = node.getLeft();
@@ -272,7 +267,7 @@ public class AVLTree {
     }
 
     // Left rotation
-    AVLNode leftRotate(AVLNode node) {
+    public AVLNode leftRotate(AVLNode node) {
 
         // Store childs
         AVLNode originalRight = node.getRight();
