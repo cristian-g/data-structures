@@ -100,7 +100,6 @@ public class TimeTest {
         csvPrinter.print(filename1);
     }
 
-
     public void runTimeTest1Graph() {
 
         CSVPrinter csvPrinter = new CSVPrinter();
@@ -237,6 +236,76 @@ public class TimeTest {
         csvPrinter.print(filename2);
     }
 
+    public void runTimeTest4() {
+
+        CSVPrinter csvPrinter = new CSVPrinter();
+
+        int[] sizes = new int[10];
+        int length = sizes.length;
+        //for (int i = 0; i < length; i++) sizes[i] = (int) Math.pow(10, i+3);
+        sizes[0] = 10000;
+        sizes[1] = 50000;
+        sizes[2] = 100000;
+        sizes[3] = 150000;
+        sizes[4] = 200000;
+        sizes[5] = 250000;
+        sizes[6] = 300000;
+        sizes[7] = 400000;
+        sizes[8] = 500000;
+        sizes[9] = 600000;
+
+        System.out.println("\n" + "--------------------");
+        System.out.println("Starting the test... We will try collections of the following sizes:");
+        System.out.println(Arrays.toString(sizes));
+        System.out.println("--------------------" + "\n");
+
+        Object[] dataStructures = new Object[] {
+                new Trie(),// Trie
+                //new RTree(),// RTree
+                new AVLTree(),// AVLTree
+                new HashTable<SimpleElementWithStringKey>(),// HashTable
+                //new Graph(),// Graph
+                new datastructures.LinkedList.LinkedList(),// LinkedList
+        };
+
+        int count = 0;
+        for (Object dataStructure: dataStructures) {
+            // -------------------------------------
+            this.registerDataStructure(dataStructure, csvPrinter);
+            // -------------------------------------
+
+            for (int size: sizes) {
+                System.out.println("Size: " + size);
+
+                // Init data structure
+                dataStructure = this.initDataStructure(dataStructure);
+
+                // Generate elements using generated random keys
+                Object[] elements = this.computeElements(dataStructure, size);
+
+                // Insert elements into the data structure
+                for (Object element: elements) {
+                    this.insert(dataStructure, element);
+                }
+
+                // Delete elements from the data structure
+                Timer timer = new Timer();
+                timer.triggerStart();
+                for (Object element: elements) {
+                    System.out.println(((User) element).getUsername());
+                    this.delete(dataStructure, element);
+                }
+                timer.triggerEnd();
+
+                csvPrinter.getTimes().get(count).add(timer.computeDuration());
+            }
+            count++;
+        }
+
+        csvPrinter.setnOfElements(sizes);
+
+        csvPrinter.print(filename1);
+    }
 
     public void runTimeTest5() {
 
