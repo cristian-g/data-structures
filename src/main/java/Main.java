@@ -9,8 +9,10 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-        TimeTest timeTest = new TimeTest();
-        timeTest.runTimeTest1();
+        /*TimeTest timeTest = new TimeTest();
+        timeTest.runTimeTest1Graph();*/
+
+
         InstaSalle instasalle = new InstaSalle();
         instasalle.init();
 

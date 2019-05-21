@@ -24,10 +24,15 @@ import java.util.LinkedList;
 
 public class TimeTest {
     public final String filename1 = "insertion_n_elements";// Insertion of n elements in an empty structure
+    public final String filename1Graph = "insertion_n_elements_graph";
     public final String filename2 = "insertion_1_element_in_n_elements";// Insertion of an element having n elements
+    public final String filename2Graph = "insertion_1_element_in_n_elements_graph";
     public final String filename3 = "search_1_element_in_n_elements";// Search for an element having n elements
+    public final String filename3Graph = "search_1_element_in_n_elements_graph";
     public final String filename4 = "elimination_1_element_in_n_elements";// Elimination of an element having n elements
+    public final String filename4Graph = "elimination_1_element_in_n_elements_graph";
     public final String filename5 = "elimination_n_elements";// Elimination of n elements (until leaving empty structure)
+    public final String filename5Graph = "elimination_n_elements_graph";
 
     public void runTimeTest1() {
 
@@ -73,70 +78,18 @@ public class TimeTest {
                 // Init data structure
                 dataStructure = this.initDataStructure(dataStructure);
 
-                if (dataStructure instanceof Graph) {
-                    // Import data from json files
+                // Generate elements using generated random keys
+                Object[] elements = this.computeElements(dataStructure, size);
 
-                    final String[] filenamesUsers = new String[] {
-                            "/extra/small/users.json",
-                            "/extra/medium/users.json",
-                            "/extra/large/users.json",
-                    };
-
-                    final String[] filenamesPosts = new String[] {
-                            "/extra/small/posts.json",
-                            "/extra/medium/posts.json",
-                            "/extra/large/posts.json",
-                    };
-
-                    // Import data to arrays (they will be discarded by java garbage collector
-                    // after adding all the elements into the data structures)
-
-                    User[] users = null;
-                    try {
-                        users = JsonReader.parseUsers(filenamesUsers[0]);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-                    Post[] posts = null;
-                    try {
-                        posts = JsonReader.parsePosts(filenamesPosts[0]);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-                    Graph graph = (Graph) dataStructure;
-
-                    // Store users into hash table
-                    for (User user: users) {
-                        graph.getUsersByUsername().insert(user);
-                    }
-
-                    // Start timer
-                    Timer timer = new Timer();
-                    timer.triggerStart();
-
-                    // Compute Graph
-                    graph.computeInitialGraph(users, posts);
-
-                    timer.triggerEnd();
-
-                    csvPrinter.getTimes().get(count).add(timer.computeDuration());
+                // Insert elements into the data structure
+                Timer timer = new Timer();
+                timer.triggerStart();
+                for (Object element: elements) {
+                    this.insert(dataStructure, element);
                 }
-                else {
-                    // Generate elements using generated random keys
-                    Object[] elements = this.computeElements(dataStructure, size);
+                timer.triggerEnd();
 
-                    // Insert elements into the data structure
-                    Timer timer = new Timer();
-                    timer.triggerStart();
-                    for (Object element: elements) {
-                        this.insert(dataStructure, element);
-                    }
-                    timer.triggerEnd();
-
-                    csvPrinter.getTimes().get(count).add(timer.computeDuration());
-                }
+                csvPrinter.getTimes().get(count).add(timer.computeDuration());
             }
             count++;
         }
@@ -146,6 +99,88 @@ public class TimeTest {
         csvPrinter.print(filename1);
     }
 
+
+    public void runTimeTest1Graph() {
+
+        CSVPrinter csvPrinter = new CSVPrinter();
+
+        System.out.println("\n" + "--------------------");
+        System.out.println("Starting the test...");
+        System.out.println("--------------------" + "\n");
+
+        Object[] dataStructures = new Object[] {
+                new Graph(),// Graph
+        };
+
+        Object dataStructure = dataStructures[0];
+        // -------------------------------------
+        this.registerDataStructure(dataStructure, csvPrinter);
+        // -------------------------------------
+
+        // Init data structure
+        dataStructure = this.initDataStructure(dataStructure);
+
+        // Import data from json files
+
+        final String[] filenamesUsers = new String[] {
+                "/extra/small/users.json",
+                "/extra/medium/users.json",
+                "/extra/large/users.json",
+        };
+
+        final String[] filenamesPosts = new String[] {
+                "/extra/small/posts.json",
+                "/extra/medium/posts.json",
+                "/extra/large/posts.json",
+        };
+
+        int[] sizes = new int[filenamesUsers.length];
+
+        for (int i = 0; i < filenamesUsers.length; i++) {
+            // Import data to arrays (they will be discarded by java garbage collector
+            // after adding all the elements into the data structures)
+
+            User[] users = null;
+            try {
+                users = JsonReader.parseUsers(filenamesUsers[i]);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            sizes[i] = users.length;
+
+            Post[] posts = null;
+            try {
+                posts = JsonReader.parsePosts(filenamesPosts[i]);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            Graph graph = (Graph) dataStructure;
+
+            // Store users into hash table
+            for (User user: users) {
+                graph.getUsersByUsername().insert(user);
+            }
+
+            // Start timer
+            Timer timer = new Timer();
+            timer.triggerStart();
+
+            // Compute Graph
+            graph.computeInitialGraph(users, posts);
+
+            timer.triggerEnd();
+
+            csvPrinter.getTimes().get(0).add(timer.computeDuration());
+
+            System.out.println("Dataset " + filenamesUsers[i] + " in " + timer.computeFormattedDuration() + " (" + users.length + " users)");
+        }
+
+        csvPrinter.setnOfElements(sizes);
+
+        csvPrinter.print(filename1Graph);
+    }
 
     public void runTimeTest2() {
 
