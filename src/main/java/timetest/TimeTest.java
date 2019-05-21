@@ -337,7 +337,8 @@ public class TimeTest {
                 // Remove elements from the data structure
                 Timer timer = new Timer();
                 timer.triggerStart();
-                this.delete(dataStructure, elements[size]);
+                Object element = elements[sizes[sizes.length - 1] - size];
+                this.delete(dataStructure, element);
                 timer.triggerEnd();
 
                 csvPrinter.getTimes().get(count).add(timer.computeDuration());
@@ -407,7 +408,8 @@ public class TimeTest {
                 // Delete elements from the data structure
                 Timer timer = new Timer();
                 timer.triggerStart();
-                for (Object element: elements) {
+                for (int i = 0; i < elements.length; i++) {
+                    Object element = elements[elements.length-1-i];
                     this.delete(dataStructure, element);
                 }
                 timer.triggerEnd();
@@ -625,6 +627,8 @@ public class TimeTest {
 
     private void insert(Object dataStructure, Object elementToInsert) {
         if (dataStructure instanceof Trie) {
+            String username = ((User) elementToInsert).getUsername();
+            System.out.println("last inserted: " + username);
             ((Trie) dataStructure).addUser((User) elementToInsert);
         }
         else if (dataStructure instanceof AVLTree) {
@@ -648,7 +652,9 @@ public class TimeTest {
 
     private void delete(Object dataStructure, Object elementToInsert) {
         if (dataStructure instanceof Trie) {
-            ((Trie) dataStructure).deleteUser(((User) elementToInsert).getUsername());
+            String username = ((User) elementToInsert).getUsername();
+            System.out.println("trying to remove: " + username);
+            ((Trie) dataStructure).deleteUser(username);
         }
         else if (dataStructure instanceof AVLTree) {
             ((AVLTree) dataStructure).deleteNode(((ElementWithIntegerKey) elementToInsert).getKey());
