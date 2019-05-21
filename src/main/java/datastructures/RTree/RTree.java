@@ -72,45 +72,44 @@ public class RTree {
     }
 
     public void addPost(Post post, Node nextNode) {
+        // Life saver: http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/3-index/R-tree.html
         double[] postLocation = post.getLocation();
 
         LinkedList<Node> candidates = new LinkedList<>();
         findCandidates(postLocation, nextNode, candidates);
 
-        /*
-        for (Node n : candidates) {
-
-        }
-        */
-
-        while (!(nextNode instanceof LeafNode)) {
+        if (nextNode instanceof InternalNode) {
             Node[] child = ((InternalNode) nextNode).getChild();
 
-            for (Node n : child) {
-                if (n != null && postInTheRegion(n.getStart(), n.getEnd(), postLocation)) {
-                    if (n instanceof LeafNode) {
-                        if (n.isFull()) {
-                            // TODO: fer el split o comprovar si hi ha alguna altre regio en la que hi cap
-                            System.out.println("Percal incoming. Post in the region but is full!");
-                        } else {
-                            // We can add the post, do it.
-                            ((LeafNode) n).addPost(post);
-                        }
-                    } else if (n instanceof InternalNode){
-                        addPost(post, n);
-                    }
+            // Provem a insertar el node a tots els child
+            for (int i = 0; i < nextNode.length; i++) {
+                Node n = child[i];
+                if (postInTheRegion(n.getStart(), n.getEnd(), postLocation)) {
+                    addPost(post, n);
                     return;
-                } else {
-                    // TODO: Calcular increment area minima
-                    System.out.println("Ens espavilem");
                 }
             }
-        }
 
-        if (nextNode.isFull()) {
-            System.out.println("L'hem trobat pero esta ple");
+            // Si arribem aqui es que no hi ha cap node que el pugui agafar (perque no esta "inTheRegion"...
+            // Ara hem de trobar el bounding rectangle a "nextNode" que augmenti area minima al insertar el post
+
+            /* aqui ho busquem */
+            // Quan trobem el que augmentaria minim l'area, fem crida recursiva per insertar el post a aquell node
+            //addPost(post, minimumAreaNode);
+
+            System.out.println("NOT IMPLEMENTED YET! Afegir when not in the region");
+
         } else {
-            ((LeafNode) nextNode).addPost(post);
+            if (nextNode.isFull()) {
+                // Split the leaf node into 2 nodes
+                // Find the bounding box for all the objects in each node
+                // Replace the parent's bounding box by (i assume 1) of the 2 bounding boxes
+                // The parent node can overflow and split, we need an insert procedure into an internal node just
+                // like the b-tree algorithm
+                System.out.println("NOT IMPLEMENTED YET! L'hem trobat pero esta ple me caguen");
+            } else {
+                ((LeafNode) nextNode).addPost(post);
+            }
         }
     }
 
