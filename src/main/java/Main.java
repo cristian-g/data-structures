@@ -10,7 +10,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
         TimeTest timeTest = new TimeTest();
-        timeTest.runTimeTest5();
+        timeTest.runTimeTest5Graph();
 
 
         InstaSalle instasalle = new InstaSalle();
