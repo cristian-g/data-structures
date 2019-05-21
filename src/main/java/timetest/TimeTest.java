@@ -238,25 +238,15 @@ public class TimeTest {
 
     public void runTimeTest4() {
 
+        int maxSize = 100000;
+
         CSVPrinter csvPrinter = new CSVPrinter();
 
-        int[] sizes = new int[10];
-        int length = sizes.length;
-        //for (int i = 0; i < length; i++) sizes[i] = (int) Math.pow(10, i+3);
-        sizes[0] = 10000;
-        sizes[1] = 50000;
-        sizes[2] = 100000;
-        sizes[3] = 150000;
-        sizes[4] = 200000;
-        sizes[5] = 250000;
-        sizes[6] = 300000;
-        sizes[7] = 400000;
-        sizes[8] = 500000;
-        sizes[9] = 600000;
+        int[] sizes = IntegerUtilities.generateCounterArray(maxSize);
 
         System.out.println("\n" + "--------------------");
-        System.out.println("Starting the test... We will try collections of the following sizes:");
-        System.out.println(Arrays.toString(sizes));
+        System.out.println("Starting the test...");
+        //System.out.println(Arrays.toString(sizes));
         System.out.println("--------------------" + "\n");
 
         Object[] dataStructures = new Object[] {
@@ -274,37 +264,35 @@ public class TimeTest {
             this.registerDataStructure(dataStructure, csvPrinter);
             // -------------------------------------
 
+            // Init data structure
+            dataStructure = this.initDataStructure(dataStructure);
+
+            // Generate elements using generated random keys
+            Object[] elements = this.computeElements(dataStructure, maxSize);
+
             for (int size: sizes) {
-                System.out.println("Size: " + size);
-
-                // Init data structure
-                dataStructure = this.initDataStructure(dataStructure);
-
-                // Generate elements using generated random keys
-                Object[] elements = this.computeElements(dataStructure, size);
-
                 // Insert elements into the data structure
-                for (Object element: elements) {
-                    this.insert(dataStructure, element);
-                }
+                this.insert(dataStructure, elements[size]);
+            }
 
-                // Delete elements from the data structure
+            for (int size: sizes) {
+
+                // Remove elements from the data structure
                 Timer timer = new Timer();
                 timer.triggerStart();
-                for (Object element: elements) {
-                    System.out.println(((User) element).getUsername());
-                    this.delete(dataStructure, element);
-                }
+                this.delete(dataStructure, elements[size]);
                 timer.triggerEnd();
 
                 csvPrinter.getTimes().get(count).add(timer.computeDuration());
             }
             count++;
+
+            //this.printDataStructure(dataStructure);
         }
 
         csvPrinter.setnOfElements(sizes);
 
-        csvPrinter.print(filename1);
+        csvPrinter.print(filename4);
     }
 
     public void runTimeTest5() {
@@ -374,7 +362,100 @@ public class TimeTest {
 
         csvPrinter.setnOfElements(sizes);
 
-        csvPrinter.print(filename1);
+        csvPrinter.print(filename5);
+    }
+
+    public void runTimeTest5Graph() {
+
+        CSVPrinter csvPrinter = new CSVPrinter();
+
+        System.out.println("\n" + "--------------------");
+        System.out.println("Starting the test...");
+        System.out.println("--------------------" + "\n");
+
+        Object[] dataStructures = new Object[] {
+                new Graph(),// Graph
+        };
+
+        Object dataStructure = dataStructures[0];
+        // -------------------------------------
+        this.registerDataStructure(dataStructure, csvPrinter);
+        // -------------------------------------
+
+        // Init data structure
+        dataStructure = this.initDataStructure(dataStructure);
+
+        // Import data from json files
+
+        final String[] filenamesUsers = new String[] {
+                "/extra/small/users.json",
+                "/extra/medium/users.json",
+                "/extra/large/users.json",
+        };
+
+        final String[] filenamesPosts = new String[] {
+                "/extra/small/posts.json",
+                "/extra/medium/posts.json",
+                "/extra/large/posts.json",
+        };
+
+        int[] sizes = new int[filenamesUsers.length];
+
+        for (int i = 0; i < filenamesUsers.length; i++) {
+            // Import data to arrays (they will be discarded by java garbage collector
+            // after adding all the elements into the data structures)
+
+            User[] users = null;
+            try {
+                users = JsonReader.parseUsers(filenamesUsers[i]);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            sizes[i] = users.length;
+
+            Post[] posts = null;
+            try {
+                posts = JsonReader.parsePosts(filenamesPosts[i]);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            Graph graph = (Graph) dataStructure;
+
+            // Store users into hash table
+            for (User user: users) {
+                graph.getUsersByUsername().insert(user);
+            }
+
+            // Compute Graph
+            graph.computeInitialGraph(users, posts);
+
+            // Start timer
+            Timer timer = new Timer();
+            timer.triggerStart();
+
+            // Remove each user from graph
+            for (User user: users) {
+                graph.removeFromGraph(user);
+
+                // Remove posts from user
+                datastructures.LinkedList.LinkedList<Post> userPosts = user.getPosts();
+                Post[] toArray = userPosts.toArray(new Post[userPosts.getSize()]);
+                for (Post post: toArray) {
+                    graph.removeFromGraph(post);
+                }
+            }
+
+            timer.triggerEnd();
+            csvPrinter.getTimes().get(0).add(timer.computeDuration());
+
+            System.out.println("Dataset " + filenamesUsers[i] + " in " + timer.computeFormattedDuration() + " (" + users.length + " users)");
+        }
+
+        csvPrinter.setnOfElements(sizes);
+
+        csvPrinter.print(filename5Graph);
     }
 
     private Object initDataStructure(Object dataStructure) {

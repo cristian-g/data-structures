@@ -60,8 +60,8 @@ public class HashTable<E> {
     }
 
     public void remove(String key) {
-        long hash = this.hash(key);
-        int hashInt = (int) hash;
+        long hash = this.hash(key) % this.array.length;
+        int hashInt = toIntExact(hash);
         this.array[hashInt].removeByStringKey(key);
     }
 
