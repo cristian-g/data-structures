@@ -14,9 +14,12 @@ public class InternalNode extends Node {
         this.child = child;
     }
 
-    // TODO: implement this function if we need it
-    public void addNode(Node node) {
-
+    public void addChild(Node child) {
+        if (isFull()) {
+            System.out.println("Internal Node Split Not Implemented Yet!");
+        } else {
+            this.child[length++] = child;
+        }
     }
 
     // TODO: implement this function if we need it
