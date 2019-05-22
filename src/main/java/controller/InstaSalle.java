@@ -287,6 +287,8 @@ public class InstaSalle {
 
                 trie.limitMemory(desiredLimit);
 
+                System.out.println("Limit is now: " + desiredLimit + " words");
+
                 break;
 
             case 8://Exit

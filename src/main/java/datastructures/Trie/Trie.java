@@ -45,6 +45,7 @@ public class Trie {
     }
 
     public void addUser(User u, int searches) {
+        if (this.users == this.limit) return;
         this.users++;
         String username = u.getUsername().toLowerCase();
         char[] charArray = username.toCharArray();
