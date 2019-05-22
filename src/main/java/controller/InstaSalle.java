@@ -3,6 +3,7 @@ package controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import datastructures.AVLTree.AVLTree;
+import datastructures.ElementWithIntegerKey;
 import datastructures.Graph.Graph;
 import datastructures.HashTable.HashTable;
 import datastructures.LinkedList.LinkedList;
@@ -318,7 +319,12 @@ public class InstaSalle {
     private void exportAVLTree(TreePrinter treePrinter) {
         try {
             System.out.println("Inorder:");
-            avlTree.inOrder(avlTree.getRoot());
+            ElementWithIntegerKey[] elementWithIntegerKeys = avlTree.inOrder(avlTree.getRoot());
+            for (ElementWithIntegerKey element: elementWithIntegerKeys) {
+                Post post = (Post) element;
+                System.out.println(post);
+            }
+
             System.out.println("Rendering image of AVL Tree...");
             System.out.println("Rendered image successfully: " + treePrinter.printAVLTree(this.avlTree));
         } catch (Exception e) {
@@ -663,8 +669,12 @@ public class InstaSalle {
                 else {
                     int desiredSize = 5;
                     Post[] posts = hashtag.getPosts().toArrayOfFirst(new Post[desiredSize], desiredSize);
-                    System.out.println("Showing first " + posts.length + " of a total of " +  hashtag.getPosts().getSize() + " with hashtag #" + desiredHashtag + "...");
+                    int total = hashtag.getPosts().getSize();
+                    int showing = total;
+                    if (showing > 5) showing = 5;
+                    System.out.println("Showing first " + showing + " post(s) of a total of " +  total + " with hashtag #" + desiredHashtag + "...");
                     for (Post post: posts) {
+                        if (post == null) continue;
                         System.out.println(post);
                     }
                 }

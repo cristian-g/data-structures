@@ -236,7 +236,7 @@ public class Post implements ElementWithIntegerKey, ElementWithCoordinates {
 
         System.out.println("N of hashtags:");
         int lengthHashtags = Integer.parseInt(InstaSalle.scanner.nextLine());
-        this.hashtagIds = new String[length];
+        this.hashtagIds = new String[lengthHashtags];
 
         for (int i = 0; i < lengthHashtags; i++) {
             System.out.println("Hashtag " + (i + 1));
