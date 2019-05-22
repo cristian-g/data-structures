@@ -558,6 +558,7 @@ public class InstaSalle {
                 Post[] toArray = userPosts.toArray(new Post[userPosts.getSize()]);
                 for (Post post: toArray) {
                     this.graph.removeFromGraph(post);
+                    this.avlTree.deleteNode(post.getId());
                     this.postsById.remove(post.getId());
                 }
 
