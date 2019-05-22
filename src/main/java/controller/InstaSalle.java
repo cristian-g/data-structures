@@ -114,7 +114,6 @@ public class InstaSalle {
         System.out.println("    2. Post");
         System.out.println("    3. According to hashtag");
         System.out.println("    4. According to location");
-        System.out.println("    5. Personalized");
     }
 
     /**
@@ -597,12 +596,17 @@ public class InstaSalle {
                     }
                     System.out.println("Load information of user [" + desiredUsername + "]? [Y/N]");
                     String answer = scanner.nextLine();
-                    if (answer.equals("Y")) {
+                    if (answer.toLowerCase().equals("y")) {
                         break;
                     }
                 }
 
-                System.out.println("\n" + desiredUser.toString());
+                if (desiredUser == null) {
+                    System.out.println("We are sorry but we have not found any user with the username that you have entered (" + desiredUsername + ").");
+                }
+                else {
+                    System.out.println("\n" + desiredUser.toString());
+                }
 
                 break;
 

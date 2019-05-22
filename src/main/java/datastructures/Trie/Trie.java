@@ -14,8 +14,8 @@ public class Trie {
     private LinkedList<Node> nodes;
 
     public Trie() {
-        //this.limit = 20;
-        this.limit = Integer.MAX_VALUE;
+        //this.limit = Integer.MAX_VALUE;// Uncomment this line to "disable" the limit
+        this.limit = 20;
         this.users = 0;
         this.nodes = new LinkedList<>();
     }
