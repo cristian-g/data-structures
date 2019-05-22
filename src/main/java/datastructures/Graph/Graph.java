@@ -107,7 +107,9 @@ public class Graph {
 
         // Remove reference from author...
         User author = (User) usersByUsername.get(post.getPublishedByUsername());
-        author.getPosts().removeByIntegerKey(post.getKey());
+        if (author != null) {
+            author.getPosts().removeByIntegerKey(post.getKey());
+        }
 
         // Remove post from hashtag list...
         for (String hashtagId: post.getHashtagIds()) {

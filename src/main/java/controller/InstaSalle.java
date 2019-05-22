@@ -553,6 +553,14 @@ public class InstaSalle {
                 // Remove from Trie
                 this.trie.deleteUser(user.getUsername());
 
+                // Remove posts from user
+                datastructures.LinkedList.LinkedList<Post> userPosts = user.getPosts();
+                Post[] toArray = userPosts.toArray(new Post[userPosts.getSize()]);
+                for (Post post: toArray) {
+                    this.graph.removeFromGraph(post);
+                    this.postsById.remove(post.getId());
+                }
+
                 System.out.println("\nThe user \"" + desiredUsername + "\" has been successfully removed from the system.\n");
 
                 break;
@@ -581,14 +589,14 @@ public class InstaSalle {
                 // Remove from AVL
                 this.avlTree.deleteNode(post.getKey());
 
-                // Remove from R-Tree
-                this.rTree.removePost(post);
-
                 // Remove from Graph
                 this.graph.removeFromGraph(post);
 
                 // Remove from list
                 this.postsList.removeByIntegerKey(desiredPost);
+
+                // Remove from R-Tree
+                this.rTree.removePost(post);
 
                 System.out.println("\nThe post with ID " + desiredPost + " has been successfully removed from the system.\n");
 

@@ -75,6 +75,12 @@ public class HashTable<E> {
         this.array[hashInt].removeByStringKey(key);
     }
 
+    public void remove(int key) {
+        long hash = this.hash(key) % this.array.length;
+        int hashInt = toIntExact(hash);
+        this.array[hashInt].removeByIntegerKey(key);
+    }
+
     public void addOn(int position, E element) {
         this.array[position].add(element);
     }
