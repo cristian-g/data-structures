@@ -672,9 +672,28 @@ public class InstaSalle {
                 break;
 
             case 4:// Search according to location
+                System.out.println("Latitud:");
+                double lat = Double.parseDouble(scanner.nextLine());
+                System.out.println("Longitud:");
+                double lon = Double.parseDouble(scanner.nextLine());
+                System.out.println("Radi maxim:");
+                int rad = Integer.parseInt(scanner.nextLine());
 
-                // TODO search according to location
-                System.out.println("TODO search according to location");
+                // TODO: CALCULATE THOSE VALUES
+                double[] calcStart = new double[2];
+                double[] calcEnd = new double[2];
+
+                LinkedList<Post> postsLinkedList = rTree.getPosts(calcStart, calcEnd);
+
+                if (postsLinkedList.getSize() > 0) {
+                    Post[] posts = postsLinkedList.toArrayOfFirst(new Post[5], 5);
+                    System.out.println("Showing first " + posts.length + " posts from a total of " + postsLinkedList.getSize());
+                    for (Post p : posts) {
+                        System.out.println(p);
+                    }
+                } else {
+                    System.out.println("No posts found.");
+                }
 
                 break;
         }
