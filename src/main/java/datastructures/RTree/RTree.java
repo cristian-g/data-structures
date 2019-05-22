@@ -145,6 +145,7 @@ public class RTree {
                     LinkedList<Post> aux = getPosts(start, end, n);
                     Post[] auxArr = aux.toArray(new Post[aux.getSize()]);
                     for (Post p : auxArr) {
+                        if (!p.isVisible()) continue;
                         posts.add(p);
                     }
                 }
@@ -154,6 +155,7 @@ public class RTree {
             for (int i = 0; i < nextNode.length; i++) {
                 Post p = childPosts[i];
                 if (postInTheRegion(start, end, p.getLocation())) {
+                    if (!p.isVisible()) continue;
                     posts.add(p);
                 }
             }
