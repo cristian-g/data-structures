@@ -150,8 +150,9 @@ public class Trie {
                 //Si la lletra coincideix, seguir aquell camí:
                 if(charArray[i] == charkey[i]) {
                     if(i == charArray.length - 1 && actualNodes.getByIntegerKey(charArray[i]) instanceof WordNode) {
-                        suggestions.add(((WordNode) actualNodes.getByIntegerKey(charArray[i])).getUser());
-                        ((WordNode) actualNodes.getByIntegerKey(charArray[i])).incrementSearches();
+                        WordNode wordNode = (WordNode) actualNodes.getByIntegerKey(charArray[i]);
+                        suggestions.add(wordNode.getUser());
+                        wordNode.incrementSearches();
                     }
                     actualNodes = actualNodes.getByIntegerKey(charArray[i]).getChilds();
                 }
