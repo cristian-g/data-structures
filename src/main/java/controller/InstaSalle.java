@@ -671,28 +671,25 @@ public class InstaSalle {
 
                 break;
 
-            case 4:// Search according to location
-                System.out.println("Latitud:");
-                double lat = Double.parseDouble(scanner.nextLine());
-                System.out.println("Longitud:");
-                double lon = Double.parseDouble(scanner.nextLine());
-                System.out.println("Radi maxim:");
-                int rad = Integer.parseInt(scanner.nextLine());
+            case 4: // Search according to location
+                System.out.println("Latitud 1:");
+                double lat1 = Double.parseDouble(scanner.nextLine());
+                System.out.println("Longitud 1:");
+                double lon1 = Double.parseDouble(scanner.nextLine());
+                System.out.println("Latitud 2:");
+                double lat2 = Double.parseDouble(scanner.nextLine());
+                System.out.println("Longitud 2:");
+                double lon2 = Double.parseDouble(scanner.nextLine());
 
-                // TODO: CALCULATE THOSE VALUES
-                double[] calcStart = new double[2];
-                double[] calcEnd = new double[2];
+                LinkedList<Post> postsLinkedList = rTree.getPosts(new double[]{lat1, lon1}, new double[]{lat2, lon2});
+                System.out.println(postsLinkedList.getSize());
+                Post[] posts = postsLinkedList.toArray(new Post[postsLinkedList.getSize()]);
 
-                LinkedList<Post> postsLinkedList = rTree.getPosts(calcStart, calcEnd);
+                System.out.println(rTree.getPost(new double[]{112.42034291299234, 44.72663866389317}));
 
-                if (postsLinkedList.getSize() > 0) {
-                    Post[] posts = postsLinkedList.toArrayOfFirst(new Post[5], 5);
-                    System.out.println("Showing first " + posts.length + " posts from a total of " + postsLinkedList.getSize());
-                    for (Post p : posts) {
-                        System.out.println(p);
-                    }
-                } else {
-                    System.out.println("No posts found.");
+                System.out.println("S'han trobat " + posts.length + " posts");
+                for (Post p : posts) {
+                    System.out.println(p);
                 }
 
                 break;
