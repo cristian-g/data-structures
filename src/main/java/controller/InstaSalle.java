@@ -682,10 +682,7 @@ public class InstaSalle {
                 double lon2 = Double.parseDouble(scanner.nextLine());
 
                 LinkedList<Post> postsLinkedList = rTree.getPosts(new double[]{lat1, lon1}, new double[]{lat2, lon2});
-                System.out.println(postsLinkedList.getSize());
                 Post[] posts = postsLinkedList.toArray(new Post[postsLinkedList.getSize()]);
-
-                System.out.println(rTree.getPost(new double[]{112.42034291299234, 44.72663866389317}));
 
                 System.out.println("S'han trobat " + posts.length + " posts");
                 for (Post p : posts) {

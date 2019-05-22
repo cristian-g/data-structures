@@ -148,15 +148,6 @@ public class RTree {
                         posts.add(p);
                     }
                 }
-                if (n instanceof LeafNode) {
-                    Post[] childPosts = ((LeafNode) n).getPosts();
-                    for (int j = 0; j < n.length; j++) {
-                        Post p = childPosts[j];
-                        if (postInTheRegion(start, end, p.getLocation())) {
-                            posts.add(p);
-                        }
-                    }
-                }
             }
         } else if (nextNode instanceof LeafNode) {
             Post[] childPosts = ((LeafNode) nextNode).getPosts();
