@@ -128,6 +128,10 @@ public class RTree {
         return getPost(location, root);
     }
 
+    public LinkedList<Post> getPosts(double[] start, double[] end) {
+        return getPosts(start, end, root);
+    }
+
     // Returns the posts inside that region
     public LinkedList<Post> getPosts(double[] start, double[] end, Node nextNode) {
         LinkedList<Post> posts = new LinkedList<>();
