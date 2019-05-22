@@ -174,6 +174,14 @@ public class InstaSalle {
 
                 // Store posts into list and hash table
                 for (Post post: posts) {
+                    String[] hashtagIds = post.getHashtagIds();
+                    for (int i = 0; i < hashtagIds.length; i++) {
+                        String hashtag = hashtagIds[i];
+                        if (hashtag.charAt(0) == '#') {
+                            hashtag = hashtag.substring(1);
+                        }
+                        hashtagIds[i] = hashtag;
+                    }
                     postsList.add(post);
                     postsById.insert(post);
                 }
@@ -619,6 +627,7 @@ public class InstaSalle {
                 else {
                     int desiredSize = 5;
                     Post[] posts = hashtag.getPosts().toArrayOfFirst(new Post[desiredSize], desiredSize);
+                    System.out.println("Showing first " + posts.length + " of a total of " +  hashtag.getPosts().getSize() + " with hashtag #" + desiredHashtag + "...");
                     for (Post post: posts) {
                         System.out.println(post);
                     }

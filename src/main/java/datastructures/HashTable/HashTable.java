@@ -14,8 +14,8 @@ public class HashTable<E> {
 
     public static String DATA_STRUCTURE_NAME = "Hash table";
 
-    public static int DEFAULT_SIZE = 20749;
-    //public static int DEFAULT_SIZE = 20;
+    //public static int DEFAULT_SIZE = 20749;
+    public static int DEFAULT_SIZE = 20;// Use this size just in case you want to export image of hashtable
     private LinkedList<E>[] array;
 
     public HashTable() {
@@ -39,14 +39,14 @@ public class HashTable<E> {
     }
 
     private long hash(int key) {
-        byte[] bytes = BigInteger.valueOf(key).toByteArray();
-        return Math.abs(Murmur3.hash_x86_32(bytes, String.valueOf(key).length(), 0));
+        return key;
     }
 
     private long hashElement(E element) {
         if (element instanceof ElementWithStringKey) {
             ElementWithStringKey elementWithStringKey = (ElementWithStringKey) element;
-            return this.hash(elementWithStringKey.getKey());
+            String key = elementWithStringKey.getKey();
+            return this.hash(key);
         }
         ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) element;
         return this.hash(elementWithIntegerKey.getKey());

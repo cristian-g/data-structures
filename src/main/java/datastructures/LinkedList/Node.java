@@ -48,7 +48,7 @@ public class Node<E> implements PrintableNode {
     public String getPrintName() {
         if (this.item instanceof Hashtag) {
             Hashtag hashtag = (Hashtag) this.item;
-            return hashtag.getId();
+            return "#" + hashtag.getId();
         }
         else {
             return "Node";

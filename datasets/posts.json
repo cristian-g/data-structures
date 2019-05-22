@@ -8,7 +8,7 @@
           48.870961,
           2.332176
         ],
-        "hashtags": ["gym", "2019", "likes4likes"]
+        "hashtags": ["#gym", "#2019", "#likes4likes"]
     },
     {
         "id": 2,
@@ -19,7 +19,7 @@
           55.760140,
           37.617844
         ],
-        "hashtags": ["engineering", "omg", "badluck"]
+        "hashtags": ["#engineering", "#omg", "#badluck"]
     },
     {
         "id": 3,
@@ -30,7 +30,7 @@
           51.509782,
           -0.126913
         ],
-        "hashtags": ["brandnew", "new", "winwin"]
+        "hashtags": ["#brandnew", "#new", "#winwin"]
     },
     {
         "id": 4,
@@ -41,7 +41,7 @@
           45.447464,
           11.001697
         ],
-        "hashtags": ["happy", "routine", "playing"]
+        "hashtags": ["#happy", "#routine", "#playing"]
     },
     {
         "id": 5,
@@ -52,7 +52,7 @@
           40.813678,
           -73.959614
         ],
-        "hashtags": ["night", "party", "wow"]
+        "hashtags": ["#night", "#party", "#wow"]
     },
     {
         "id": 6,
@@ -63,6 +63,6 @@
           48.870961,
           2.332176
         ],
-        "hashtags": ["best", "shot", "foody"]
+        "hashtags": ["#best", "#shot", "#foody"]
     }
 ]
