@@ -135,30 +135,39 @@ public class RTree {
     // Returns the posts inside that region
     public LinkedList<Post> getPosts(double[] start, double[] end, Node nextNode) {
         LinkedList<Post> posts = new LinkedList<>();
-        Node[] child = ((InternalNode) nextNode).getChild();
 
-        for (Node n : child) {
-            if (n instanceof InternalNode && regionIntersectsRegion(start, end, n.getStart(), n.getEnd())) {
-                LinkedList<Post> aux = getPosts(start, end, n);
-                Post[] auxArr = aux.toArray(new Post[aux.getSize()]);
-                for (Post p : auxArr) {
-                    posts.add(p);
-                }
-            }
-            if (n instanceof LeafNode) {
-                for (Post p : ((LeafNode) n).getPosts()) {
-                    if (p != null && postInTheRegion(start, end, p.getLocation())) {
+        if (nextNode instanceof InternalNode) {
+            Node[] child = ((InternalNode) nextNode).getChild();
+
+            for (int i = 0; i < nextNode.getLength(); i++) {
+                Node n = child[i];
+                if (regionIntersectsRegion(start, end, n.getStart(), n.getEnd())) {
+                    LinkedList<Post> aux = getPosts(start, end, n);
+                    Post[] auxArr = aux.toArray(new Post[aux.getSize()]);
+                    for (Post p : auxArr) {
                         posts.add(p);
                     }
                 }
             }
+        } else if (nextNode instanceof LeafNode) {
+            Post[] childPosts = ((LeafNode) nextNode).getPosts();
+            for (int i = 0; i < nextNode.length; i++) {
+                Post p = childPosts[i];
+                if (postInTheRegion(start, end, p.getLocation())) {
+                    posts.add(p);
+                }
+            }
         }
+
+
         return posts;
     }
 
     //Mira si hi ha interseccio entre dues regions:
     private boolean regionIntersectsRegion(double[] start, double[] end, double[] startN, double[] endN) {
-        return (startN[0] > start[0] || endN[0] < end[0] || startN[1] > start[1] || endN[1] < end[1]);
+        boolean b1 = postInTheRegion(start, end, startN) || postInTheRegion(start, end, endN);
+        boolean b2 = postInTheRegion(startN, endN, start) || postInTheRegion(startN, endN, end);
+        return b1 || b2;
     }
 
     public void removePost(Post post) {

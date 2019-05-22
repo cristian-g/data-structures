@@ -130,7 +130,7 @@ public class TreePrinter {
                         nodeArray
                 );
 
-        Graphviz.fromGraph(g).width(9000).render(Format.PNG).toFile(new File(filename));
+        Graphviz.fromGraph(g).width(100000).render(Format.PNG).toFile(new File(filename));
 
         return filename;
     }
