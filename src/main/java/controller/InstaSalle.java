@@ -72,8 +72,8 @@ public class InstaSalle {
     public void showExportMenu() {
         System.out.println("Select an option:");
         System.out.println("    1. Export of files in JSON format of users and posts");
-        System.out.println("    2. Export of files in JSON format of all the structures");
-        System.out.println("    3. Export of files in JSON format of an specific structure");
+        System.out.println("    2. Export of images of all the structures");
+        System.out.println("    3. Export of image of an specific structure");
     }
 
     public void showExportSpecificMenu() {
@@ -286,6 +286,58 @@ public class InstaSalle {
         }
     }
 
+    private void exportTrie(TreePrinter treePrinter) {
+        try {
+            System.out.println("Rendering image of Trie...");
+            System.out.println("Rendered image successfully: " + treePrinter.printTrie(this.trie));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportRTree(TreePrinter treePrinter) {
+        try {
+            System.out.println("Rendering image of R-Tree...");
+            System.out.println("Rendered image successfully: " + treePrinter.printRTree(this.rTree));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportAVLTree(TreePrinter treePrinter) {
+        try {
+            System.out.println("Inorder:");
+            avlTree.inOrder(avlTree.getRoot());
+            System.out.println("Rendering image of AVL Tree...");
+            System.out.println("Rendered image successfully: " + treePrinter.printAVLTree(this.avlTree));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportHashTable(TreePrinter treePrinter) {
+        try {
+            System.out.println("Rendering image of hash table...");
+            System.out.println("Rendered image successfully: " + treePrinter.printHashTable(this.hashtagsByName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exportGraph() {
+        LinkedList<User> linkedList1 = this.usersList;
+        User[] array1 = linkedList1.toArray(new User[linkedList1.getSize()]);
+        for (User user: array1) {
+            System.out.println(user);
+        }
+
+        LinkedList<Post> linkedList2 = this.postsList;
+        Post[] array2 = linkedList2.toArray(new Post[linkedList2.getSize()]);
+        for (Post post: array2) {
+            System.out.println(post);
+        }
+    }
+
     /**
      * Start one of the application options.
      *
@@ -299,67 +351,31 @@ public class InstaSalle {
 
             case 1:// Trie visualization
 
-                System.out.println("Rendering image of Trie...");
-                try {
-                    System.out.println("Rendered image successfully: " + treePrinter.printTrie(this.trie));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                this.exportTrie(treePrinter);
 
                 break;
 
             case 2:// R-Tree visualization
 
-                System.out.println("Rendering image of R-Tree...");
-                try {
-                    System.out.println("Rendered image successfully: " + treePrinter.printRTree(this.rTree));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                this.exportRTree(treePrinter);
 
                 break;
 
             case 3:// AVL Tree visualization
 
-                System.out.println("Inorder:");
-                avlTree.inOrder(avlTree.getRoot());
-
-                System.out.println("Rendering image of AVL Tree...");
-                try {
-                    System.out.println("Rendered image successfully: " + treePrinter.printAVLTree(this.avlTree));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                this.exportAVLTree(treePrinter);
 
                 break;
 
             case 4:// Hash table visualization
 
-                System.out.println("TODO Hash table visualization");
-
-                System.out.println("Rendering image of hash table...");
-
-                try {
-                    System.out.println("Rendered image successfully: " + treePrinter.printHashTable(this.hashtagsByName));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                this.exportHashTable(treePrinter);
 
                 break;
 
             case 5:// Graph visualization
 
-                LinkedList<User> linkedList1 = this.usersList;
-                User[] array1 = linkedList1.toArray(new User[linkedList1.getSize()]);
-                for (User user: array1) {
-                    System.out.println(user);
-                }
-
-                LinkedList<Post> linkedList2 = this.postsList;
-                Post[] array2 = linkedList2.toArray(new Post[linkedList2.getSize()]);
-                for (Post post: array2) {
-                    System.out.println(post);
-                }
+                this.exportGraph();
 
                 break;
         }
@@ -396,14 +412,19 @@ public class InstaSalle {
 
                 break;
 
-            case 2:// Export of files in JSON format of all structures
+            case 2:// Export of images of all structures
 
-                // TODO export of files in JSON format of all structures
-                System.out.println("TODO export of files in JSON format of all structures");
+                System.out.println("Exporting images of all structures...");
+
+                this.exportTrie(new TreePrinter());// Trie
+                this.exportRTree(new TreePrinter());// R-Tree
+                this.exportAVLTree(new TreePrinter());// AVL Tree
+                this.exportHashTable(new TreePrinter());// Hash table
+                this.exportGraph();// Graph visualization
 
                 break;
 
-            case 3:// Export of files in JSON format of an specific structure
+            case 3:// Export of image of an specific structure
 
                 int exportSpecificOption;
                 showExportSpecificMenu();
