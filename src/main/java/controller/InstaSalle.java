@@ -553,7 +553,12 @@ public class InstaSalle {
                 this.usersByUsername.remove(user.getKey());
 
                 // Remove from Trie
-                this.trie.deleteUser(user.getUsername());
+                try {
+                    this.trie.deleteUser(user.getUsername());
+                }
+                catch (Exception e) {
+                    // It may throw an exception since it may not be there as there is a memory limit
+                }
 
                 // Remove posts from user
                 datastructures.LinkedList.LinkedList<Post> userPosts = user.getPosts();
