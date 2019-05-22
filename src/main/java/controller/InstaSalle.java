@@ -188,9 +188,10 @@ public class InstaSalle {
                 // Compute Graph
                 this.graph.computeInitialGraph(users, posts);
 
-                // Add data to AVL Tree
+                // Add data to AVL Tree and R-Tree
                 for (Post post: posts) {
                     this.avlTree.insert(post);
+                    this.rTree.addPost(post);
                 }
 
                 timer.triggerEnd();
@@ -496,6 +497,9 @@ public class InstaSalle {
                 // Add to AVL Tree
                 this.avlTree.insert(post);
 
+                // Add to R-Tree
+                this.rTree.addPost(post);
+
                 break;
         }
     }
@@ -511,8 +515,19 @@ public class InstaSalle {
 
             case 1:// Delete user
 
-                System.out.println("Specify username of the user you want do delete:");
-                String desiredUsername = scanner.nextLine();
+                String desiredUsername = null;
+
+                while (true) {
+                    System.out.println("Specify username of the user you want do delete:");
+                    desiredUsername = scanner.nextLine();
+                    User user = (User) usersByUsername.get(desiredUsername);
+                    if (user == null) {
+                        System.out.println("Username " + desiredUsername + " has not been found... Please, try again.");
+                    }
+                    else {
+                        break;
+                    }
+                }
 
                 System.out.println("Processing request...");
 
@@ -538,13 +553,30 @@ public class InstaSalle {
 
             case 2:// Delete post
 
-                System.out.println("Specify ID of the post you want do delete:");
-                int desiredPost = Integer.parseInt(scanner.nextLine());
+                int desiredPost = -1;
+
+                while (true) {
+                    System.out.println("Specify ID of the post you want do delete:");
+                    desiredPost = Integer.parseInt(scanner.nextLine());
+                    Post post = (Post) postsById.get(desiredPost);
+                    if (post == null) {
+                        System.out.println("Post with ID " + desiredPost + " has not been found... Please, try again.");
+                    }
+                    else {
+                        break;
+                    }
+                }
 
                 System.out.println("Processing request...");
 
                 // Find post
                 Post post = (Post) this.avlTree.findNodeWithKey(desiredPost);
+
+                // Remove from AVL
+                this.avlTree.deleteNode(post.getKey());
+
+                // Remove from R-Tree
+                this.rTree.removePost(post);
 
                 // Remove from Graph
                 this.graph.removeFromGraph(post);
