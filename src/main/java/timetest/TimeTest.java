@@ -74,6 +74,12 @@ public class TimeTest {
             // -------------------------------------
 
             for (int size: sizes) {
+
+                if (size > 225000 && dataStructure instanceof Trie) {
+                    csvPrinter.getTimes().get(count).add(new Double(0));
+                    continue;
+                }
+
                 System.out.println("Size: " + size);
 
                 // Init data structure
@@ -392,6 +398,12 @@ public class TimeTest {
             // -------------------------------------
 
             for (int size: sizes) {
+
+                if (size > 225000 && dataStructure instanceof Trie) {
+                    csvPrinter.getTimes().get(count).add(new Double(0));
+                    continue;
+                }
+
                 System.out.println("Size: " + size);
 
                 // Init data structure
@@ -652,7 +664,6 @@ public class TimeTest {
     private void insert(Object dataStructure, Object elementToInsert) {
         if (dataStructure instanceof Trie) {
             String username = ((User) elementToInsert).getUsername();
-            System.out.println("last inserted: " + username);
             ((Trie) dataStructure).addUser((User) elementToInsert);
         }
         else if (dataStructure instanceof RTree) {
@@ -682,7 +693,6 @@ public class TimeTest {
     private void delete(Object dataStructure, Object elementToDelete) {
         if (dataStructure instanceof Trie) {
             String username = ((User) elementToDelete).getUsername();
-            System.out.println("trying to remove: " + username);
             ((Trie) dataStructure).deleteUser(username);
         }
         else if (dataStructure instanceof RTree) {

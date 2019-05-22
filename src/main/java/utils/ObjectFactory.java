@@ -37,8 +37,8 @@ public class ObjectFactory {
 
         String[] usernames = ObjectFactory.computeSpanishWords();
 
-        User[] users = new User[usernames.length];
-        for (int j = 0; j < users.length; j++) {
+        User[] users = new User[quantity];
+        for (int j = 0; j < quantity; j++) {
             users[j] = new User(usernames[j]);
         }
 
