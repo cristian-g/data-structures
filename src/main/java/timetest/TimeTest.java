@@ -60,7 +60,7 @@ public class TimeTest {
 
         Object[] dataStructures = new Object[] {
                 new Trie(),// Trie
-                //new RTree(),// RTree
+                new RTree(),// RTree
                 new AVLTree(),// AVLTree
                 new HashTable<SimpleElementWithStringKey>(),// HashTable
                 //new Graph(),// Graph
@@ -197,7 +197,7 @@ public class TimeTest {
 
         Object[] dataStructures = new Object[] {
                 new Trie(),// Trie
-                //new RTree(),// RTree
+                new RTree(),// RTree
                 new AVLTree(),// AVLTree
                 new HashTable<SimpleElementWithStringKey>(),// HashTable
                 //new Graph(),// Graph
@@ -251,7 +251,7 @@ public class TimeTest {
 
         Object[] dataStructures = new Object[] {
                 new Trie(),// Trie
-                //new RTree(),// RTree
+                new RTree(),// RTree
                 new AVLTree(),// AVLTree
                 new HashTable<SimpleElementWithStringKey>(),// HashTable
                 //new Graph(),// Graph
@@ -308,7 +308,7 @@ public class TimeTest {
 
         Object[] dataStructures = new Object[] {
                 new Trie(),// Trie
-                //new RTree(),// RTree
+                new RTree(),// RTree
                 new AVLTree(),// AVLTree
                 new HashTable<SimpleElementWithStringKey>(),// HashTable
                 //new Graph(),// Graph
@@ -378,7 +378,7 @@ public class TimeTest {
 
         Object[] dataStructures = new Object[] {
                 new Trie(),// Trie
-                //new RTree(),// RTree
+                new RTree(),// RTree
                 new AVLTree(),// AVLTree
                 new HashTable<SimpleElementWithStringKey>(),// HashTable
                 //new Graph(),// Graph
@@ -530,6 +530,9 @@ public class TimeTest {
         if (dataStructure instanceof Trie) {
             return new Trie();
         }
+        else if (dataStructure instanceof RTree) {
+            return new RTree();
+        }
         else if (dataStructure instanceof AVLTree) {
             return new AVLTree();
         }
@@ -549,6 +552,11 @@ public class TimeTest {
         if (dataStructure instanceof Trie) {
             System.out.println("Data structure: " + Trie.DATA_STRUCTURE_NAME);
             csvPrinter.getNames().add(Trie.DATA_STRUCTURE_NAME);
+            csvPrinter.getTimes().add(new LinkedList<>());
+        }
+        else if (dataStructure instanceof RTree) {
+            System.out.println("Data structure: " + RTree.DATA_STRUCTURE_NAME);
+            csvPrinter.getNames().add(RTree.DATA_STRUCTURE_NAME);
             csvPrinter.getTimes().add(new LinkedList<>());
         }
         else if (dataStructure instanceof AVLTree) {
@@ -603,6 +611,22 @@ public class TimeTest {
         if (dataStructure instanceof Trie) {
             return ObjectFactory.computeUsersWithRandomUsername(size);
         }
+        else if (dataStructure instanceof RTree) {
+            RTree rTree = (RTree) dataStructure;
+
+            // Compute random keys
+            int[] keys = IntegerUtilities.generateRandomArrayWithNoDuplicates(size);
+
+            // Generate posts using generated keys
+            int keysLength = keys.length;
+            Post[] posts = new Post[keysLength];
+            for (int i = 0; i < keysLength; i++) {
+                posts[i] = new Post();
+                posts[i].fillWithRandomGeographicCoordinates();
+            }
+
+            return posts;
+        }
         else if (dataStructure instanceof AVLTree || dataStructure instanceof datastructures.LinkedList.LinkedList) {
 
             // Compute random keys
@@ -631,6 +655,11 @@ public class TimeTest {
             System.out.println("last inserted: " + username);
             ((Trie) dataStructure).addUser((User) elementToInsert);
         }
+        else if (dataStructure instanceof RTree) {
+            RTree rTree = (RTree) dataStructure;
+            Post post = (Post) elementToInsert;
+            rTree.addPost(post);
+        }
         else if (dataStructure instanceof AVLTree) {
             ((AVLTree) dataStructure).insert((ElementWithIntegerKey) elementToInsert);
         }
@@ -650,43 +679,53 @@ public class TimeTest {
         }
     }
 
-    private void delete(Object dataStructure, Object elementToInsert) {
+    private void delete(Object dataStructure, Object elementToDelete) {
         if (dataStructure instanceof Trie) {
-            String username = ((User) elementToInsert).getUsername();
+            String username = ((User) elementToDelete).getUsername();
             System.out.println("trying to remove: " + username);
             ((Trie) dataStructure).deleteUser(username);
         }
+        else if (dataStructure instanceof RTree) {
+            RTree rTree = (RTree) dataStructure;
+            Post post = (Post) elementToDelete;
+            rTree.removePost(post);
+        }
         else if (dataStructure instanceof AVLTree) {
-            ((AVLTree) dataStructure).deleteNode(((ElementWithIntegerKey) elementToInsert).getKey());
+            ((AVLTree) dataStructure).deleteNode(((ElementWithIntegerKey) elementToDelete).getKey());
         }
         else if (dataStructure instanceof HashTable) {
-            ((HashTable) dataStructure).remove(((ElementWithStringKey) elementToInsert).getKey());
+            ((HashTable) dataStructure).remove(((ElementWithStringKey) elementToDelete).getKey());
         }
         else if (dataStructure instanceof Graph) {
-            if (elementToInsert instanceof User) {
-                ((Graph) dataStructure).removeFromGraph((User) elementToInsert);
+            if (elementToDelete instanceof User) {
+                ((Graph) dataStructure).removeFromGraph((User) elementToDelete);
             }
-            else if (elementToInsert instanceof Post) {
-                ((Graph) dataStructure).removeFromGraph((Post) elementToInsert);
+            else if (elementToDelete instanceof Post) {
+                ((Graph) dataStructure).removeFromGraph((Post) elementToDelete);
             }
         }
         else if (dataStructure instanceof datastructures.LinkedList.LinkedList) {
-            ((datastructures.LinkedList.LinkedList) dataStructure).removeByIntegerKey(((SimpleElementWithIntegerKey) elementToInsert).getKey());
+            ((datastructures.LinkedList.LinkedList) dataStructure).removeByIntegerKey(((SimpleElementWithIntegerKey) elementToDelete).getKey());
         }
     }
 
-    private void search(Object dataStructure, Object elementToInsert) {
+    private void search(Object dataStructure, Object elementToSearch) {
         if (dataStructure instanceof Trie) {
-            ((Trie) dataStructure).getSuggestions(((User) elementToInsert).getUsername());
+            ((Trie) dataStructure).getSuggestions(((User) elementToSearch).getUsername());
+        }
+        else if (dataStructure instanceof RTree) {
+            RTree rTree = (RTree) dataStructure;
+            Post post = (Post) elementToSearch;
+            rTree.getPost(post.getLocation());
         }
         else if (dataStructure instanceof AVLTree) {
-            ((AVLTree) dataStructure).findNodeWithKey(((ElementWithIntegerKey) elementToInsert).getKey());
+            ((AVLTree) dataStructure).findNodeWithKey(((ElementWithIntegerKey) elementToSearch).getKey());
         }
         else if (dataStructure instanceof HashTable) {
-            ((HashTable) dataStructure).get(((ElementWithStringKey) elementToInsert).getKey());
+            ((HashTable) dataStructure).get(((ElementWithStringKey) elementToSearch).getKey());
         }
         else if (dataStructure instanceof datastructures.LinkedList.LinkedList) {
-            ((datastructures.LinkedList.LinkedList) dataStructure).getByIntegerKey(((SimpleElementWithIntegerKey) elementToInsert).getKey());
+            ((datastructures.LinkedList.LinkedList) dataStructure).getByIntegerKey(((SimpleElementWithIntegerKey) elementToSearch).getKey());
         }
     }
 }
