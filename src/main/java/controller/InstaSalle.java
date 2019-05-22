@@ -562,6 +562,7 @@ public class InstaSalle {
                     this.graph.removeFromGraph(post);
                     this.avlTree.deleteNode(post.getId());
                     this.postsById.remove(post.getId());
+                    this.rTree.removePost(post);
                 }
 
                 System.out.println("\nThe user \"" + desiredUsername + "\" has been successfully removed from the system.\n");
