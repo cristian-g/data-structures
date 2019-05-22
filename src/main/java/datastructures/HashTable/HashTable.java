@@ -5,7 +5,6 @@ import datastructures.ElementWithIntegerKey;
 import datastructures.ElementWithStringKey;
 import datastructures.LinkedList.LinkedList;
 
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 
 import static java.lang.Math.toIntExact;
@@ -14,8 +13,8 @@ public class HashTable<E> {
 
     public static String DATA_STRUCTURE_NAME = "Hash table";
 
-    //public static int DEFAULT_SIZE = 20749;
-    public static int DEFAULT_SIZE = 20;// Use this size just in case you want to export image of hashtable
+    public static int DEFAULT_SIZE = 20749;
+    //public static int DEFAULT_SIZE = 20;// Use this size just in case you want to export image of hashtable
     private LinkedList<E>[] array;
 
     public HashTable() {
