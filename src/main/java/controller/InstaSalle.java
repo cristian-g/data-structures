@@ -27,6 +27,7 @@ public class InstaSalle {
 
     // Hash tables
     private HashTable<User> usersByUsername;
+    private HashTable<Post> postsById;
     private HashTable<Hashtag> hashtagsByName;
 
     // Graph
@@ -52,6 +53,7 @@ public class InstaSalle {
         this.avlTree = new AVLTree();
         this.rTree = new RTree();
         this.usersByUsername = new HashTable<>();
+        this.postsById = new HashTable<>();
         this.hashtagsByName = new HashTable<>();
         this.graph = new Graph(usersByUsername, hashtagsByName);
     }
@@ -173,6 +175,7 @@ public class InstaSalle {
                 // Store posts into list and hash table
                 for (Post post: posts) {
                     postsList.add(post);
+                    postsById.insert(post);
                 }
 
                 // Compute Graph
@@ -453,7 +456,7 @@ public class InstaSalle {
             case 1:// New user
 
                 User user = new User();
-                user.fillFromUserInput();
+                user.fillFromUserInput(usersByUsername, postsById);
 
                 // Graph
                 this.graph.computeGraph(user);
@@ -472,13 +475,16 @@ public class InstaSalle {
             case 2:// New post
 
                 Post post = new Post();
-                post.fillFromUserInput();
+                post.fillFromUserInput(usersByUsername, postsById);
 
                 // Graph
                 this.graph.computeGraph(post);
 
                 // Add to list
                 this.postsList.add(post);
+
+                // Add to hashtable
+                this.postsById.insert(post);
 
                 // Add to AVL Tree
                 this.avlTree.insert(post);
@@ -602,15 +608,20 @@ public class InstaSalle {
 
             case 3:// Search according to hashtag
 
-                System.out.println("Enter hashtag:");
+                System.out.println("Enter hashtag (without #):");
                 String desiredHashtag = scanner.nextLine();
 
                 Hashtag hashtag = this.hashtagsByName.get(desiredHashtag);
 
-                int desiredSize = 5;
-                Post[] posts = hashtag.getPosts().toArrayOfFirst(new Post[desiredSize], desiredSize);
-                for (Post post: posts) {
-                    System.out.println(post);
+                if (hashtag == null) {
+                    System.out.println("We are sorry but we have not found any post with the hashtag that you have entered (" + desiredHashtag + ").");
+                }
+                else {
+                    int desiredSize = 5;
+                    Post[] posts = hashtag.getPosts().toArrayOfFirst(new Post[desiredSize], desiredSize);
+                    for (Post post: posts) {
+                        System.out.println(post);
+                    }
                 }
 
                 break;

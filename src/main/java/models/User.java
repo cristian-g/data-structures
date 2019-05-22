@@ -3,6 +3,7 @@ package models;
 import com.google.gson.annotations.SerializedName;
 import controller.InstaSalle;
 import datastructures.ElementWithStringKey;
+import datastructures.HashTable.HashTable;
 import datastructures.LinkedList.LinkedList;
 
 
@@ -171,10 +172,21 @@ public class User implements ElementWithStringKey {
         return this.username;
     }
 
-    public void fillFromUserInput() {
+    public void fillFromUserInput(HashTable<User> usersByUsername, HashTable<Post> postsById) {
 
-        System.out.println("Username:");
-        this.username = InstaSalle.scanner.nextLine();
+
+        while (true) {
+            System.out.println("Username:");
+            String desiredUsername = InstaSalle.scanner.nextLine();
+            User user = (User) usersByUsername.get(desiredUsername);
+            if (user != null) {
+                System.out.println("User with username " + desiredUsername + " already exists... Please, try again.");
+            }
+            else {
+                this.username = desiredUsername;
+                break;
+            }
+        }
 
         System.out.println("Creation timestamp:");
         this.creation = Integer.parseInt(InstaSalle.scanner.nextLine());
@@ -184,8 +196,18 @@ public class User implements ElementWithStringKey {
         this.toFollowUsernames = new String[length];
 
         for (int i = 0; i < length; i++) {
-            System.out.println("Username of user to follow:");
-            this.toFollowUsernames[i] = InstaSalle.scanner.nextLine();
+            while (true) {
+                System.out.println("Username of user " + (i + 1) + " to follow:");
+                String desiredUsername = InstaSalle.scanner.nextLine();
+                User author = (User) usersByUsername.get(desiredUsername);
+                if (author == null) {
+                    System.out.println("Username " + desiredUsername + " has not been found... Please, try again.");
+                }
+                else {
+                    this.toFollowUsernames[i] = desiredUsername;
+                    break;
+                }
+            }
         }
     }
 }

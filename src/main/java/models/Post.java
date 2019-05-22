@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import controller.InstaSalle;
 import datastructures.ElementWithCoordinates;
 import datastructures.ElementWithIntegerKey;
+import datastructures.HashTable.HashTable;
 import utils.DoubleUtilities;
 import utils.IntegerUtilities;
 
@@ -175,25 +176,57 @@ public class Post implements ElementWithIntegerKey, ElementWithCoordinates {
                 '}';
     }
 
-    public void fillFromUserInput() {
+    public void fillFromUserInput(HashTable<User> usersByUsername, HashTable<Post> postsById) {
 
-        System.out.println("ID:");
-        this.id = Integer.parseInt(InstaSalle.scanner.nextLine());
+        while (true) {
+            System.out.println("ID:");
+            int desiredId = Integer.parseInt(InstaSalle.scanner.nextLine());
+            Post post = (Post) postsById.get(desiredId);
+            if (post != null) {
+                System.out.println("Post with ID " + desiredId + " already exists... Please, try again.");
+            }
+            else {
+                this.id = desiredId;
+                break;
+            }
+        }
 
         System.out.println("N of users that liked this post:");
         int length = Integer.parseInt(InstaSalle.scanner.nextLine());
         this.likedByUsernames = new String[length];
 
         for (int i = 0; i < length; i++) {
-            System.out.println("Username of user " + (i + 1) + " that liked this post:");
-            this.likedByUsernames[i] = InstaSalle.scanner.nextLine();
+            while (true) {
+                System.out.println("Username of user " + (i + 1) + " that liked this post:");
+                String desiredUsername = InstaSalle.scanner.nextLine();
+                User author = (User) usersByUsername.get(desiredUsername);
+                if (author == null) {
+                    System.out.println("Username " + desiredUsername + " has not been found... Please, try again.");
+                }
+                else {
+                    this.likedByUsernames[i] = desiredUsername;
+                    break;
+                }
+            }
         }
 
         System.out.println("Published timestamp:");
         this.publishedWhen = Integer.parseInt(InstaSalle.scanner.nextLine());
 
-        System.out.println("Username of user that published this post:");
-        this.publishedByUsername = InstaSalle.scanner.nextLine();
+        while (true) {
+            System.out.println("Username of user that published this post:");
+            String desiredUsername = InstaSalle.scanner.nextLine();
+            User author = (User) usersByUsername.get(desiredUsername);
+            if (author == null) {
+                System.out.println("Username " + desiredUsername + " has not been found... Please, try again.");
+            }
+            else {
+                this.publishedByUsername = desiredUsername;
+                break;
+            }
+        }
+
+        this.location = new double[2];
 
         System.out.println("Latitude:");
         this.location[0] = Double.parseDouble(InstaSalle.scanner.nextLine());
@@ -205,7 +238,7 @@ public class Post implements ElementWithIntegerKey, ElementWithCoordinates {
         int lengthHashtags = Integer.parseInt(InstaSalle.scanner.nextLine());
         this.hashtagIds = new String[length];
 
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < lengthHashtags; i++) {
             System.out.println("Hashtag " + (i + 1));
             this.hashtagIds[i] = InstaSalle.scanner.nextLine();
         }

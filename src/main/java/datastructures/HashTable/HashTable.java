@@ -1,6 +1,7 @@
 package datastructures.HashTable;
 
 import com.sangupta.murmur.Murmur3;
+import datastructures.ElementWithIntegerKey;
 import datastructures.ElementWithStringKey;
 import datastructures.LinkedList.LinkedList;
 
@@ -43,8 +44,12 @@ public class HashTable<E> {
     }
 
     private long hashElement(E element) {
-        ElementWithStringKey elementWithStringKey = (ElementWithStringKey) element;
-        return this.hash(elementWithStringKey.getKey());
+        if (element instanceof ElementWithStringKey) {
+            ElementWithStringKey elementWithStringKey = (ElementWithStringKey) element;
+            return this.hash(elementWithStringKey.getKey());
+        }
+        ElementWithIntegerKey elementWithIntegerKey = (ElementWithIntegerKey) element;
+        return this.hash(elementWithIntegerKey.getKey());
     }
 
     public void insert(E element) {
@@ -57,6 +62,12 @@ public class HashTable<E> {
         long hash = this.hash(key) % this.array.length;
         int hashInt = toIntExact(hash);
         return this.array[hashInt].getByStringKey(key);
+    }
+
+    public E get(int key) {
+        long hash = this.hash(key) % this.array.length;
+        int hashInt = toIntExact(hash);
+        return this.array[hashInt].getByIntegerKey(key);
     }
 
     public void remove(String key) {
