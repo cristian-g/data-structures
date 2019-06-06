@@ -150,7 +150,7 @@ public class InternalNode extends Node {
                 } else if (MIN_ITEMS - l2.getLength() == postsToAdd) {
                     l2.addChild(n);
                 } else {
-                    if (findNearestRegion(this, l2, n)) {
+                    if (!findNearestRegion(this, l2, n)) {
                         addChild(n);
                     } else {
                         l2.addChild(n);
