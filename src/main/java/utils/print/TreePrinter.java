@@ -116,7 +116,7 @@ public class TreePrinter {
 
     public String printRTree(RTree rTree) throws IOException {
 
-        final String filename = "out/r_tree_" + TreePrinter.images_count + ".png";
+        final String filename = "out/r_tree_" + (TreePrinter.images_count++) + ".png";
 
         LinkedList<Node> links = new LinkedList<>();
 
@@ -130,7 +130,7 @@ public class TreePrinter {
                         nodeArray
                 );
 
-        Graphviz.fromGraph(g).width(100000).render(Format.PNG).toFile(new File(filename));
+        Graphviz.fromGraph(g).width(1000).render(Format.PNG).toFile(new File(filename));
 
         return filename;
     }
