@@ -131,7 +131,7 @@ public class LeafNode extends Node {
                 } else if (MIN_ITEMS - l2.getLength() == postsToAdd) {
                     l2.addPost(p);
                 } else {
-                    if (findNearestRegion(this, l2, p)) {
+                    if (!findNearestRegion(this, l2, p)) {
                         addPost(p);
                     } else {
                         l2.addPost(p);
