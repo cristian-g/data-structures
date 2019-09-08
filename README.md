@@ -1,4 +1,4 @@
-# Implementación de estructuras de datos.
+# Implementación de estructuras de datos
 Este proyecto consiste en la implementación de varias estructuras de datos.
 Se trata de un trabajo universitario donde implementamos varias estructuras utilizadas para poder indexar los datos de manera pertinente.
 
