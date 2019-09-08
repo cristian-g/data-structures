@@ -1,4 +1,16 @@
-Este proyecto utiliza Maven para la gestión de librerías, por lo que antes de ejecutarlo es necesario comprobar que todas estén instaladas.
+# Implementación de estructuras de datos.
+Este proyecto consiste en la implementación de varias estructuras de datos.
+Se trata de un trabajo universitario donde implementamos varias estructuras utilizadas para poder indexar los datos de manera pertinente.
+
+## Estructuras de datos implementadas
+1. Trie para la funcionalidad de autocompletar
+2. R-Tree para la indexación de publicaciones según ubicación
+3. AVL Tree o Red black Tree: para indexar publicaciones
+4. Tabla hash: busca hashtags
+5. Gráfico: para la relación entre usuarios
+
+## Instalación
+Este proyecto utiliza Maven para la gestión de librerías.
 
 Importante: para utilizar los datasets proporcionados por el profesorado (no se han incluido en la entrega por su tamaño), es necesario añadirlos dentro de la carpeta "datasets/extra", de forma que se encuentren en "datasets/extra/small", "datasets/extra/medium" y "datasets/extra/large".
 
